@@ -1,6 +1,6 @@
 {
-  "name": "Alumni Contact Export",
-  "description": "Outbound extraction pipeline that selects Banner person/student records matching age criteria, applies best-record rules for contact information, and uploads a CSV export to Amazon S3 for downstream alumni outreach campaigns.",
+  "name": "Student Contact Export",
+  "description": "Outbound extraction pipeline that creates a clean student contact file and uploads the CSV export to Amazon S3 for the campus outreach platform.",
   "parameters": [
     {
       "name": "ethosApiKey",

@@ -1,15 +1,10 @@
 ---
 import { hero } from '../data/site';
-import { presets, stages } from '../data/walkthrough';
 const [line1, line2] = hero.headline.split('\n');
-// Keep the preset labels exactly as written — lowercasing them broke "LMS".
-const pending = presets.filter((p) => !p.ready).map((p) => p.label);
-const pendingText = pending.join(' and ');
-const first = stages[0];
 ---
 <section class="border-b border-rule">
-  <div class="mx-auto grid max-w-[1200px] gap-14 px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.92fr)] lg:items-start lg:gap-16">
-   <div class="min-w-0">
+  <div class="mx-auto max-w-[1200px] px-4 py-16 sm:px-6 sm:py-24">
+   <div class="max-w-[50rem]">
     <p class="u-label text-blue">{hero.eyebrow}</p>
 
     <h1 class="u-display mt-5 text-blue-deep">
@@ -18,50 +13,6 @@ const first = stages[0];
 
     <p class="u-lead u-measure mt-7">{hero.lead}</p>
 
-    <div class="mt-9 flex flex-wrap items-center gap-3">
-      <a href={hero.install.href} class="u-btn u-btn-primary">{hero.install.label}</a>
-      <a href={hero.secondary.href} class="u-btn u-btn-secondary">{hero.secondary.label}</a>
-    </div>
-
-    <!-- Preset prompts start the walkthrough. Only the captured one is a control;
-         the others are named as use cases, not shown as dead buttons (finding 03). -->
-    <div class="mt-14 border-t border-rule pt-8">
-      <p class="u-label text-ink-soft">Watch a requirement become a pipeline</p>
-      <div class="mt-4 flex flex-wrap items-center gap-3">
-        {presets.filter((p) => p.ready).map((p) => (
-          <a
-            href="#walkthrough"
-            data-preset={p.id}
-            class="u-btn u-btn-secondary !rounded-full !py-2.5 !text-[0.9375rem]"
-          >
-            <span aria-hidden="true" class="inline-block h-2 w-2 rounded-full bg-blue"></span>
-            {p.label}
-          </a>
-        ))}
-      </div>
-      <p class="u-measure mt-4 text-[0.9375rem] text-ink-soft">
-        Walkthroughs for <span class="text-ink">{pendingText}</span> are being captured.
-      </p>
-    </div>
    </div>
-
-   <figure class="min-w-0 lg:pt-14">
-     <div class="u-bezel">
-       <div class="u-placeholder" role="img" aria-label={first.alt}>
-         <span class="u-label">Capture pending · stage 01</span>
-         <span class="text-[0.875rem] font-semibold text-ink">{first.title}</span>
-         <span class="max-w-[32ch] text-[0.8125rem]">16:10 · uncropped source at 2×</span>
-       </div>
-     </div>
-     <figcaption class="mt-3 text-[0.8125rem] text-ink-soft">{first.alt}</figcaption>
-   </figure>
-  </div>
-</section>
-
-<!-- The thesis, given its own quiet band. -->
-<section class="border-b border-rule bg-paper">
-  <div class="mx-auto max-w-[1200px] px-4 py-16 sm:px-6 sm:py-20">
-    <p class="u-h2 u-measure text-blue-deep">{hero.thesis}</p>
-    <p class="mt-4 font-mono text-[0.9375rem] text-ink-soft">{hero.thesisSub}</p>
   </div>
 </section>

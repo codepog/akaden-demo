@@ -186,3 +186,14 @@ Checked against spec §5 before accepting this system.
 section eyebrows, the underline on the hero. That is the default move and it destroyed the
 one thing the deck's colour language was already doing. Amber was pulled back to agents only,
 and the boldness was moved to where the spec says it belongs: the approve gate at stage 03.
+
+## 9. Story order
+
+The product UI is the first visual, never a decorative placeholder. The page teaches in this
+order: explain the handoff, show one complete workspace run, unpack the ownership of each stage,
+then explain guardrails, maintenance, proof, and the broader system. The real workspace is the
+evidence; prose after it gives a cold visitor the language to explain what they just saw.
+
+No empty screenshot frame ships in the primary flow. Until a capture is available, the relevant
+stage uses a compact evidence panel rather than pretending to show product UI. This preserves the
+honesty rule and keeps the review gate as the one deliberately bold moment.

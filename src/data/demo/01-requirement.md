@@ -1,12 +1,12 @@
-# Alumni Contact Export Integration Requirements
+# Student Contact Export Requirements
 
 ## Business context
 
-The Alumni & Advancement team is launching a targeted outreach campaign to reconnect with older alumni cohorts.
+The campus communications team needs a nightly contact file for its outreach platform.
 
-The team needs a clean, reliable contact list that uses each person’s preferred name when available, primary contact information when available, and a consistent output format for the downstream marketing/vendor process.
+The team needs a clean, reliable contact list with each person's preferred name and primary contact information when available.
 
-The downstream marketing/vendor process consumes the export file from Amazon S3, which is used as the secure staging location for outbound data feeds.
+The outreach platform receives the export file from Amazon S3, used here as a secure handoff location.
 
 ## Source system
 
@@ -167,7 +167,7 @@ Upload `output.csv` to Amazon S3.
 Default delivery location:
 
 - Bucket: `bucket-name`
-- Key/path: `alumni_exports/output.csv`
+- Key/path: `student_contacts/output.csv`
 
 The S3 bucket and key/path should be runtime-configurable.
 

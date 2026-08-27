@@ -1,27 +1,8 @@
 ---
-import { steps, FILES, FOLDERS } from '../../data/ide';
+import { FILES, FOLDERS } from '../../data/ide';
 const byFolder = (f: string) => Object.entries(FILES).filter(([, v]) => v.folder === f);
 ---
 <aside class="side">
-  <!-- SDLC panel — the product's own step list, used as the walkthrough rail -->
-  <section class="panel">
-    <header class="panel-head">
-      <span>SDLC</span>
-      <button type="button" class="x" aria-label="Close SDLC panel" tabindex="-1">×</button>
-    </header>
-    <ol class="sdlc" role="list">
-      {steps.map((s) => (
-        <li>
-          <button type="button" class="sdlc-row" data-goto={s.n} aria-current="false">
-            <span class="sdlc-n">{s.n}</span>
-            <span class="sdlc-t">{s.title}</span>
-            <span class="sdlc-next">Next</span>
-          </button>
-        </li>
-      ))}
-    </ol>
-  </section>
-
   <section class="panel explorer">
     <header class="panel-head"><span>Explorer</span></header>
     <div class="tree">
@@ -54,34 +35,12 @@ const byFolder = (f: string) => Object.entries(FILES).filter(([, v]) => v.folder
     display:flex; flex-direction:column; min-height:0; overflow:hidden;
   }
   .panel{display:flex;flex-direction:column;min-height:0;}
-  .explorer{flex:1;border-top:1px solid var(--ide-border);min-height:0;}
+  .explorer{flex:1;min-height:0;}
   .panel-head{
     display:flex;align-items:center;justify-content:space-between;
     padding:11px 14px 9px; font-size:11.5px; font-weight:600; letter-spacing:.06em;
     text-transform:uppercase; color:var(--ide-ink-soft);
   }
-  .x{border:0;background:transparent;color:var(--ide-ink-soft);font-size:17px;line-height:1;cursor:default;padding:0 2px;}
-
-  .sdlc{list-style:none;margin:0;padding:0 8px 10px;display:flex;flex-direction:column;gap:1px;}
-  .sdlc-row{
-    width:100%;display:grid;grid-template-columns:22px 1fr auto;align-items:center;gap:8px;
-    padding:6px 8px;border:1px solid transparent;border-radius:6px;background:transparent;
-    text-align:left;cursor:pointer;color:var(--ide-ink);font:inherit;font-size:13.5px;
-    transition:background-color 120ms,border-color 120ms;
-  }
-  .sdlc-row:hover{background:var(--ide-hover);}
-  .sdlc-n{
-    font-size:12px;color:var(--ide-ink-soft);text-align:center;
-    width:20px;height:20px;line-height:20px;border-radius:50%;
-  }
-  .sdlc-next{font-size:12.5px;font-weight:600;color:var(--ide-accent);opacity:0;}
-  .sdlc-row[aria-current="true"]{background:var(--ide-active);border-color:#C9D9F0;}
-  .sdlc-row[aria-current="true"] .sdlc-t{color:var(--ide-accent);font-weight:500;}
-  .sdlc-row[aria-current="true"] .sdlc-n{background:var(--ide-accent);color:#fff;}
-  .sdlc-row.is-next{background:var(--ide-hover);}
-  .sdlc-row.is-next .sdlc-next{opacity:1;}
-  .sdlc-row:focus-visible{outline:2px solid var(--ide-accent);outline-offset:1px;}
-
   .tree{padding:0 8px 16px;overflow-y:auto;min-height:0;font-size:13.5px;}
   .root{
     display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:6px;

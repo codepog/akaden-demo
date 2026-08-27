@@ -124,20 +124,10 @@ export const specExcerpt = `Pick the name in this order:
 2. Legal/official name.
 3. Any available name as fallback.`;
 
-/**
- * Preset prompts. Built for three; only the first has captures (spec §7.2 vs §9).
- * The other two are named as use cases in text rather than shown as dead controls.
- */
-export const presets = [
-  { id: 'alumni',    label: 'Export alumni contacts to S3', ready: true },
-  { id: 'lms',       label: 'Sync course enrollments to the LMS', ready: false },
-  { id: 'finaid',    label: 'Nightly financial aid feed', ready: false },
-];
-
 /** The change-request beat — §7.5 calls this the highest-value element on the page. */
 export const changeRequest = {
   when: 'Six months later',
-  ask: 'Advancement needs a country column on the alumni export.',
+  ask: 'The communications team needs a country column in the contact export.',
   oldWay: 'Open the pipeline. Find the mapping. Patch it by hand. Hope the tests still cover it.',
   newWay: 'Add the column to the specification. Regenerate. Acceptance criteria pass. The spec still describes what shipped.',
 };

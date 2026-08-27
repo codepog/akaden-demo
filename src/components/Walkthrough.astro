@@ -1,249 +1,105 @@
 ---
-import { stages, specExcerpt, changeRequest } from '../data/walkthrough';
-import { walkthroughNote } from '../data/site';
-
-/**
- * Server-rendered first, enhanced second (review finding 09).
- *
- * All five stages are emitted as semantic HTML at build time. With JavaScript off
- * they render as a plain ordered list — which IS the text equivalent §8 requires,
- * with no duplicate DOM to drift out of sync.
- *
- * With JavaScript on, the same nodes become the stepped walkthrough, and the
- * "Show every stage" control turns stepping back off. That control is also the
- * route past the approve gate for anyone who does not want to interact, so the
- * gate never becomes a wall in the funnel (review finding 06).
- */
-const actorClass = {
-  human:  { dot: 'bg-blue',  chip: 'border-blue text-blue',  word: 'You' },
-  agent:  { dot: 'bg-agent', chip: 'border-agent text-ink',  word: 'Agent' },
-  system: { dot: 'bg-blue',  chip: 'border-blue text-blue',  word: 'System' },
-} as const;
+const stages = [
+  {
+    number: '01',
+    title: 'Prepare workspace',
+    detail: 'Add the business request and the context Akaden needs.',
+    kind: 'workspace',
+    mark: '↓',
+  },
+  {
+    number: '02',
+    title: 'Draft specification',
+    detail: 'The Specification Builder Agent turns the request into a clear plan.',
+    kind: 'agent',
+    mark: 'AI',
+  },
+  {
+    number: '03',
+    title: 'Review specification',
+    detail: 'A person checks the decisions and approves the work to continue.',
+    kind: 'review',
+    mark: '✓',
+  },
+  {
+    number: '04',
+    title: 'Build pipeline',
+    detail: 'The Pipeline Builder Agent generates the pipeline from the approved plan.',
+    kind: 'agent',
+    mark: 'AI',
+  },
+  {
+    number: '05',
+    title: 'Deploy and validate',
+    detail: 'Deploy to the tenant, run it, and check the result against the specification.',
+    kind: 'deploy',
+    mark: '↑',
+  },
+];
 ---
+
 <section id="walkthrough" class="border-b border-rule scroll-mt-20">
   <div class="mx-auto max-w-[1200px] px-4 py-20 sm:px-6 sm:py-28">
-    <p class="u-label text-blue">The walkthrough</p>
-    <h2 class="u-h2 mt-4 text-blue-deep">A requirement becomes a deployed pipeline</h2>
+    <p class="u-label text-blue">How it works</p>
+    <h2 class="u-h2 mt-4 max-w-[18ch] text-blue-deep">From request to reliable pipeline.</h2>
     <p class="u-lead u-measure mt-5">
-      Five stages. Four of them are things the system does. One of them is yours, and the
-      walkthrough will not continue without you.
+      Akaden keeps the human decision at the center, then carries that approved specification all the way to a validated deployment.
     </p>
 
-    <p class="mt-6 inline-flex items-start gap-2 rounded-md border border-rule-strong bg-paper px-3 py-2 font-mono text-[0.8125rem] text-ink-soft">
-      <span aria-hidden="true">●</span>{walkthroughNote}
-    </p>
-
-    <div class="wt mt-12" data-walkthrough>
-      <!-- Rail. Only meaningful once enhanced; hidden otherwise. -->
-      <div class="wt-rail mb-10 overflow-x-auto" role="group" aria-label="Walkthrough stages">
-        <ol class="flex min-w-max items-stretch gap-2">
-          {stages.map((s) => (
-            <li>
-              <button
-                type="button"
-                class="wt-marker flex w-[9.5rem] flex-col items-start gap-2 rounded-md border border-rule px-3 py-3 text-left transition-colors hover:border-rule-strong disabled:cursor-not-allowed disabled:opacity-45"
-                data-goto={s.n}
-                aria-controls={`stage-${s.id}`}
-              >
-                <span class="flex items-center gap-2">
-                  <span class={`inline-block h-2.5 w-2.5 rounded-full ${actorClass[s.actor].dot}`} aria-hidden="true"></span>
-                  <span class="u-label text-ink-soft">{s.n}</span>
-                </span>
-                <span class="text-[0.8125rem] font-semibold leading-tight text-ink">{s.title}</span>
-              </button>
-            </li>
-          ))}
-        </ol>
-      </div>
-
-      <ol class="wt-stages grid gap-16">
-        {stages.map((s) => (
-          <li
-            id={`stage-${s.id}`}
-            class="stage-panel scroll-mt-24"
-            data-stage={s.n}
-            data-actor={s.actor}
-            data-gated={Number(s.n) > 3 ? 'true' : 'false'}
-          >
-            <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-14">
-              <div class="min-w-0">
-                <div class="flex items-center gap-3">
-                  <span class={`u-label rounded-sm border px-2 py-1 ${actorClass[s.actor].chip}`}>
-                    {s.n} · {actorClass[s.actor].word}
-                  </span>
-                </div>
-                <h3 class="u-h3 mt-4 text-blue-deep">{s.title}</h3>
-                <p class="mt-1 font-mono text-[0.8125rem] text-ink-soft">{s.caption}</p>
-                <p class="u-measure mt-5 text-ink-soft">{s.body}</p>
-
-                {s.iterate && (
-                  <p class="mt-5 flex items-start gap-2.5 rounded-md bg-agent-tint/45 px-3.5 py-2.5 text-[0.9375rem] text-ink">
-                    <span aria-hidden="true" class="mt-0.5 inline-block h-2.5 w-2.5 shrink-0 rounded-full bg-agent"></span>
-                    <span><span class="font-semibold">Iterate.</span> {s.iterate}</span>
-                  </p>
-                )}
-
-                {s.n === '03' && (
-                  <div class="mt-7 rounded-xl border-2 border-blue bg-paper p-5 sm:p-6">
-                    <p class="u-label text-blue">From the specification</p>
-                    <pre class="mt-3 overflow-x-auto rounded-md border border-rule-strong bg-ground p-4 font-mono text-[0.875rem] leading-relaxed text-ink"><code>{specExcerpt}</code></pre>
-                    <p class="mt-4 text-[0.9375rem] text-ink-soft">
-                      That is an institutional decision, not a technical one. It is written down,
-                      and a person signs off on it before any pipeline exists.
-                    </p>
-                    <div class="wt-gate mt-5" data-gate>
-                      <button type="button" class="u-btn u-btn-primary w-full justify-center sm:w-auto" data-approve>
-                        Approve specification
-                      </button>
-                      <p class="mt-3 text-[0.875rem] text-ink-soft" data-gate-hint>
-                        The walkthrough stops here until you do.
-                      </p>
-                    </div>
-                    <p class="wt-approved mt-5 hidden items-center gap-2 text-[0.9375rem] font-semibold text-blue" data-approved-msg>
-                      <span aria-hidden="true">✓</span> Approved. Pipeline generation unlocked.
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              <figure class="min-w-0 lg:pt-1">
-                <div class="u-bezel">
-                  {s.shot ? (
-                    <img src={s.shot} alt={s.alt} width="1600" height="1000" loading={s.n === '01' ? 'eager' : 'lazy'} decoding="async" />
-                  ) : (
-                    <div class="u-placeholder" role="img" aria-label={s.alt}>
-                      <span class="u-label">Capture pending · stage {s.n}</span>
-                      <span class="text-[0.875rem] font-semibold text-ink">{s.title}</span>
-                      <span class="max-w-[34ch] text-[0.8125rem]">16:10 · uncropped source at 2× · mobile crop: {s.mobileCrop}</span>
-                    </div>
-                  )}
-                </div>
-                <figcaption class="mt-3 text-[0.8125rem] text-ink-soft">{s.alt}</figcaption>
-              </figure>
-            </div>
-          </li>
-        ))}
-      </ol>
-
-      <div class="wt-showall mt-12 border-t border-rule pt-6">
-        <button type="button" class="u-btn u-btn-secondary" data-show-all aria-pressed="false">
-          Show every stage as text
-        </button>
-        <p class="mt-3 max-w-[52ch] text-[0.875rem] text-ink-soft">
-          Opens all five stages at once, past the approval step. Same content, no stepping.
-        </p>
-      </div>
-    </div>
-
-    <!-- The change-request beat. §7.5 calls this the highest-value element on the page,
-         so it lives outside the gated walkthrough where everyone reaches it. -->
-    <div class="mt-24 rounded-xl border border-rule-strong bg-paper p-6 sm:p-10">
-      <p class="u-label text-blue">{changeRequest.when}</p>
-      <h3 class="u-h2 mt-4 text-blue-deep">{changeRequest.ask}</h3>
-      <div class="mt-8 grid gap-6 sm:grid-cols-2">
-        <div class="rounded-lg border border-rule bg-ground p-5">
-          <p class="u-label text-ink-soft">By hand</p>
-          <p class="mt-3 text-ink-soft">{changeRequest.oldWay}</p>
-        </div>
-        <div class="rounded-lg border-2 border-blue bg-ground p-5">
-          <p class="u-label text-blue">With a specification</p>
-          <p class="mt-3 text-ink">{changeRequest.newWay}</p>
-        </div>
-      </div>
-    </div>
+    <ol class="flow mt-14" aria-label="The Akaden workflow">
+      {stages.map((stage) => (
+        <li class="flow-step">
+          <span class={`flow-icon ${stage.kind}`} aria-hidden="true">{stage.mark}</span>
+          <p class="flow-number">{stage.number}</p>
+          <h3>{stage.title}</h3>
+          <p class="flow-detail">{stage.detail}</p>
+        </li>
+      ))}
+    </ol>
   </div>
 </section>
 
 <style>
-  /* Un-enhanced: no rail, no gate, every stage visible. Nothing traps a reader. */
-  .wt:not([data-enhanced]) .wt-rail,
-  .wt:not([data-enhanced]) .wt-gate,
-  .wt:not([data-enhanced]) .wt-showall { display: none; }
-  .wt:not([data-enhanced]) .stage-panel { opacity: 1; transform: none; }
-
-  /* Enhanced: one stage at a time, unless the reader asked for all of them. */
-  .wt[data-enhanced] .stage-panel[hidden] { display: none; }
-  .wt[data-enhanced][data-all="true"] .wt-rail { display: none; }
-
-  .wt-marker[aria-current="true"] {
-    border-color: var(--color-blue);
-    background: var(--color-paper);
+  .flow{
+    list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2rem;
   }
-  /* Stage 03 is the only marker that ever fills solid — the human moment. */
-  .wt-marker[data-goto="03"][aria-current="true"] {
-    background: var(--color-blue);
-    border-color: var(--color-blue);
+  .flow-step{position:relative;min-width:0;}
+  .flow-step:not(:last-child)::after{
+    content:"";position:absolute;z-index:0;top:2.8rem;left:calc(50% + 3.6rem);right:calc(-50% + 3.6rem);
+    border-top:2px solid var(--color-rule-strong);
   }
-  .wt-marker[data-goto="03"][aria-current="true"] :global(span) { color: #fff; }
+  .flow-step:not(:last-child)::before{
+    content:"";position:absolute;z-index:1;top:calc(2.8rem - 4px);right:calc(-50% + 3.5rem);
+    width:8px;height:8px;border-top:2px solid var(--color-rule-strong);border-right:2px solid var(--color-rule-strong);transform:rotate(45deg);
+  }
+  .flow-icon{
+    position:relative;z-index:2;display:grid;place-items:center;width:5.5rem;height:5.5rem;border:3px solid var(--color-blue);
+    border-radius:50%;background:var(--color-ground);color:var(--color-blue);font-family:var(--font-mono);font-size:1.65rem;font-weight:700;
+  }
+  .flow-icon.workspace{border-radius:.75rem;background:var(--color-blue-deep);color:#fff;border-color:var(--color-blue-deep);}
+  .flow-icon.workspace::before{content:"";position:absolute;left:.65rem;top:-.42rem;width:2.2rem;height:.65rem;border-radius:.4rem .4rem 0 0;background:var(--color-blue-deep);}
+  .flow-icon.agent{border-color:var(--color-agent);color:#8a5600;font-size:1rem;letter-spacing:.06em;}
+  .flow-icon.review{font-family:var(--font-sans);font-size:3.1rem;line-height:1;}
+  .flow-icon.deploy{border-radius:1.45rem;color:var(--color-blue);font-size:2.6rem;}
+  .flow-number{margin:1.2rem 0 .4rem;font-family:var(--font-mono);font-size:.6875rem;font-weight:700;letter-spacing:.1em;color:var(--color-ink-soft);}
+  .flow-step h3{margin:0;color:var(--color-blue-deep);font-size:1.125rem;line-height:1.2;letter-spacing:-.01em;}
+  .flow-detail{margin:.65rem 0 0;color:var(--color-ink-soft);font-size:.9375rem;line-height:1.45;}
+
+  @media (max-width:900px){
+    .flow{grid-template-columns:repeat(2,minmax(0,1fr));gap:2.5rem 3rem;}
+    .flow-step:not(:last-child)::after,.flow-step:not(:last-child)::before{display:none;}
+  }
+  @media (max-width:560px){
+    .flow{grid-template-columns:1fr;gap:0;}
+    .flow-step{display:grid;grid-template-columns:4rem minmax(0,1fr);column-gap:1rem;padding-bottom:2rem;}
+    .flow-step:not(:last-child)::after{display:block;top:4rem;bottom:0;left:2rem;right:auto;border-top:0;border-left:2px solid var(--color-rule-strong);}
+    .flow-step:not(:last-child)::before{display:none;}
+    .flow-icon{grid-row:span 3;width:4rem;height:4rem;font-size:1.2rem;}
+    .flow-icon.review{font-size:2.35rem;}
+    .flow-icon.deploy{font-size:2rem;}
+    .flow-icon.workspace::before{left:.45rem;width:1.65rem;}
+    .flow-number{margin:.3rem 0;}
+    .flow-step h3{font-size:1.125rem;}
+    .flow-detail{margin:.35rem 0 0;}
+  }
 </style>
-
-<script>
-  const root = document.querySelector<HTMLElement>('[data-walkthrough]');
-  if (root) {
-    const panels = Array.from(root.querySelectorAll<HTMLElement>('.stage-panel'));
-    const markers = Array.from(root.querySelectorAll<HTMLButtonElement>('.wt-marker'));
-    const showAllBtn = root.querySelector<HTMLButtonElement>('[data-show-all]');
-    const approveBtn = root.querySelector<HTMLButtonElement>('[data-approve]');
-    const gate = root.querySelector<HTMLElement>('[data-gate]');
-    const approvedMsg = root.querySelector<HTMLElement>('[data-approved-msg]');
-
-    let approved = false;
-    let current = '01';
-
-    const isGated = (n: string) => Number(n) > 3 && !approved;
-
-    function render() {
-      const all = root!.dataset.all === 'true';
-      panels.forEach((p) => {
-        const n = p.dataset.stage!;
-        const visible = all || n === current;
-        p.hidden = !visible;
-        p.dataset.active = String(visible);
-      });
-      markers.forEach((m) => {
-        const n = m.dataset.goto!;
-        m.setAttribute('aria-current', String(!all && n === current));
-        m.disabled = isGated(n);
-      });
-    }
-
-    function goto(n: string) {
-      if (isGated(n)) return;
-      current = n;
-      render();
-    }
-
-    markers.forEach((m) => m.addEventListener('click', () => goto(m.dataset.goto!)));
-
-    approveBtn?.addEventListener('click', () => {
-      approved = true;
-      gate?.setAttribute('hidden', '');
-      approvedMsg?.classList.remove('hidden');
-      approvedMsg?.classList.add('flex');
-      render();
-      goto('04');
-      root!.querySelector<HTMLElement>('.stage-panel[data-stage="04"]')
-        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-
-    showAllBtn?.addEventListener('click', () => {
-      const now = root!.dataset.all === 'true';
-      root!.dataset.all = String(!now);
-      showAllBtn.setAttribute('aria-pressed', String(!now));
-      showAllBtn.textContent = !now ? 'Step through the stages' : 'Show every stage as text';
-      render();
-    });
-
-    // Hero preset chips jump into the walkthrough at stage 01.
-    document.querySelectorAll<HTMLAnchorElement>('[data-preset]').forEach((chip) =>
-      chip.addEventListener('click', () => {
-        root!.dataset.all = 'false';
-        goto('01');
-      })
-    );
-
-    root.dataset.enhanced = 'true';
-    root.dataset.all = 'false';
-    render();
-  }
-</script>

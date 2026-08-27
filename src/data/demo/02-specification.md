@@ -1,14 +1,14 @@
-# Alumni Contact Export Integration Specification
+# Student Contact Export Specification
 
 ## Pipeline Name and Description
 
-**Pipeline Name:** Alumni Contact Export
+**Pipeline Name:** Student Contact Export
 
 **Pipeline Type:** Outbound
 
-**Description:** Outbound extraction pipeline that selects Banner person/student records matching age criteria, applies best-record rules for contact information, and uploads a CSV export to Amazon S3 for downstream alumni outreach campaigns.
+**Description:** Outbound extraction pipeline that prepares a clean student contact file and uploads it to Amazon S3 for the campus outreach platform.
 
-**Business Purpose:** Support Alumni & Advancement team targeted outreach by providing a clean, reliable contact list with preferred names and primary contact information.
+**Business Purpose:** Give the campus communications team a clean, reliable contact list with preferred names and primary contact information.
 
 **Data Source:** Ellucian Banner SaaS via supported Ethos APIs (not direct database access).
 
@@ -22,7 +22,7 @@
 |---|---|---|---|---|---|
 | `dateOfBirthCutoff` | date | No | `2000-01-01` | Records with dateOfBirth earlier than this value are included. | Must be a valid date in YYYY-MM-DD format. |
 | `s3Bucket` | string | Yes | (none) | Target Amazon S3 bucket name. | Non-empty string; must be a valid AWS S3 bucket name accessible by the pipeline runtime. |
-| `s3KeyPath` | string | No | `alumni_exports/output.csv` | Full S3 object key/path where output.csv will be stored. | Non-empty string ending with `output.csv`; can include directory prefix. |
+| `s3KeyPath` | string | No | `student_contacts/output.csv` | Full S3 object key/path where output.csv will be stored. | Non-empty string ending with `output.csv`; can include directory prefix. |
 | `executionMode` | string | No | `export` | Execution mode: `validateOnly` (test configuration without exporting) or `export` (perform full export). | Must be `validateOnly` or `export`. |
 | `batchIdentifier` | string | No | (auto-generated) | Optional batch identifier for traceability and logging. | Any string; auto-generated as timestamp or UUID if not supplied. |
 
@@ -190,7 +190,7 @@ For each person record passing all filters and selection logic, construct one CS
 
 Upload the generated `output.csv` file to the S3 bucket and key/path specified in the pipeline parameters:
 - **S3 Bucket:** Use the `s3Bucket` parameter.
-- **S3 Key/Path:** Use the `s3KeyPath` parameter (default: `alumni_exports/output.csv`).
+- **S3 Key/Path:** Use the `s3KeyPath` parameter (default: `student_contacts/output.csv`).
 
 **Upload Validation:**
 - Verify the S3 bucket exists and is accessible.
@@ -236,7 +236,7 @@ The pipeline executes in the following sequence:
 
 ```csv
 bannerid,firstName,lastName,dateofbirth,email,phone,city,address,emergencyContact
-BAN001,John,Smith,1985-06-15,john.smith@alumni.edu,555-123-4567,Boston,123 Main Street Apt 4B,Jane Smith - 555-987-6543
+BAN001,John,Smith,1985-06-15,john.smith@campus.edu,555-123-4567,Boston,123 Main Street Apt 4B,Jane Smith - 555-987-6543
 BAN002,Mary,Johnson,1990-03-22,mary.j@email.com,,Portland,456 Oak Avenue Apt 201,
 BAN003,Robert,Williams,1978-11-08,,555-234-5678,Seattle,789 Pine Road,Robert Williams
 BAN004,Sarah,Brown,1995-01-14,sarah.brown@example.com,555-345-6789,Denver,321 Elm Street,Margaret Chen - 555-456-7890
@@ -256,13 +256,13 @@ BAN005,Michael,Davis,1982-09-30,michael@contact.org,,Chicago,,
 
 ```
 [INFO] Execution started at 2026-08-25T23:30:00Z. Batch ID: batch-20260825-export-001
-[INFO] Parameters: s3Bucket=alumni-export-bucket, s3KeyPath=alumni_exports/output.csv, dateOfBirthCutoff=2000-01-01, executionMode=export
+[INFO] Parameters: s3Bucket=student-contact-bucket, s3KeyPath=student_contacts/output.csv, dateOfBirthCutoff=2000-01-01, executionMode=export
 [INFO] Person records evaluated: 2,543
 [INFO] Records excluded (dateOfBirth missing): 87
 [INFO] Records excluded (dateOfBirth >= cutoff): 1,256
 [INFO] Records passed filter and eligible for output: 1,200
 [INFO] CSV file generated with 1,200 data rows (plus 1 header row).
-[INFO] CSV file uploaded to S3. Bucket: alumni-export-bucket. Key: alumni_exports/output.csv. Size: 285 KB.
+[INFO] CSV file uploaded to S3. Bucket: student-contact-bucket. Key: student_contacts/output.csv. Size: 285 KB.
 [INFO] Upload status: SUCCESS.
 [INFO] Execution completed successfully at 2026-08-25T23:35:42Z.
 ```
@@ -354,7 +354,7 @@ The following test cases cover material branches in the filtering, selection, an
 - [ ] Optional parameters used if supplied; defaults applied if not supplied.
 - [ ] Parameter: `dateOfBirthCutoff` (date, optional, default 2000-01-01).
 - [ ] Parameter: `s3Bucket` (string, required).
-- [ ] Parameter: `s3KeyPath` (string, optional, default `alumni_exports/output.csv`).
+- [ ] Parameter: `s3KeyPath` (string, optional, default `student_contacts/output.csv`).
 - [ ] Parameter: `executionMode` (string, optional, default `export`; valid values: `validateOnly` or `export`).
 - [ ] Parameter: `batchIdentifier` (string, optional, auto-generated if not supplied).
 - [ ] All test cases pass (TC-001 through TC-034).

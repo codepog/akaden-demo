@@ -60,10 +60,10 @@ export const AGENTS = [
 ];
 
 export const FILES: Record<string, { folder: string; name: string; kind: 'md' | 'pipeline' }> = {
-  requirement: { folder: 'inputs', name: 'student-records-specification.md', kind: 'md' },
-  spec: { folder: 'specifications', name: 'alumni-contact-export-spec.md', kind: 'md' },
-  readme: { folder: 'pipelines', name: 'ALUMNI_CONTACT_EXPORT_README.md', kind: 'md' },
-  pipeline: { folder: 'pipelines', name: 'alumni-contact-export.pipeline', kind: 'pipeline' },
+  requirement: { folder: 'inputs', name: 'student-contact-export-requirement.md', kind: 'md' },
+  spec: { folder: 'specifications', name: 'student-contact-export-spec.md', kind: 'md' },
+  readme: { folder: 'pipelines', name: 'STUDENT_CONTACT_EXPORT_README.md', kind: 'md' },
+  pipeline: { folder: 'pipelines', name: 'student-contact-export.pipeline', kind: 'pipeline' },
 };
 
 export const FOLDERS = ['inputs', 'pipelines', 'specifications', 'sub-pipelines', 'validation'];
@@ -75,7 +75,7 @@ export const steps: Step[] = [
     suggested: 'Build specification — ask the Specification Builder Agent',
     files: ['requirement'], open: null, view: 'empty', agent: 'Agent',
     chat: [],
-    instruct: "Advancement sent over their requirement and it's in your inputs folder. That is the whole setup.",
+    instruct: 'A team needs a nightly file of student contact details. Their request is ready in the workspace.',
     focus: 'side',
     ring: '[data-file="requirement"]',
     nextLabel: 'Build the specification',
@@ -93,24 +93,24 @@ export const steps: Step[] = [
     ring: '[data-agent-btn]',
     nextLabel: 'Read the specification',
     chat: [
-      { from: 'you', text: 'Review the files in inputs/ and help me draft the integration specification.' },
+      { from: 'you', text: 'Turn the request in inputs/ into a clear plan for this integration.' },
       {
         from: 'agent', agent: 'Specification Builder Agent', meta: 'Anthropic Claude Haiku 4.5 · just now',
         text: '', blocks: [
-          { kind: 'p', text: "I've read the Alumni Contact Export requirement in `inputs/`. Drafting the integration specification now." },
+          { kind: 'p', text: "I've read the student contact export request in `inputs/`. Drafting the integration specification now." },
           { kind: 'h', text: 'What I extracted' },
           { kind: 'ul', items: [
             'Source: Ellucian Banner SaaS via Ethos APIs — no direct database access',
-            'Filter: dateOfBirth exists AND is earlier than 2000-01-01',
-            'Best-record rules for name, email, phone, address, emergency contact',
-            'Output: output.csv, nine columns in a fixed order, uploaded to S3',
+            'Source: approved Banner contact data, read through Ethos APIs',
+            'Output: one clean CSV contact file, delivered to a secure S3 folder',
+            'Guardrail: the pipeline reads data but never updates Banner',
           ]},
           { kind: 'h', text: 'Constraints carried through' },
           { kind: 'ul', items: [
             'The integration must not update Banner data',
             'It must not rely on direct database access or direct Banner table reads',
           ]},
-          { kind: 'p', text: 'Written to `/specifications/alumni-contact-export-spec.md` — 34 test cases and an acceptance checklist included.' },
+          { kind: 'p', text: 'Written to `/specifications/student-contact-export-spec.md` — with test cases and an acceptance checklist included.' },
         ],
       },
     ],
@@ -156,7 +156,7 @@ export const steps: Step[] = [
       {
         from: 'agent', agent: 'Pipeline Builder Agent', meta: 'Anthropic Claude Haiku 4.5 · just now',
         text: '', blocks: [
-          { kind: 'p', text: 'Generated `alumni-contact-export.pipeline` from the approved specification, using the v3.1Outbound template.' },
+        { kind: 'p', text: 'Generated `student-contact-export.pipeline` from the approved specification, using the v3.1Outbound template.' },
           { kind: 'ul', items: [
             '39 segments in run order',
             '25 pipeline parameters',
@@ -224,7 +224,7 @@ export const steps: Step[] = [
     focus: 'ed', ring: '.pl-head', nextLabel: 'Publish it',
     chat: [
       { from: 'agent', agent: 'Pipeline Builder Agent', meta: 'just now', text: '', blocks: [
-        { kind: 'p', text: 'Ready to deploy `Alumni Contact Export` to the Ellucian Integration Designer tenant.' },
+        { kind: 'p', text: 'Ready to deploy `Student Contact Export` to the Ellucian Integration Designer tenant.' },
       ]},
     ],
   },
@@ -280,8 +280,8 @@ export const steps: Step[] = [
 
 /** Runtime parameters, read from the real .pipeline file. */
 export const jobParams = [
-  { name: 's3BucketName', label: 'S3 Bucket Name', value: 'alumni-export-bucket', required: true, type: 'text' },
-  { name: 's3KeyPath', label: 'S3 Key Path', value: 'alumni_exports/output.csv', required: false, type: 'text' },
+  { name: 's3BucketName', label: 'S3 Bucket Name', value: 'student-contact-bucket', required: true, type: 'text' },
+  { name: 's3KeyPath', label: 'S3 Key Path', value: 'student_contacts/output.csv', required: false, type: 'text' },
   { name: 'dateOfBirthCutoff', label: 'Date of Birth Cutoff', value: '2000-01-01', required: false, type: 'text', fromSpec: true },
   { name: 'executionMode', label: 'Execution Mode', value: 'export', required: false, type: 'select', options: ['validateOnly', 'export'] },
   { name: 'batchIdentifier', label: 'Batch Identifier', value: 'batch-20260826-001', required: false, type: 'text' },
@@ -290,13 +290,13 @@ export const jobParams = [
 /** Run log, format taken from the specification's own example. */
 export const runLog = [
   '[INFO] Execution started. Batch ID: batch-20260825-export-001',
-  '[INFO] Parameters: s3Bucket=alumni-export-bucket, s3KeyPath=alumni_exports/output.csv, dateOfBirthCutoff={{CUTOFF}}, executionMode=export',
+  '[INFO] Parameters: s3Bucket=student-contact-bucket, s3KeyPath=student_contacts/output.csv, dateOfBirthCutoff={{CUTOFF}}, executionMode=export',
   '[INFO] Person records evaluated: 2,543',
   '[INFO] Records excluded (dateOfBirth missing): 87',
   '[INFO] Records excluded (dateOfBirth >= cutoff): 1,256',
   '[INFO] Records passed filter and eligible for output: 1,200',
   '[INFO] CSV file generated with 1,200 data rows (plus 1 header row).',
-  '[INFO] CSV uploaded to S3. Key: alumni_exports/output.csv. Size: 285 KB.',
+  '[INFO] CSV uploaded to S3. Key: student_contacts/output.csv. Size: 285 KB.',
   '[INFO] Upload status: SUCCESS.',
   '[INFO] Execution completed successfully.',
 ];

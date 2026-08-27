@@ -29,16 +29,12 @@ export const nav = {
 
 export const hero = {
   eyebrow: 'For Ellucian Banner and Ethos',
-  headline: 'Write a spec.\nGet a working pipeline.',
+  headline: 'From request\nto reliable pipeline.',
   lead:
-    'Akaden is a multi-agent system for Ellucian data integrations. You describe a requirement, ' +
-    'an agent drafts a written specification, you approve it, and a second agent generates and ' +
-    'deploys the pipeline. When the requirement changes six months later, you edit the ' +
-    'specification and regenerate — you do not hand-patch the pipeline.',
+    'Akaden turns a written request into a reviewed, deployable Ellucian data pipeline.',
   thesis: 'You stop maintaining pipelines. You start maintaining specifications.',
   thesisSub: 'The pipeline is the output. The spec is the asset.',
   install: { label: 'Get Akaden', href: '#install' },
-  secondary: { label: 'See how it works', href: '#walkthrough' },
 };
 
 /** Honesty label on the walkthrough. Presets are pre-recorded; the page says so (spec §7.2). */

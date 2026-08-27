@@ -1,6 +1,6 @@
-# Alumni Contact Export Pipeline
+# Student Contact Export Pipeline
 
-**Pipeline File:** `alumni-contact-export.pipeline`  
+**Pipeline File:** `student-contact-export.pipeline`
 **Template:** v3.1Outbound  
 **Status:** Ready for Testing  
 
@@ -8,12 +8,12 @@
 
 ## Overview
 
-The **Alumni Contact Export** pipeline is an Akaden-generated outbound extraction service that:
+The **Student Contact Export** pipeline is an Akaden-generated outbound extraction service that:
 
 1. **Retrieves and filters** Banner person/student records by age criteria (dateOfBirth < configurable cutoff)
 2. **Enriches** each filtered person with contact information using best-record selection rules
 3. **Generates** a CSV export file with normalized contact data
-4. **Uploads** the CSV to Amazon S3 for downstream alumni outreach campaigns
+4. **Uploads** the CSV to Amazon S3 for the campus outreach platform
 
 ---
 
@@ -23,7 +23,7 @@ The **Alumni Contact Export** pipeline is an Akaden-generated outbound extractio
 |-----------|------|----------|---------|-------------|
 | `dateOfBirthCutoff` | string | No | `2000-01-01` | Records with dateOfBirth earlier than this value (YYYY-MM-DD) are included. |
 | `s3BucketName` | string | **Yes** | — | Target Amazon S3 bucket name. |
-| `s3KeyPath` | string | No | `alumni_exports/output.csv` | Full S3 object key/path for the output CSV file. |
+| `s3KeyPath` | string | No | `student_contacts/output.csv` | Full S3 object key/path for the output CSV file. |
 | `executionMode` | enum | No | `export` | `validateOnly` (test config) or `export` (full export). |
 | `batchIdentifier` | string | No | Auto-generated | Optional batch identifier for traceability. |
 
@@ -84,7 +84,7 @@ The **Alumni Contact Export** pipeline is an Akaden-generated outbound extractio
 
 ```csv
 bannerid,firstName,lastName,dateofbirth,email,phone,city,address,emergencyContact
-BAN001,John,Smith,1985-06-15,john.smith@alumni.edu,555-123-4567,Boston,123 Main Street Apt 4B,Jane Smith - 555-987-6543
+BAN001,John,Smith,1985-06-15,john.smith@campus.edu,555-123-4567,Boston,123 Main Street Apt 4B,Jane Smith - 555-987-6543
 BAN002,Mary,Johnson,1990-03-22,mary.j@email.com,,Portland,456 Oak Avenue Apt 201,
 BAN003,Robert,Williams,1978-11-08,,555-234-5678,Seattle,789 Pine Road,Robert Williams
 ```
@@ -244,6 +244,6 @@ The pipeline applies deterministic selection logic for each contact field:
 
 ---
 
-**Pipeline File Location:** `/pipelines/alumni-contact-export.pipeline`  
-**Specification:** `/specifications/alumni-contact-export-spec.md`  
+**Pipeline File Location:** `/pipelines/student-contact-export.pipeline`
+**Specification:** `/specifications/student-contact-export-spec.md`
 **Last Updated:** 2026-08-25

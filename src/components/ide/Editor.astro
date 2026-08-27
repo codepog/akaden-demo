@@ -26,6 +26,13 @@ const CLASS_LABEL: Record<string, string> = {
   forEach: 'Loop',
   reducer: 'Reducer',
 };
+const pipelineIcon = (kind?: string) =>
+  kind === 'JavaScriptTransform' ? '</>'
+    : kind === 'ethosProxyGetFilter' ? '☁'
+      : kind === 'SubPipeline' ? '↗'
+        : kind === 'forEach' ? '↻'
+          : kind === 'reducer' ? '∑'
+            : '•';
 ---
 <main class="ed" aria-label="Editor">
   <div class="ed-bar">
@@ -49,12 +56,12 @@ const CLASS_LABEL: Record<string, string> = {
     <!-- step 1: the requirement that landed in inputs/ -->
     <div class="view drop-stage" data-view="empty">
       <div class="stage-in">
-        <p class="from">From Alumni &amp; Advancement</p>
+        <p class="from">From campus communications</p>
         <button type="button" class="dragcard" data-openreq aria-describedby="dragcard-hint">
           <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
             <path d="M6 2h8l4 4v16H6z"/><path d="M14 2v4h4"/><path d="M9 12h6M9 16h6" stroke-linecap="round"/>
           </svg>
-          <span class="dc-name">student-records-specification.md</span>
+          <span class="dc-name">nightly-contact-export.md</span>
           <span class="dc-sub" id="dragcard-hint">Landed in <b>inputs</b> — press to read it</span>
         </button>
       </div>
@@ -77,16 +84,39 @@ const CLASS_LABEL: Record<string, string> = {
       <div class="pl">
         <header class="pl-head">
           <h2>{pipeline.name}</h2>
-          <p>{pipeline.pipeline.length} segments in run order · generated from the approved specification</p>
+          <p>{pipeline.pipeline.length} generated steps from the approved specification</p>
         </header>
-        <ol class="pl-list">
+        <ol class="pl-canvas" data-pipeline-canvas>
           {pipeline.pipeline.map((seg, i) => {
             const def = pipeline.segments[seg];
             return (
-              <li>
-                <span class="pl-n">{String(i + 1).padStart(2, '0')}</span>
-                <span class="pl-name">{seg}</span>
-                <span class:list={['pl-kind', def?.class]}>{CLASS_LABEL[def?.class ?? ''] ?? def?.class}</span>
+              <li data-segment data-segment-index={i}>
+                <span class="segment-drag" aria-hidden="true">⠿</span>
+                <article class:list={['segment-card', def?.class]}>
+                  <span class="segment-icon" aria-hidden="true">{pipelineIcon(def?.class)}</span>
+                  <div class="segment-copy">
+                    <h3>{seg}</h3>
+                    <p class="segment-kind">{CLASS_LABEL[def?.class ?? ''] ?? def?.class}</p>
+                    <p class="segment-detail">{def?.description ?? 'Generated pipeline step'}</p>
+                  </div>
+                  <div class="segment-actions">
+                    <button
+                      type="button"
+                      class="segment-menu-toggle"
+                      data-segment-menu-toggle
+                      aria-label={`Actions for ${seg}`}
+                      aria-expanded="false"
+                      aria-controls={`segment-menu-${i}`}
+                    >⋮</button>
+                    <div id={`segment-menu-${i}`} class="segment-menu" data-segment-menu role="menu" hidden>
+                      <button type="button" role="menuitem" data-segment-action="disable">Disable</button>
+                      <button type="button" role="menuitem" data-segment-action="disable-below">Disable current and all below</button>
+                      <button type="button" role="menuitem" data-segment-action="copy">Copy</button>
+                      <hr />
+                      <button type="button" role="menuitem" class="delete-action" data-segment-action="delete">Delete</button>
+                    </div>
+                  </div>
+                </article>
               </li>
             );
           })}
@@ -209,19 +239,42 @@ const CLASS_LABEL: Record<string, string> = {
   .doc :global(blockquote){border-left:3px solid var(--ide-accent);margin:16px 0;padding-left:14px;color:#33415C;}
 
   /* pipeline */
-  .pl{padding:28px 32px 80px;max-width:900px;}
+  .pl{min-height:100%;padding:28px 32px 80px;background:#F8FAFD;}
   .pl-head h2{margin:0;font-size:1.35rem;letter-spacing:-.015em;}
   .pl-head p{margin:6px 0 0;font-size:13px;color:var(--ide-ink-soft);}
-  .pl-list{list-style:none;margin:22px 0 0;padding:0;border:1px solid var(--ide-border);border-radius:8px;overflow:hidden;}
-  .pl-list li{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:12px;align-items:center;padding:8px 14px;border-top:1px solid var(--ide-border);font-size:13px;}
-  .pl-list li:first-child{border-top:0;}
-  .pl-list li:nth-child(odd){background:var(--ide-panel);}
-  .pl-n{font-family:var(--ide-mono);font-size:11.5px;color:var(--ide-ink-soft);}
-  .pl-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .pl-kind{font-family:var(--ide-mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:3px;background:#E7EDF7;color:#3B5A85;white-space:nowrap;}
-  .pl-kind.ethosProxyGetFilter{background:#E3F0E8;color:#2C6B45;}
-  .pl-kind.SubPipeline{background:#F1EAF7;color:#5B4380;}
-  .pl-kind.forEach,.pl-kind.reducer{background:#FCF0DC;color:#8A5600;}
+  .pl-canvas{list-style:none;margin:26px auto 0;max-width:960px;padding:0 0 32px;display:grid;gap:18px;}
+  .pl-canvas > li{position:relative;display:grid;grid-template-columns:42px minmax(0,1fr);gap:14px;align-items:center;}
+  .pl-canvas > li:not(:last-child)::after{content:"";position:absolute;left:62px;top:100%;height:18px;border-left:2px dashed #BFC9D8;}
+  .pl-canvas > li:not(:last-child)::before{content:"⌄";position:absolute;z-index:1;left:56px;top:calc(100% + 10px);width:14px;height:10px;color:#64748B;font-size:20px;line-height:8px;background:#F8FAFD;text-align:center;}
+  .segment-drag{display:grid;place-items:center;width:36px;height:42px;border-radius:7px;color:var(--ide-ink-soft);font-size:23px;letter-spacing:-.15em;cursor:grab;}
+  .segment-card{position:relative;display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:13px;align-items:start;min-width:0;padding:18px 62px 18px 20px;border:1px solid #AEB9C8;border-left:7px solid #C78900;border-radius:14px;background:#FFFBEF;box-shadow:0 10px 22px rgba(39,67,107,.10);}
+  .segment-card.ethosProxyGetFilter{border-left-color:#0782D7;background:#EEF7FF;}
+  .segment-card.SubPipeline{border-left-color:#8E69C6;background:#F7F2FF;}
+  .segment-card.forEach,.segment-card.reducer{border-left-color:#3C9C69;background:#F0FBF5;}
+  .segment-icon{display:grid;place-items:center;width:31px;height:31px;border-radius:7px;background:#FFF5D8;color:#B77200;font-family:var(--ide-mono);font-size:13px;font-weight:700;}
+  .ethosProxyGetFilter .segment-icon{background:#DFF0FF;color:#0076CC;font-size:18px;}
+  .SubPipeline .segment-icon{background:#EFE2FF;color:#7752AE;font-size:17px;}
+  .forEach .segment-icon,.reducer .segment-icon{background:#DDF4E5;color:#287451;font-size:18px;}
+  .segment-copy{min-width:0;}
+  .segment-copy h3{margin:0;color:#1B2331;font-size:1.125rem;line-height:1.25;letter-spacing:-.01em;overflow-wrap:anywhere;}
+  .segment-kind{margin:5px 0 0;color:#B77200;font-family:var(--ide-mono);font-size:.875rem;line-height:1.2;}
+  .ethosProxyGetFilter .segment-kind{color:#0076CC;}.SubPipeline .segment-kind{color:#7752AE;}.forEach .segment-kind,.reducer .segment-kind{color:#287451;}
+  .segment-detail{margin:7px 0 0;color:#4A5568;font-size:.9375rem;line-height:1.35;}
+  .segment-actions{position:absolute;right:16px;top:16px;}
+  .segment-menu-toggle{display:grid;place-items:center;width:38px;height:38px;border:1px solid #DCB56A;border-radius:10px;background:#FFF9EB;color:#9A6200;font-size:24px;line-height:1;cursor:pointer;}
+  .segment-menu-toggle:hover,.segment-menu-toggle[aria-expanded="true"]{background:#FFF1C9;}
+  .segment-menu-toggle:focus-visible{outline:2px solid var(--ide-accent);outline-offset:2px;}
+  .segment-menu{position:absolute;z-index:5;top:44px;right:0;width:220px;padding:6px;background:#fff;border:1px solid var(--ide-border-strong);border-radius:9px;box-shadow:0 12px 24px rgba(27,35,49,.18);}
+  .segment-menu[hidden]{display:none;}
+  .segment-menu button{display:block;width:100%;border:0;border-radius:5px;background:transparent;padding:8px 9px;text-align:left;font:inherit;font-size:12.5px;color:var(--ide-ink);cursor:pointer;}
+  .segment-menu button:hover{background:var(--ide-hover);}
+  .segment-menu hr{border:0;border-top:1px solid var(--ide-border);margin:6px 0;}
+  .segment-menu .delete-action{color:#B42318;}
+  [data-segment][data-disabled="true"] .segment-card{filter:grayscale(.75);opacity:.45;box-shadow:none;}
+  [data-segment][data-disabled="true"] .segment-copy h3,.segment-card [data-disabled="true"] .segment-copy h3{text-decoration:line-through;}
+  .view.step-enter{animation:stepEnter .28s ease-out both;}
+  @keyframes stepEnter{from{opacity:.25;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  @media (max-width:700px){.pl{padding:20px 16px 56px;}.pl-canvas > li{grid-template-columns:28px minmax(0,1fr);gap:8px;}.pl-canvas > li:not(:last-child)::after{left:34px;}.pl-canvas > li:not(:last-child)::before{left:28px;}.segment-drag{width:28px;font-size:18px;}.segment-card{padding:16px 52px 16px 15px;gap:10px;border-left-width:5px;}.segment-copy h3{font-size:1rem;}.segment-detail{font-size:.875rem;}.segment-actions{right:10px;top:10px;}.segment-menu-toggle{width:34px;height:34px;}}
 
   /* params */
   .form{padding:28px 32px 80px;max-width:560px;}
@@ -257,3 +310,49 @@ const CLASS_LABEL: Record<string, string> = {
   .acc li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:#33415C;}
   .tick{color:#1E7A55;font-weight:700;}
 </style>
+
+<script>
+  const canvas = document.querySelector<HTMLElement>('[data-pipeline-canvas]');
+  if (canvas) {
+    const segments = () => Array.from(canvas.querySelectorAll<HTMLElement>('[data-segment]'));
+    const closeMenus = () => canvas.querySelectorAll<HTMLElement>('[data-segment-menu]').forEach((menu) => {
+      menu.hidden = true;
+      menu.closest<HTMLElement>('.segment-actions')?.querySelector<HTMLButtonElement>('[data-segment-menu-toggle]')
+        ?.setAttribute('aria-expanded', 'false');
+    });
+
+    canvas.querySelectorAll<HTMLButtonElement>('[data-segment-menu-toggle]').forEach((toggle) => {
+      toggle.addEventListener('click', (event) => {
+        event.stopPropagation();
+        const menu = toggle.parentElement?.querySelector<HTMLElement>('[data-segment-menu]');
+        const isOpen = menu?.hidden === false;
+        closeMenus();
+        if (menu) menu.hidden = isOpen;
+        toggle.setAttribute('aria-expanded', String(!isOpen));
+      });
+    });
+
+    canvas.querySelectorAll<HTMLButtonElement>('[data-segment-action]').forEach((button) => {
+      button.addEventListener('click', async () => {
+        const segment = button.closest<HTMLElement>('[data-segment]');
+        if (!segment) return;
+        const action = button.dataset.segmentAction;
+        if (action === 'disable') segment.dataset.disabled = 'true';
+        if (action === 'disable-below') {
+          const start = Number(segment.dataset.segmentIndex ?? 0);
+          segments().filter((item) => Number(item.dataset.segmentIndex ?? -1) >= start)
+            .forEach((item) => { item.dataset.disabled = 'true'; });
+        }
+        if (action === 'copy') {
+          await navigator.clipboard?.writeText(segment.querySelector('h3')?.textContent ?? '').catch(() => undefined);
+          button.textContent = 'Copied';
+          window.setTimeout(() => { button.textContent = 'Copy'; }, 900);
+        }
+        if (action === 'delete') segment.remove();
+        closeMenus();
+      });
+    });
+
+    document.addEventListener('click', closeMenus);
+  }
+</script>
