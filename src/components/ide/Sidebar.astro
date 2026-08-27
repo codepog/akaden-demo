@@ -1,0 +1,108 @@
+---
+import { steps, FILES, FOLDERS } from '../../data/ide';
+const byFolder = (f: string) => Object.entries(FILES).filter(([, v]) => v.folder === f);
+---
+<aside class="side">
+  <!-- SDLC panel — the product's own step list, used as the walkthrough rail -->
+  <section class="panel">
+    <header class="panel-head">
+      <span>SDLC</span>
+      <button type="button" class="x" aria-label="Close SDLC panel" tabindex="-1">×</button>
+    </header>
+    <ol class="sdlc" role="list">
+      {steps.map((s) => (
+        <li>
+          <button type="button" class="sdlc-row" data-goto={s.n} aria-current="false">
+            <span class="sdlc-n">{s.n}</span>
+            <span class="sdlc-t">{s.title}</span>
+            <span class="sdlc-next">Next</span>
+          </button>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="panel explorer">
+    <header class="panel-head"><span>Explorer</span></header>
+    <div class="tree">
+      <div class="root"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 5h6l2 2h8v12H4z"/></svg> test-env</div>
+      {FOLDERS.map((folder) => {
+        const items = byFolder(folder);
+        return (
+          <div class="folder" data-folder={folder}>
+            <div class="folder-row">
+              <span class="chev" aria-hidden="true">{items.length ? '⌄' : '›'}</span>
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 5h6l2 2h10v12H3z"/></svg>
+              <span>{folder}</span>
+            </div>
+            {items.map(([key, v]) => (
+              <button type="button" class="file" data-file={key} hidden>
+                <span class:list={['ficon', v.kind]} aria-hidden="true">{v.kind === 'pipeline' ? 'S' : 'TXT'}</span>
+                <span class="fname">{v.name}</span>
+              </button>
+            ))}
+          </div>
+        );
+      })}
+    </div>
+  </section>
+</aside>
+
+<style>
+  .side{
+    grid-area:side; background:var(--ide-panel); border-right:1px solid var(--ide-border);
+    display:flex; flex-direction:column; min-height:0; overflow:hidden;
+  }
+  .panel{display:flex;flex-direction:column;min-height:0;}
+  .explorer{flex:1;border-top:1px solid var(--ide-border);min-height:0;}
+  .panel-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:11px 14px 9px; font-size:11.5px; font-weight:600; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--ide-ink-soft);
+  }
+  .x{border:0;background:transparent;color:var(--ide-ink-soft);font-size:17px;line-height:1;cursor:default;padding:0 2px;}
+
+  .sdlc{list-style:none;margin:0;padding:0 8px 10px;display:flex;flex-direction:column;gap:1px;}
+  .sdlc-row{
+    width:100%;display:grid;grid-template-columns:22px 1fr auto;align-items:center;gap:8px;
+    padding:6px 8px;border:1px solid transparent;border-radius:6px;background:transparent;
+    text-align:left;cursor:pointer;color:var(--ide-ink);font:inherit;font-size:13.5px;
+    transition:background-color 120ms,border-color 120ms;
+  }
+  .sdlc-row:hover{background:var(--ide-hover);}
+  .sdlc-n{
+    font-size:12px;color:var(--ide-ink-soft);text-align:center;
+    width:20px;height:20px;line-height:20px;border-radius:50%;
+  }
+  .sdlc-next{font-size:12.5px;font-weight:600;color:var(--ide-accent);opacity:0;}
+  .sdlc-row[aria-current="true"]{background:var(--ide-active);border-color:#C9D9F0;}
+  .sdlc-row[aria-current="true"] .sdlc-t{color:var(--ide-accent);font-weight:500;}
+  .sdlc-row[aria-current="true"] .sdlc-n{background:var(--ide-accent);color:#fff;}
+  .sdlc-row.is-next{background:var(--ide-hover);}
+  .sdlc-row.is-next .sdlc-next{opacity:1;}
+  .sdlc-row:focus-visible{outline:2px solid var(--ide-accent);outline-offset:1px;}
+
+  .tree{padding:0 8px 16px;overflow-y:auto;min-height:0;font-size:13.5px;}
+  .root{
+    display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:6px;
+    background:var(--ide-selected);font-weight:600;color:var(--ide-ink);margin-bottom:2px;
+  }
+  .folder-row{display:flex;align-items:center;gap:6px;padding:4px 8px 4px 12px;color:var(--ide-ink);font-weight:600;border-radius:6px;}
+
+  .chev{width:10px;font-size:11px;color:var(--ide-ink-soft);}
+  .file{
+    display:flex;align-items:center;gap:7px;width:100%;
+    padding:4px 8px 4px 34px;border:0;background:transparent;border-radius:6px;
+    text-align:left;cursor:pointer;color:var(--ide-ink);font:inherit;font-size:13px;
+  }
+  .file:hover{background:var(--ide-hover);}
+  .file[aria-current="true"]{background:var(--ide-selected);}
+  .file:focus-visible{outline:2px solid var(--ide-accent);outline-offset:-2px;}
+  .fname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .ficon{
+    font-size:7px;font-weight:700;letter-spacing:.02em;font-family:var(--ide-mono);
+    border:1px solid currentColor;border-radius:2px;padding:1px 2px;flex-shrink:0;
+    color:#5B8DD6;
+  }
+  .ficon.pipeline{color:#C0392B;}
+</style>

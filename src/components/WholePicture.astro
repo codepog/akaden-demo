@@ -1,0 +1,91 @@
+---
+import { wholePicture } from '../data/site';
+
+const systems = [
+  { l1: 'Banner /',      l2: 'Colleague' },
+  { l1: 'Source',        l2: 'systems' },
+  { l1: 'Student',       l2: 'records / SIS' },
+  { l1: 'LMS',           l2: '' },
+  { l1: 'Data',          l2: 'warehouse' },
+  { l1: 'Legacy +',      l2: 'future systems' },
+];
+const W = 153, GAP = 16, X0 = 20, TOP = 330, H = 80;
+const cx = (i: number) => X0 + i * (W + GAP) + W / 2;
+---
+<section id="picture" class="border-b border-rule scroll-mt-20">
+  <div class="mx-auto max-w-[1200px] px-4 py-20 sm:px-6 sm:py-28">
+    <p class="u-label text-blue">{wholePicture.eyebrow}</p>
+    <h2 class="u-h2 mt-4 text-blue-deep">{wholePicture.headline}</h2>
+    <p class="u-lead u-measure mt-5">{wholePicture.lead}</p>
+
+    <div class="mt-12 overflow-x-auto">
+      <svg
+        viewBox="0 0 1040 540"
+        class="min-w-[720px] w-full h-auto"
+        role="img"
+        aria-labelledby="picture-title picture-desc"
+      >
+        <title id="picture-title">The Akaden system</title>
+        <desc id="picture-desc">
+          An engineer sits above and supervises. Below them, the Akaden agents — the
+          Specification Builder and the Pipeline Builder — do the work, writing every
+          specification into git. The agents connect outward to six systems: Banner or
+          Colleague, source systems, student records and the SIS, the LMS, the data warehouse,
+          and legacy or future systems.
+        </desc>
+
+        <g font-family="Figtree, ui-sans-serif, system-ui, sans-serif">
+          <!-- supervision beam: the engineer's attention, pointed at the agents -->
+          <polygon points="486,76 554,76 706,138 334,138" fill="#F7DF97" opacity="0.5" />
+
+          <!-- engineer -->
+          <rect x="430" y="16" width="180" height="60" rx="8" fill="#FFFFFF" stroke="#2153C4" stroke-width="1.5" />
+          <text x="520" y="43" text-anchor="middle" font-size="16" font-weight="700" fill="#002163">Engineer</text>
+          <text x="520" y="62" text-anchor="middle" font-size="12" fill="#4A5A78">supervising the flow</text>
+
+          <!-- agents -->
+          <rect x="300" y="138" width="440" height="96" rx="10" fill="#FFF6DF" stroke="#FFBF2E" stroke-width="2" />
+          <text x="520" y="177" text-anchor="middle" font-size="18" font-weight="800" fill="#0E1A33">Akaden agents</text>
+          <text x="520" y="204" text-anchor="middle" font-size="12.5" font-family="JetBrains Mono, ui-monospace, monospace" fill="#4A5A78">
+            Specification Builder · Pipeline Builder
+          </text>
+
+          <!-- git -->
+          <line x1="740" y1="186" x2="784" y2="186" stroke="#2153C4" stroke-width="1.5" />
+          <polygon points="784,186 776,182 776,190" fill="#2153C4" />
+          <rect x="790" y="152" width="230" height="68" rx="8" fill="#FFFFFF" stroke="#2153C4" stroke-width="1.5" />
+          <text x="905" y="181" text-anchor="middle" font-size="15" font-weight="700" fill="#002163">Specifications</text>
+          <text x="905" y="201" text-anchor="middle" font-size="13" fill="#4A5A78">reviewed and versioned in git</text>
+
+          <!-- fan-out to the systems -->
+          {systems.map((_, i) => (
+            <line x1="520" y1="234" x2={cx(i)} y2={TOP} stroke="#2153C4" stroke-width="1.25" opacity="0.55" />
+          ))}
+
+          <!-- systems -->
+          {systems.map((s, i) => (
+            <g>
+              <rect x={X0 + i * (W + GAP)} y={TOP} width={W} height={H} rx="8" fill="#FFFFFF" stroke="#2153C4" stroke-width="1.5" />
+              <text x={cx(i)} y={s.l2 ? TOP + 34 : TOP + 46} text-anchor="middle" font-size="14" font-weight="600" fill="#002163">{s.l1}</text>
+              {s.l2 && (
+                <text x={cx(i)} y={TOP + 54} text-anchor="middle" font-size="14" font-weight="600" fill="#002163">{s.l2}</text>
+              )}
+            </g>
+          ))}
+
+          <!-- legend: the colour rule, stated -->
+          <g transform="translate(20, 468)">
+            <rect x="0" y="0" width="13" height="13" rx="3" fill="#FFFFFF" stroke="#2153C4" stroke-width="1.5" />
+            <text x="22" y="11" font-size="13" fill="#4A5A78">A person or a system</text>
+            <rect x="196" y="0" width="13" height="13" rx="3" fill="#FFBF2E" />
+            <text x="218" y="11" font-size="13" fill="#4A5A78">An agent</text>
+          </g>
+          <line x1="20" y1="504" x2="1020" y2="504" stroke="#DCE5F2" stroke-width="1" />
+          <text x="20" y="527" font-size="13" fill="#4A5A78">
+            The systems did not change. What changed is where the engineer stands.
+          </text>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>

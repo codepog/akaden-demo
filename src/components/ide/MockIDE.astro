@@ -1,0 +1,322 @@
+---
+import Rail from './Rail.astro';
+import Sidebar from './Sidebar.astro';
+import Editor from './Editor.astro';
+import Chat from './Chat.astro';
+---
+<div class="ide" data-ide>
+  <div class="menubar">
+    <span class="mi">File</span><span class="mi">Edit</span><span class="mi">View</span><span class="mi">Help</span>
+    <span class="chipbtn"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h16v14H4z"/><path d="M8 10l2 2-2 2M13 14h4" stroke-linecap="round"/></svg> Command Palette</span>
+    <span class="chipbtn"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h6l2 2h8v12H4z"/></svg> test-env <span class="cv">⌄</span></span>
+    <span class="mi plus">+</span>
+    <span class="spacer"></span>
+    <span class="mi pane" aria-hidden="true">▤</span><span class="mi pane" aria-hidden="true">▥</span>
+  </div>
+
+  <!-- pane switcher, narrow viewports only -->
+  <div class="mtabs" role="tablist" aria-label="Panels">
+    <button type="button" role="tab" data-pane="side" aria-selected="true">Steps</button>
+    <button type="button" role="tab" data-pane="ed" aria-selected="false">Editor</button>
+    <button type="button" role="tab" data-pane="chat" aria-selected="false">Assistant</button>
+  </div>
+
+  <Rail />
+  <Sidebar />
+  <Editor />
+  <Chat />
+
+  <div class="statusbar">
+    <span>Akaden</span>
+    <span class="sb-right"><span>Autocomplete: Off</span><span>Plain Text</span></span>
+  </div>
+</div>
+
+<style>
+  .ide{
+    --ide-menubar:#E5E5E5;
+    --ide-rail:#F0F0F0;
+    --ide-panel:#F5F6F8;
+    --ide-editor:#FAFCFF;
+    --ide-accent:#3376CD;
+    --ide-active:#DDE6F3;
+    --ide-selected:#D9E5FD;
+    --ide-border:#E5E5E5;
+    --ide-border-strong:#CDD4DE;
+    --ide-hover:#ECEFF5;
+    --ide-ink:#1B2331;
+    --ide-ink-soft:#68707E;
+    --ide-icon:#5A6270;
+    --ide-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+
+    display:grid;
+    grid-template-columns:56px 300px minmax(0,1fr) 400px;
+    grid-template-rows:auto minmax(0,1fr) auto;
+    grid-template-areas:
+      "menu menu menu menu"
+      "rail side ed   chat"
+      "stat stat stat stat";
+    height:100%; min-height:0; overflow:hidden;
+    background:var(--ide-editor);
+    font-family:"Figtree",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+    color:var(--ide-ink);
+    font-size:14px; line-height:1.55;
+  }
+
+  .menubar{
+    grid-area:menu; display:flex; align-items:center; gap:4px;
+    background:var(--ide-menubar); border-bottom:1px solid #D8D8D8;
+    padding:6px 10px; font-size:13px; overflow:hidden;
+  }
+  .mi{padding:5px 9px;border-radius:5px;color:var(--ide-ink);white-space:nowrap;}
+  .mi.plus{color:var(--ide-ink-soft);font-size:16px;padding:2px 8px;}
+  .mi.pane{color:var(--ide-ink-soft);}
+  .chipbtn{
+    display:inline-flex;align-items:center;gap:6px;background:var(--ide-editor);
+    border:1px solid #D2D2D2;border-radius:6px;padding:4px 10px;white-space:nowrap;font-size:12.5px;
+  }
+  .cv{color:var(--ide-ink-soft);font-size:11px;}
+  .spacer{flex:1;}
+
+  .mtabs{display:none;}
+
+  /* ---- focus: the pane holding the action stays bright, the rest recede ---- */
+  .ide :global(.side),.ide :global(.ed),.ide :global(.chat){
+    transition:opacity 220ms ease-out, filter 220ms ease-out;
+  }
+  .ide :global(.dim){opacity:.38;filter:saturate(.5);}
+  .ide :global(.sdlc-row){transition:opacity 200ms ease-out;}
+  .ide :global(.sdlc-row.faded){opacity:.42;}
+
+  /* the one control worth looking at */
+  .ide :global(.is-target){
+    position:relative;
+    box-shadow:0 0 0 3px rgba(51,118,205,.55), 0 0 0 8px rgba(51,118,205,.18);
+    border-radius:8px;
+  }
+  @media (prefers-reduced-motion: no-preference){
+    .ide :global(.is-target){animation:coachPulse 2.4s ease-in-out infinite;}
+    @keyframes coachPulse{
+      0%,100%{box-shadow:0 0 0 3px rgba(51,118,205,.55), 0 0 0 8px rgba(51,118,205,.16);}
+      50%    {box-shadow:0 0 0 3px rgba(51,118,205,.75), 0 0 0 13px rgba(51,118,205,.05);}
+    }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .ide :global(.side),.ide :global(.ed),.ide :global(.chat),.ide :global(.sdlc-row){transition:none;}
+  }
+
+  /* done markers in the step list */
+  .ide :global(.sdlc-row.done .sdlc-n){background:#1E7A55;color:#fff;font-size:11px;}
+  .ide :global(.sdlc-row.done .sdlc-t){color:var(--ide-ink-soft);}
+
+  .statusbar{
+    grid-area:stat; background:var(--ide-accent); color:#fff;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:5px 14px; font-size:12px; letter-spacing:.01em;
+  }
+  .sb-right{display:flex;gap:18px;}
+
+  @media (max-width:1020px){
+    .ide{grid-template-columns:56px 270px minmax(0,1fr);grid-template-areas:
+      "menu menu menu" "rail side ed" "stat stat stat";}
+    .ide :global(.chat){display:none;}
+    .ide[data-pane="chat"] :global(.chat){display:flex;grid-area:ed;}
+    .ide[data-pane="chat"] :global(.ed){display:none;}
+    .mtabs{display:flex;grid-area:menu;justify-self:end;gap:2px;padding-right:10px;}
+    .mtabs button{border:1px solid #D2D2D2;background:var(--ide-editor);border-radius:5px;padding:4px 9px;font:inherit;font-size:11.5px;cursor:pointer;}
+    .mtabs button[aria-selected="true"]{background:var(--ide-accent);color:#fff;border-color:var(--ide-accent);}
+  }
+  @media (max-width:820px){
+    .ide{grid-template-columns:minmax(0,1fr);grid-template-areas:"menu" "ed" "stat";}
+    .ide :global(.rail){display:none;}
+    .ide :global(.side){display:none;}
+    .ide[data-pane="side"] :global(.side){display:flex;grid-area:ed;border-right:0;}
+    .ide[data-pane="side"] :global(.ed){display:none;}
+    .menubar .mi:not(.plus):not(.pane){display:none;}
+    .menubar .chipbtn:first-of-type{display:none;}
+    .mtabs{position:static;justify-self:end;}
+  }
+</style>
+
+<script>
+  import { steps } from '../../data/ide';
+
+  const ide = document.querySelector<HTMLElement>('[data-ide]');
+  if (ide) {
+    const q  = <T extends Element>(sel: string, r: ParentNode = ide) => r.querySelector<T>(sel);
+    const qa = <T extends Element>(sel: string, r: ParentNode = ide) => Array.from(r.querySelectorAll<T>(sel));
+
+    const sdlcRows = qa<HTMLButtonElement>('[data-goto]');
+    const fileBtns = qa<HTMLButtonElement>('[data-file]');
+    const tabBtns  = qa<HTMLButtonElement>('[data-tab]');
+    const tabBar   = q<HTMLElement>('[data-tabs]');
+    const views    = qa<HTMLElement>('.view');
+    const turnsets = qa<HTMLElement>('[data-turns]');
+    const suggestEl= q<HTMLElement>('[data-suggest]');
+    const toolbarEl= q<HTMLElement>('[data-toolbar]');
+    const agentLbl = q<HTMLElement>('[data-agent-label]');
+    const agentBtn = q<HTMLButtonElement>('[data-agent-btn]');
+    const picker   = q<HTMLElement>('[data-picker]');
+    const thread   = q<HTMLElement>('[data-thread]');
+    const panes    = { side: q<HTMLElement>('.side'), ed: q<HTMLElement>('.ed'), chat: q<HTMLElement>('.chat') };
+
+    // guide bar lives outside the IDE frame — it is demo navigation, not product UI
+    const bar      = document.querySelector<HTMLElement>('[data-guide]');
+    const gCount   = document.querySelector<HTMLElement>('[data-g-count]');
+    const gTitle   = document.querySelector<HTMLElement>('[data-g-title]');
+    const gText    = document.querySelector<HTMLElement>('[data-g-text]');
+    const gPrev    = document.querySelector<HTMLButtonElement>('[data-g-prev]');
+    const gNext    = document.querySelector<HTMLButtonElement>('[data-g-next]');
+    const gDots    = document.querySelector<HTMLElement>('[data-g-dots]');
+
+    let cur = 1;
+    let openFile: string | null = null;
+
+    const step = () => steps[cur - 1];
+
+    /* The cutoff typed at step 8 turns up in the run log at step 9. The value flows
+       forward — the product thesis, in miniature. */
+    const logTemplate = q<HTMLElement>('[data-log]')?.textContent ?? '';
+    const cutoffInput = q<HTMLInputElement>('[data-param="dateOfBirthCutoff"]');
+    function applyCutoff() {
+      const logEl = q<HTMLElement>('[data-log]');
+      const val = (cutoffInput?.value || '').trim() || '2000-01-01';
+      if (logEl) logEl.textContent = logTemplate.replace('{{CUTOFF}}', val);
+    }
+    cutoffInput?.addEventListener('input', applyCutoff);
+
+    const viewFor = (file: string | null, fallback: string) =>
+      !file ? fallback : file === 'pipeline' ? 'pipeline' : `doc:${file}`;
+
+    function setPane(name: string) {
+      ide!.dataset.pane = name;
+      qa<HTMLButtonElement>('[data-pane]').forEach((o) =>
+        o.setAttribute('aria-selected', String(o.dataset.pane === name)));
+    }
+
+    function render() {
+      const s = step();
+
+      // step list: done gets a check, everything but the current one recedes
+      sdlcRows.forEach((r) => {
+        const n = Number(r.dataset.goto);
+        const done = n < cur;
+        r.setAttribute('aria-current', String(n === cur));
+        r.classList.toggle('done', done);
+        r.classList.toggle('faded', n !== cur);
+        r.classList.remove('is-next');
+        const numEl = r.querySelector<HTMLElement>('.sdlc-n');
+        if (numEl) numEl.textContent = done ? '✓' : String(n);
+      });
+
+      fileBtns.forEach((b) => {
+        b.hidden = !s.files.includes(b.dataset.file!);
+        b.setAttribute('aria-current', String(b.dataset.file === openFile));
+      });
+      tabBtns.forEach((t) => {
+        t.hidden = t.dataset.tab !== openFile;
+        t.setAttribute('aria-current', String(t.dataset.tab === openFile));
+      });
+      if (tabBar) tabBar.hidden = openFile === null;
+
+      views.forEach((v) => { v.hidden = v.dataset.view !== viewFor(openFile, s.view); });
+
+      if (suggestEl) suggestEl.textContent = s.suggested;
+      if (agentLbl) agentLbl.textContent = s.agent;
+      qa<HTMLInputElement>('input[name="agent"]').forEach((i) => { i.checked = i.value === s.agent; });
+
+      if (toolbarEl) {
+        toolbarEl.innerHTML = '';
+        (s.toolbar ?? []).forEach((b) => {
+          const el = document.createElement('button');
+          el.type = 'button';
+          el.className = 'tb-btn' + (b.kind === 'primary' ? ' primary' : '');
+          el.textContent = b.label;
+          el.addEventListener('click', next);
+          toolbarEl.appendChild(el);
+        });
+      }
+
+      turnsets.forEach((t) => { t.hidden = Number(t.dataset.turns) !== cur; });
+      applyCutoff();
+      if (thread) thread.scrollTop = 0;
+
+      // dim every pane except the one holding the action
+      Object.entries(panes).forEach(([k, el]) => el?.classList.toggle('dim', k !== s.focus));
+
+      // ring the one control worth looking at
+      qa<HTMLElement>('.is-target').forEach((e) => e.classList.remove('is-target'));
+      q<HTMLElement>(s.ring)?.classList.add('is-target');
+
+      // on narrow screens, bring the focused pane forward
+      if (window.matchMedia('(max-width: 1020px)').matches) setPane(s.focus);
+
+      // guide bar
+      if (gCount) gCount.textContent = `Step ${cur} of ${steps.length}`;
+      if (gTitle) gTitle.textContent = s.title;
+      if (gText)  gText.textContent  = s.instruct;
+      if (gPrev)  gPrev.disabled = cur === 1;
+      if (gNext)  gNext.textContent = s.nextLabel;
+      if (bar) bar.dataset.step = String(cur);
+      qa<HTMLElement>('[data-dot]', gDots ?? document).forEach((d) => {
+        const n = Number(d.dataset.dot);
+        d.classList.toggle('on', n === cur);
+        d.classList.toggle('past', n < cur);
+      });
+    }
+
+    function go(n: number) {
+      cur = Math.min(Math.max(n, 1), steps.length);
+      openFile = step().open;
+      if (openFile && !step().files.includes(openFile)) openFile = null;
+      render();
+    }
+    function next() { cur === steps.length ? go(1) : go(cur + 1); }
+    function prev() { go(cur - 1); }
+
+    gNext?.addEventListener('click', next);
+    gPrev?.addEventListener('click', prev);
+    sdlcRows.forEach((r) => r.addEventListener('click', () => go(Number(r.dataset.goto))));
+    fileBtns.forEach((b) => b.addEventListener('click', () => { openFile = b.dataset.file!; render(); }));
+    tabBtns.forEach((t) => t.addEventListener('click', () => { openFile = t.dataset.tab!; render(); }));
+    q<HTMLButtonElement>('[data-openreq]')?.addEventListener('click', () => { openFile = 'requirement'; render(); });
+    qa<HTMLElement>('[data-dot]', gDots ?? document).forEach((d) =>
+      d.addEventListener('click', () => go(Number(d.dataset.dot))));
+
+    agentBtn?.addEventListener('click', () => {
+      const open = picker?.hidden === false;
+      if (picker) picker.hidden = open;
+      agentBtn.setAttribute('aria-expanded', String(!open));
+    });
+    qa<HTMLInputElement>('input[name="agent"]').forEach((i) =>
+      i.addEventListener('change', () => {
+        if (agentLbl) agentLbl.textContent = i.value;
+        if (picker) picker.hidden = true;
+        agentBtn?.setAttribute('aria-expanded', 'false');
+      }));
+    document.addEventListener('click', (e) => {
+      if (!picker || picker.hidden) return;
+      const t = e.target as Node;
+      if (!picker.contains(t) && !agentBtn?.contains(t)) {
+        picker.hidden = true;
+        agentBtn?.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    qa<HTMLButtonElement>('[data-pane]').forEach((b) =>
+      b.addEventListener('click', () => setPane(b.dataset.pane!)));
+
+    document.querySelector('[data-reset]')?.addEventListener('click', () => go(1));
+
+    // arrow keys move through the walkthrough
+    document.addEventListener('keydown', (e) => {
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); prev(); }
+    });
+
+    setPane('side');
+    go(1);
+  }
+</script>

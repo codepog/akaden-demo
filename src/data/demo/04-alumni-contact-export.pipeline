@@ -1,0 +1,741 @@
+{
+  "name": "Alumni Contact Export",
+  "description": "Outbound extraction pipeline that selects Banner person/student records matching age criteria, applies best-record rules for contact information, and uploads a CSV export to Amazon S3 for downstream alumni outreach campaigns.",
+  "parameters": [
+    {
+      "name": "ethosApiKey",
+      "type": "string",
+      "label": "Ethos API Key",
+      "required": true,
+      "sensitive": true,
+      "persistent": true,
+      "description": "If using insights provide common Ethos API key else provide project specific Ethos API key"
+    },
+    {
+      "enum": [
+        {
+          "label": "SFTP with a Password",
+          "value": "outputSftpPassword"
+        },
+        {
+          "label": "SFTP with a Private Key",
+          "value": "outputSftpPrivateKey"
+        },
+        {
+          "label": "S3 Bucket",
+          "value": "outputS3"
+        },
+        {
+          "label": "Both S3 Bucket and SFTP with Private Key",
+          "value": "outputS3SftpPrivateKey"
+        },
+        {
+          "label": "Both S3 Bucket and SFTP with Password",
+          "value": "outputS3SftpPassword"
+        },
+        {
+          "label": "None of the above",
+          "value": "none"
+        }
+      ],
+      "name": "fileSharingOption",
+      "type": "string",
+      "label": "File Sharing Option",
+      "required": true,
+      "persistent": true,
+      "description": "The dropdown to select the output file storage preference from S3, SFTP or Both S3 and SFTP and None of the above"
+    },
+    {
+      "name": "sftpUserName",
+      "type": "string",
+      "label": "Sftp User Name",
+      "persistent": true,
+      "description": "SFTP User Name"
+    },
+    {
+      "name": "sftpHostName",
+      "type": "string",
+      "label": "Sftp Host Name",
+      "persistent": true,
+      "description": "SFTP Host Name"
+    },
+    {
+      "name": "sftpPrivateKey",
+      "type": "string",
+      "label": "Sftp Private Key",
+      "multiline": true,
+      "sensitive": true,
+      "persistent": true,
+      "description": "SFTP Private Key"
+    },
+    {
+      "name": "sftpPassword",
+      "type": "string",
+      "label": "Sftp Password",
+      "sensitive": true,
+      "persistent": true,
+      "description": "SFTP Password"
+    },
+    {
+      "name": "s3AccessKey",
+      "type": "string",
+      "label": "S3 Access Key",
+      "persistent": true,
+      "description": "S3 Access Key"
+    },
+    {
+      "name": "s3SecretAccessKey",
+      "type": "string",
+      "label": "S3 Secret Access Key",
+      "sensitive": true,
+      "persistent": true,
+      "description": "S3 Secret Access Key"
+    },
+    {
+      "name": "outputS3Bucket",
+      "type": "string",
+      "label": "Output S3 Bucket",
+      "persistent": true,
+      "description": "S3 Bucket Name for storing output file. No directories should be added."
+    },
+    {
+      "name": "reportFilePath",
+      "type": "string",
+      "label": "Report File Path And Name",
+      "persistent": true,
+      "description": "File Path for Report File, should include file name without extension. Eg: main/report/FileNamePrefix (without file extension). Note: If \"File Sharing Option\" is 'None of the Above' and \"DC Preview\" is enabled, then provide only filename and not the whole file path."
+    },
+    {
+      "name": "auditFilePath",
+      "type": "string",
+      "default": "AuditLog",
+      "label": "Audit File Path And Name",
+      "persistent": true,
+      "description": "File Path for Audit File, should include file name without extension. Eg: main/audit/FileNamePrefix (without file extension). Note: If \"File Sharing Option\" is 'None of the Above' and \"DC Preview\" is enabled, then provide only filename and not the whole file path."
+    },
+    {
+      "name": "errorFilePath",
+      "type": "string",
+      "default": "ErrorLog",
+      "label": "Error File Path And Name",
+      "persistent": true,
+      "description": "File Path for Error File, should include file name without extension. Eg: main/error/FileNamePrefix (without file extension). Note: If \"File Sharing Option\" is 'None of the Above' and \"DC Preview\" is enabled, then provide only filename and not the whole file path."
+    },
+    {
+      "name": "dcPreview",
+      "type": "boolean",
+      "label": "DC Preview",
+      "persistent": true,
+      "description": "Preview files on DC dashboard"
+    },
+    {
+      "enum": [
+        {
+          "label": "Baseline",
+          "value": "baseline"
+        },
+        {
+          "label": "Custom",
+          "value": "custom"
+        },
+        {
+          "label": "Extend",
+          "value": "extend"
+        }
+      ],
+      "name": "extractProcessMethod",
+      "type": "string",
+      "label": "Extract Process Method",
+      "default": "baseline",
+      "required": true,
+      "persistent": true,
+      "description": "Choose a data extract process method between Baseline/Custom/Extend"
+    },
+    {
+      "enum": [
+        {
+          "label": "Baseline",
+          "value": "baseline"
+        },
+        {
+          "label": "Custom",
+          "value": "custom"
+        },
+        {
+          "label": "Extend",
+          "value": "extend"
+        }
+      ],
+      "name": "dataProcessingMethod",
+      "type": "string",
+      "label": "Data Processing Method",
+      "default": "baseline",
+      "required": true,
+      "persistent": true,
+      "description": "Choose a report file data process method between Baseline/Custom/Extend"
+    },
+    {
+      "enum": [
+        {
+          "label": "Baseline",
+          "value": "baseline"
+        },
+        {
+          "label": "Custom",
+          "value": "custom"
+        }
+      ],
+      "name": "dataTransformMethod",
+      "type": "string",
+      "label": "Data Transform Method",
+      "default": "baseline",
+      "required": true,
+      "persistent": true,
+      "description": "Choose a report file data transform method between Baseline/Custom"
+    },
+    {
+      "enum": [
+        {
+          "label": "Baseline",
+          "value": "baseline"
+        },
+        {
+          "label": "Custom",
+          "value": "custom"
+        }
+      ],
+      "name": "auditFileProcessMethod",
+      "type": "string",
+      "label": "Audit File Process Method",
+      "default": "baseline",
+      "required": true,
+      "persistent": true,
+      "description": "Choose an audit file data process method between Baseline/Custom"
+    },
+    {
+      "enum": [
+        {
+          "label": "Baseline",
+          "value": "baseline"
+        },
+        {
+          "label": "Custom",
+          "value": "custom"
+        }
+      ],
+      "name": "errorFileProcessMethod",
+      "type": "string",
+      "label": "Error File Process Method",
+      "default": "baseline",
+      "required": true,
+      "persistent": true,
+      "description": "Choose an error file data process method between Baseline/Custom"
+    },
+    {
+      "name": "extendedParameters",
+      "type": "string",
+      "label": "Extended Parameters",
+      "default": "{\"sendAuditFile\":true, \"sendErrorFile\":true, \"noFile\":false, \"reportFileDelimiter\":\",\", \"reportFileExtension\":\"csv\", \"reportFileWithHeaders\":true}",
+      "multiline": true,
+      "description": "Additional parameter for pipeline, input should be in json format. Eg: {\"collCode\":\"value\", \"levlCode\": \"value\", \"noFile\":true, \"sendAuditFile\":true, \"sendErrorFile\":true, \"reportFileDelimiter\":\",\", \"reportFileExtension\":\"csv\", \"reportFileWithHeaders\":true}"
+    },
+    {
+      "name": "additionalCustomOperations",
+      "type": "boolean",
+      "label": "Additional Custom Operations",
+      "persistent": true,
+      "description": "Post processing logic to be applied here. Eg: Writing files to various location, sending email notification and etc."
+    },
+    {
+      "name": "dateOfBirthCutoff",
+      "type": "string",
+      "label": "Date of Birth Cutoff",
+      "default": "2000-01-01",
+      "description": "Records with dateOfBirth earlier than this value (YYYY-MM-DD format) are included in export. Default: 2000-01-01"
+    },
+    {
+      "required": true,
+      "description": "Target Amazon S3 bucket name where output CSV will be stored.",
+      "label": "S3 Bucket Name",
+      "name": "s3BucketName",
+      "type": "string"
+    },
+    {
+      "default": "alumni_exports/output.csv",
+      "description": "Full S3 object key/path where output.csv will be stored. Must end with 'output.csv'. Default: alumni_exports/output.csv",
+      "label": "S3 Key Path",
+      "name": "s3KeyPath",
+      "type": "string"
+    },
+    {
+      "default": "export",
+      "description": "Execution mode: 'validateOnly' tests configuration without exporting; 'export' performs full export. Default: export",
+      "enum": [
+        {
+          "label": "Validate Only",
+          "value": "validateOnly"
+        },
+        {
+          "label": "Export (Full)",
+          "value": "export"
+        }
+      ],
+      "label": "Execution Mode",
+      "name": "executionMode",
+      "type": "string"
+    },
+    {
+      "description": "Optional batch identifier for traceability and logging. Auto-generated if not supplied.",
+      "label": "Batch Identifier",
+      "name": "batchIdentifier",
+      "type": "string"
+    }
+  ],
+  "pipeline": [
+    "JS - Audit Trail v3.1.0",
+    "GET - installation-controls (Baseline)",
+    "JS - Fetch University or School Name (Baseline)",
+    "JS - Baseline validation setup (Baseline)",
+    "Sub-pipeline - Extensibility Baseline Validation (Baseline)",
+    "Sub-pipeline - Validate Credentials (Baseline)",
+    "Sub-pipeline - Baseline Parameter User Value Validation (Baseline)",
+    "GET - persons (Baseline)",
+    "JS - Filter and enrich persons by age (Baseline)",
+    "For Each - filtered persons (Baseline)",
+    "JS - Init loop gate (Baseline)",
+    "GET - names for person (Baseline)",
+    "GET - emails for person (Baseline)",
+    "GET - phones for person (Baseline)",
+    "GET - addresses for person (Baseline)",
+    "GET - emergency-contacts for person (Baseline)",
+    "JS - Apply best-record selection rules (Baseline)",
+    "Reducer - accumulate CSV rows (Baseline)",
+    "JS - No data extract handling (Baseline)",
+    "Sub-pipeline - Extract data (Custom/Extend)",
+    "JS - Format data series (Baseline)",
+    "JS - No data process handling (Baseline)",
+    "Sub-pipeline - Process data (Custom/Extend)",
+    "JS - Persist header for report file (Baseline)",
+    "Sub-pipeline - Transform Report File (Custom)",
+    "JS - Create data for file (Baseline)",
+    "JS - Add report file content (Baseline)",
+    "Sub-pipeline - Send Report file (Baseline)",
+    "JS - Persist header for Audit file (Baseline)",
+    "Sub-pipeline - Transform Audit File (Custom)",
+    "JS - Create Audit file content (Baseline)",
+    "JS - No data audit handling (Baseline)",
+    "Sub-pipeline - Send Audit file (Baseline)",
+    "JS - Persist header for Error file (Baseline)",
+    "Sub-pipeline - Transform Error file (Custom)",
+    "JS - Create error file content (Baseline)",
+    "Sub-pipeline - Send Error file (Baseline)",
+    "Sub-pipeline - Additional Custom Operations (Custom)",
+    "JS - Change pipeline execution status (Baseline)"
+  ],
+  "segments": {
+    "JS - Audit Trail v3.1.0": {
+      "class": "JavaScriptTransform",
+      "description": "Pipeline details log",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "code": "function transform (message, context) {\n\n  return message\n}"
+      }
+    },
+    "GET - installation-controls (Baseline)": {
+      "class": "ethosProxyGetFilter",
+      "description": "Get university name",
+      "config": {
+        "resource": "installation-controls",
+        "payloadTargetPath": "installationControlsResponse",
+        "acceptVersions": [
+          "1"
+        ],
+        "cache": false,
+        "queryByPost": false,
+        "ignoreErrors": true,
+        "errorPath": "installationControlsError"
+      }
+    },
+    "JS - Fetch University or School Name (Baseline)": {
+      "class": "JavaScriptTransform",
+      "description": "Fetch University/School Name",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "code": "function transform (message, context) {\r\n  if(message.payload?.installationControlsError){\r\n    throw new Error(`installation-controls: ${generateErrorMessage(message.payload?.installationControlsError)}`);\r\n  }\r\n  else if(message.payload?.installationControlsResponse.length<1){\r\n    throw new Error(`installation-controls: API returned no data`);\r\n  }\r\n  else{\r\n    context.set(\"universityName\",message.payload?.installationControlsResponse?.[0]?.name);\r\n    delete message.payload?.installationControlsResponse;\r\n  }\r\n  return message;\r\n}\r\n\r\nfunction generateErrorMessage(getError) {\r\n  let err = \"\";\r\n  if (getError?.message) {\r\n    err += `${getError.message}`;\r\n  }\r\n  if (getError?.body && typeof getError?.body === \"object\") {\r\n    const body = getError.body;\r\n \r\n    const collect = (val) => {\r\n      if (Array.isArray(val)) {\r\n        return val.map(collect).join(\" \");\r\n      }\r\n      if (val && typeof val === \"object\") {\r\n        return Object.values(val).map(collect).join(\" \");\r\n      }\r\n      return String(val ?? \"\");\r\n    };\r\n \r\n    for (let key in body) {\r\n      if (Object.prototype.hasOwnProperty.call(body, key)) {\r\n        err += ` ${collect(body[key])}`;\r\n      }\r\n    }\r\n  } else if (getError?.body && typeof getError?.body !== \"object\") {\r\n    err += ` ${getError.body}`;\r\n  } else if (!getError?.message) {\r\n    err += JSON.stringify(getError);\r\n  }\r\n  return err;\r\n}"
+      }
+    },
+    "JS - Baseline validation setup (Baseline)": {
+      "class": "JavaScriptTransform",
+      "description": "Setup up parameter for extensibility validation",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "code": "function transform (message, context) {\n  let validateParam = [];\n  let valueValidateParam = [];\n  \n  if((context.extractProcessMethod === \"baseline\" || context.extractProcessMethod === \"extend\")) {\n    validateParam = ['termCode'];\n    valueValidateParam = ['termCode'];\n    // Valid pipeline parameter when Phase 1 and Phase 2 is not Custom Mode\n    context.set('parameterValidationExists', true);\n    \n    context.set('pipelineNameValidation', true);  //replace pipelineName with current pipeline name to pass parameter into the Sub-pipeline - Baseline Parameter User Value Validation (Baseline)\n  }\n\n  context.set('validationParameters', validateParam);\n  context.set('valueValidationParameters', valueValidateParam);\n  \n  return message;\n}"
+      }
+    },
+    "Sub-pipeline - Extensibility Baseline Validation (Baseline)": {
+      "class": "SubPipeline",
+      "description": "Validation baseline and extensibility parameter requirement validation",
+      "config": {
+        "name": "Ellucian-Baseline-Validation-Sub",
+        "version": "1",
+        "isExtensible": false
+      }
+    },
+    "Sub-pipeline - Validate Credentials (Baseline)": {
+      "class": "SubPipeline",
+      "description": "Validate SFTP, S3 credentials and Ethos API Key",
+      "config": {
+        "name": "Ellucian-Credential-Validation-Sub",
+        "version": "1",
+        "isExtensible": false
+      }
+    },
+    "Sub-pipeline - Baseline Parameter User Value Validation (Baseline)": {
+      "class": "SubPipeline",
+      "description": "Baseline Parameter Value Validation of  user input",
+      "if": "context.parameterValidationExists",
+      "config": {
+        "name": "",
+        "isExtensible": false
+      }
+    },
+    "GET - persons (Baseline)": {
+      "class": "ethosProxyGetFilter",
+      "description": "Fetch all person records from Banner with dateOfBirth populated for age filtering.",
+      "if": "context.extractBaseline",
+      "config": {
+        "resource": "persons?criteria={\"dateOfBirth\":{\"$ne\":null}}",
+        "payloadTargetPath": "personsResponse",
+        "acceptVersions": [
+          "12.0.0"
+        ],
+        "cache": false,
+        "queryByPost": false,
+        "ignoreErrors": true,
+        "errorPath": "personsError"
+      }
+    },
+    "JS - Filter and enrich persons by age (Baseline)": {
+      "class": "JavaScriptTransform",
+      "config": {
+        "code": "function transform(message, context) {\n  if (message.payload?.personsError) {\n    throw new Error(`persons API Errored On: ${generateErrorMessage(message.payload.personsError)}`);\n  }\n\n  const persons = message.payload?.personsResponse || [];\n  const dateOfBirthCutoff = context.dateOfBirthCutoff || '2000-01-01';\n  const batchId = context.batchIdentifier || `batch-${new Date().getTime()}`;\n\n  let evaluated = 0;\n  let excluded_missing_dob = 0;\n  let excluded_dob_after_cutoff = 0;\n  const filtered = [];\n\n  persons.forEach((person) => {\n    evaluated++;\n    const dob = person.dateOfBirth;\n\n    if (!dob) {\n      excluded_missing_dob++;\n      return;\n    }\n\n    if (dob >= dateOfBirthCutoff) {\n      excluded_dob_after_cutoff++;\n      return;\n    }\n\n    // Person passes filter: has DOB and DOB < cutoff\n    filtered.push({\n      bannerId: person.id || '',\n      dateOfBirth: dob,\n      personObject: person // Keep original for names/contact API lookups\n    });\n  });\n\n  // Log evaluation counts\n  context.set('evaluatedPersonCount', evaluated);\n  context.set('excludedMissingDob', excluded_missing_dob);\n  context.set('excludedDobAfterCutoff', excluded_dob_after_cutoff);\n  context.set('filteredPersonCount', filtered.length);\n  context.set('batchId', batchId);\n  context.set('dateOfBirthCutoff', dateOfBirthCutoff);\n  context.set('executionMode', context.executionMode || 'export');\n\n  // Set final payload for iteration over filtered persons\n  message.payload = filtered;\n\n  return message;\n}\n\nfunction generateErrorMessage(getError) {\n  let err = '';\n  if (getError?.message) {\n    err += `${getError.message}`;\n  }\n  if (getError?.body && typeof getError?.body === 'object') {\n    const body = getError.body;\n    const collect = (val) => {\n      if (Array.isArray(val)) return val.map(collect).join(' ');\n      if (val && typeof val === 'object') return Object.values(val).map(collect).join(' ');\n      return String(val ?? '');\n    };\n    for (let key in body) {\n      if (Object.prototype.hasOwnProperty.call(body, key)) {\n        err += ` ${collect(body[key])}`;\n      }\n    }\n  } else if (getError?.body && typeof getError?.body !== 'object') {\n    err += ` ${getError.body}`;\n  } else if (!getError?.message) {\n    err += JSON.stringify(getError);\n  }\n  return err;\n}",
+        "pushUndefined": true,
+        "stopOnError": true
+      },
+      "description": "Filter persons by age criteria (dateOfBirth < cutoff) and track evaluation counts. Payload becomes array of filtered person records with bannerId, dateOfBirth, and original person object.",
+      "if": "context.extractBaseline"
+    },
+    "For Each - filtered persons (Baseline)": {
+      "class": "forEach",
+      "config": {
+        "source": "payload"
+      },
+      "description": "Iterate over filtered person records to enrich with contact information.",
+      "if": "context.extractBaseline,message.header.proceedLoop"
+    },
+    "JS - Init loop gate (Baseline)": {
+      "class": "JavaScriptTransform",
+      "config": {
+        "code": "function transform(message, context) {\n  // Precompute loop gate from filtered persons array\n  message.header.proceedLoop = Array.isArray(message.payload) && message.payload.length > 0;\n  return message;\n}",
+        "pushUndefined": true,
+        "stopOnError": false
+      },
+      "description": "Precompute loop gate before forEach based on filtered persons array length.",
+      "if": "context.extractBaseline"
+    },
+    "GET - names for person (Baseline)": {
+      "class": "ethosProxyGetFilter",
+      "config": {
+        "acceptVersions": [
+          "12.0.0"
+        ],
+        "cache": false,
+        "errorPath": "namesError",
+        "ignoreErrors": true,
+        "payloadTargetPath": "namesResponse",
+        "queryByPost": false,
+        "resource": "names?criteria={\"personId\":\"{{{message.payload.bannerId}}}\"}"
+      },
+      "description": "Retrieve all name records for current person to apply best-record selection logic.",
+      "if": "context.extractBaseline,message.header.proceedLoop"
+    },
+    "GET - emails for person (Baseline)": {
+      "class": "ethosProxyGetFilter",
+      "config": {
+        "acceptVersions": [
+          "12.0.0"
+        ],
+        "cache": false,
+        "errorPath": "emailsError",
+        "ignoreErrors": true,
+        "payloadTargetPath": "emailsResponse",
+        "queryByPost": false,
+        "resource": "emails?criteria={\"personId\":\"{{{message.payload.bannerId}}}\"}"
+      },
+      "description": "Retrieve all email records for current person to apply best-record selection (primary > lowest priority > any available).",
+      "if": "context.extractBaseline,message.header.proceedLoop"
+    },
+    "GET - phones for person (Baseline)": {
+      "class": "ethosProxyGetFilter",
+      "config": {
+        "acceptVersions": [
+          "12.0.0"
+        ],
+        "cache": false,
+        "errorPath": "phonesError",
+        "ignoreErrors": true,
+        "payloadTargetPath": "phonesResponse",
+        "queryByPost": false,
+        "resource": "phones?criteria={\"personId\":\"{{{message.payload.bannerId}}}\"}"
+      },
+      "description": "Retrieve all phone records for current person to apply best-record selection (primary > lowest priority > any available).",
+      "if": "context.extractBaseline,message.header.proceedLoop"
+    },
+    "GET - addresses for person (Baseline)": {
+      "class": "ethosProxyGetFilter",
+      "config": {
+        "acceptVersions": [
+          "12.0.0"
+        ],
+        "cache": false,
+        "errorPath": "addressesError",
+        "ignoreErrors": true,
+        "payloadTargetPath": "addressesResponse",
+        "queryByPost": false,
+        "resource": "addresses?criteria={\"personId\":\"{{{message.payload.bannerId}}}\"}"
+      },
+      "description": "Retrieve all address records for current person to apply best-record selection (active mailing > active permanent > highest-priority active > any available).",
+      "if": "context.extractBaseline,message.header.proceedLoop"
+    },
+    "GET - emergency-contacts for person (Baseline)": {
+      "class": "ethosProxyGetFilter",
+      "config": {
+        "acceptVersions": [
+          "12.0.0"
+        ],
+        "cache": false,
+        "errorPath": "emergencyContactsError",
+        "ignoreErrors": true,
+        "payloadTargetPath": "emergencyContactsResponse",
+        "queryByPost": false,
+        "resource": "emergency-contacts?criteria={\"personId\":\"{{{message.payload.bannerId}}}\"}"
+      },
+      "description": "Retrieve all emergency contact records for current person to apply best-record selection (primary > lowest priority > any available).",
+      "if": "context.extractBaseline,message.header.proceedLoop"
+    },
+    "JS - Apply best-record selection rules (Baseline)": {
+      "class": "JavaScriptTransform",
+      "config": {
+        "code": "function transform(message, context) {\n  // Build output row for current person with best-record selections\n  const person = message.payload;\n  const names = message.payload?.namesResponse || [];\n  const emails = message.payload?.emailsResponse || [];\n  const phones = message.payload?.phonesResponse || [];\n  const addresses = message.payload?.addressesResponse || [];\n  const emergencyContacts = message.payload?.emergencyContactsResponse || [];\n\n  // Select best name: preferred > legal > any\n  const selectName = () => {\n    const preferred = names.find(n => n.type === 'preferred' || n.nameType === 'preferred');\n    if (preferred) return { first: preferred.firstName || '', last: preferred.lastName || '' };\n    const legal = names.find(n => n.type === 'legal' || n.nameType === 'legal' || n.type === 'official');\n    if (legal) return { first: legal.firstName || '', last: legal.lastName || '' };\n    if (names.length > 0) return { first: names[0].firstName || '', last: names[0].lastName || '' };\n    return { first: '', last: '' };\n  };\n\n  // Select best email: primary > lowest priority > any\n  const selectEmail = () => {\n    const primaries = emails.filter(e => e.isPrimary === true);\n    if (primaries.length === 1) return primaries[0].address || '';\n    if (primaries.length > 1) {\n      const sorted = primaries.sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));\n      return sorted[0].address || '';\n    }\n    if (emails.length > 0) {\n      const sorted = emails.sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));\n      return sorted[0].address || '';\n    }\n    return '';\n  };\n\n  // Select best phone: primary > lowest priority > any\n  const selectPhone = () => {\n    const primaries = phones.filter(p => p.isPrimary === true);\n    if (primaries.length === 1) return primaries[0].number || '';\n    if (primaries.length > 1) {\n      const sorted = primaries.sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));\n      return sorted[0].number || '';\n    }\n    if (phones.length > 0) {\n      const sorted = phones.sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));\n      return sorted[0].number || '';\n    }\n    return '';\n  };\n\n  // Select best address: active mailing > active permanent > highest-priority active > any\n  const selectAddress = () => {\n    const activeMailing = addresses.find(a => \n      (a.type === 'mailing' || a.addressType === 'mailing') && \n      (a.isActive === true || a.isCurrent === true)\n    );\n    if (activeMailing) {\n      const streets = [activeMailing.addressLine1, activeMailing.addressLine2, activeMailing.addressLine3]\n        .filter(l => l).join(' ');\n      return { city: activeMailing.city || '', address: streets };\n    }\n    const activePermanent = addresses.find(a => \n      (a.type === 'permanent' || a.addressType === 'permanent') && \n      (a.isActive === true || a.isCurrent === true)\n    );\n    if (activePermanent) {\n      const streets = [activePermanent.addressLine1, activePermanent.addressLine2, activePermanent.addressLine3]\n        .filter(l => l).join(' ');\n      return { city: activePermanent.city || '', address: streets };\n    }\n    const activeAddrs = addresses.filter(a => a.isActive === true || a.isCurrent === true);\n    if (activeAddrs.length > 0) {\n      const sorted = activeAddrs.sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));\n      const addr = sorted[0];\n      const streets = [addr.addressLine1, addr.addressLine2, addr.addressLine3]\n        .filter(l => l).join(' ');\n      return { city: addr.city || '', address: streets };\n    }\n    if (addresses.length > 0) {\n      const addr = addresses[0];\n      const streets = [addr.addressLine1, addr.addressLine2, addr.addressLine3]\n        .filter(l => l).join(' ');\n      return { city: addr.city || '', address: streets };\n    }\n    return { city: '', address: '' };\n  };\n\n  // Select best emergency contact: primary > lowest priority > any\n  const selectEmergencyContact = () => {\n    const primaries = emergencyContacts.filter(ec => ec.isPrimary === true);\n    const selectOne = (arr) => {\n      if (arr.length === 0) return null;\n      if (arr.length === 1) return arr[0];\n      const sorted = arr.sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));\n      return sorted[0];\n    };\n    const selected = selectOne(primaries) || selectOne(emergencyContacts);\n    if (!selected) return '';\n    const name = selected.name || selected.contactName || '';\n    const phone = selected.phone || selected.contactPhone || '';\n    if (name && phone) return `${name} - ${phone}`;\n    if (name) return name;\n    if (phone) return phone;\n    return '';\n  };\n\n  const nameData = selectName();\n  const emailData = selectEmail();\n  const phoneData = selectPhone();\n  const addressData = selectAddress();\n  const emergencyContactData = selectEmergencyContact();\n\n  // Build CSV row\n  message.payload = {\n    bannerid: person.bannerId,\n    firstName: nameData.first,\n    lastName: nameData.last,\n    dateofbirth: person.dateOfBirth,\n    email: emailData,\n    phone: phoneData,\n    city: addressData.city,\n    address: addressData.address,\n    emergencyContact: emergencyContactData\n  };\n\n  return message;\n}",
+        "pushUndefined": true,
+        "stopOnError": false
+      },
+      "description": "Apply best-record selection logic for names, emails, phones, addresses, and emergency contacts. Build CSV output row with selected values.",
+      "if": "context.extractBaseline,message.header.proceedLoop"
+    },
+    "Reducer - accumulate CSV rows (Baseline)": {
+      "class": "reducer",
+      "config": {
+        "accumulator": "payload"
+      },
+      "description": "Accumulate individual CSV row objects back into a single array for CSV file assembly.",
+      "if": "context.extractBaseline,message.header.proceedLoop"
+    },
+    "JS - No data extract handling (Baseline)": {
+      "class": "JavaScriptTransform",
+      "description": "Create output for extract phase when no data",
+      "if": "context.extractBaseline",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "draft": false,
+        "code": "function transform (message, context) {\n  \n  if (!Array.isArray(message.payload) || message.payload?.length === 0){\n    //throw new Error(`Reading operation returned no data`);\n    context.set('doCustomAudit', true);\n    context.set('customAuditContent', 'Reading operation returned no data')\n    message.payload = [];\n  } else if (message.payload.length > 0){\n    context.set(\"existDataProcess\", true);\n  }\n  \n  return message;\n}\n"
+      }
+    },
+    "Sub-pipeline - Extract data (Custom/Extend)": {
+      "class": "SubPipeline",
+      "description": "Extract data from subpipeline",
+      "if": "context.extractCustom",
+      "config": {
+        "isExtensible": true
+      }
+    },
+    "JS - Format data series (Baseline)": {
+      "class": "JavaScriptTransform",
+      "config": {
+        "code": "function transform(message, context) {\n  const rows = Array.isArray(message.payload) ? message.payload : [];\n  \n  // Build CSV header\n  const header = 'bannerid,firstName,lastName,dateofbirth,email,phone,city,address,emergencyContact';\n  \n  // Escape and quote CSV fields\n  const escapeCsvField = (value) => {\n    if (value === null || value === undefined) return '';\n    const str = String(value);\n    if (str.includes(',') || str.includes('\"') || str.includes('\\n')) {\n      return `\"${str.replace(/\"/g, '\"\"')}\"`;\n    }\n    return str;\n  };\n  \n  // Build data rows\n  const csvLines = [header];\n  rows.forEach(row => {\n    const line = [\n      escapeCsvField(row.bannerid),\n      escapeCsvField(row.firstName),\n      escapeCsvField(row.lastName),\n      escapeCsvField(row.dateofbirth),\n      escapeCsvField(row.email),\n      escapeCsvField(row.phone),\n      escapeCsvField(row.city),\n      escapeCsvField(row.address),\n      escapeCsvField(row.emergencyContact)\n    ].join(',');\n    csvLines.push(line);\n  });\n  \n  // Join with CRLF\n  const csvContent = csvLines.join('\\r\\n');\n  \n  // Store CSV in payload and logs in context\n  message.payload = {\n    reportLog: [{\n      output_csv: csvContent,\n      record_count: rows.length,\n      batch_id: context.batchId,\n      execution_mode: context.executionMode\n    }],\n    auditLog: [{\n      activity: 'CSV File Generation',\n      message: `CSV file generated with ${rows.length} data rows (plus 1 header row).`,\n      timestamp: new Date().toISOString(),\n      batch_id: context.batchId\n    }],\n    errorLog: []\n  };\n  \n  context.set('csvContent', csvContent);\n  context.set('outputRecordCount', rows.length);\n  context.set('existProcess', rows.length > 0);\n  \n  return message;\n}",
+        "pushUndefined": true,
+        "stopOnError": false
+      },
+      "description": "Format accumulated CSV rows with header and proper quoting. Assemble final CSV content for output."
+    },
+    "JS - No data process handling (Baseline)": {
+      "class": "JavaScriptTransform",
+      "description": "Create output for process phase when no data",
+      "if": "context.processBaseline,context.doCustomAudit",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "draft": false,
+        "code": "function transform (message, context) {\n    context.set('existProcess', true);\n   \n    message.payload = {\n      reportLog: [],\n      auditLog: [],\n      errorLog: []\n    }\n  \n  return message;\n}"
+      }
+    },
+    "Sub-pipeline - Process data (Custom/Extend)": {
+      "class": "SubPipeline",
+      "description": "Transform extracted data for report file",
+      "if": "context.processCustom",
+      "config": {
+        "isExtensible": true
+      }
+    },
+    "JS - Persist header for report file (Baseline)": {
+      "class": "JavaScriptTransform",
+      "description": "Persist payload in header",
+      "if": "context.existProcess",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "code": "function transform (message, context) {\n  message.header.fileLogs = message.payload;\n  return message;\n}"
+      }
+    },
+    "Sub-pipeline - Transform Report File (Custom)": {
+      "class": "SubPipeline",
+      "description": "Transform report file data",
+      "if": "context.transformCustom",
+      "config": {
+        "isExtensible": true
+      }
+    },
+    "JS - Create data for file (Baseline)": {
+      "class": "JavaScriptTransform",
+      "config": {
+        "code": "function transform(message, context) {\n  // Prepare final payload for S3 upload (CSV content at root)\n  message.payload = context.csvContent || '';\n  return message;\n}",
+        "pushUndefined": true,
+        "stopOnError": false
+      },
+      "description": "Prepare final payload for S3 upload by placing CSV content at root of message.payload."
+    },
+    "JS - Add report file content (Baseline)": {
+      "class": "JavaScriptTransform",
+      "config": {
+        "code": "function transform(message, context) {\n  // Placeholder for report file content transformation (handled in Send Report File sub-pipeline)\n  return message;\n}",
+        "pushUndefined": true,
+        "stopOnError": false
+      },
+      "description": "Placeholder for report file content processing."
+    },
+    "Sub-pipeline - Send Report file (Baseline)": {
+      "class": "SubPipeline",
+      "description": "Send Report file",
+      "if": "context.existReport",
+      "config": {
+        "name": "Ellucian-Report-File-Send-Sub",
+        "isExtensible": false
+      }
+    },
+    "JS - Persist header for Audit file (Baseline)": {
+      "class": "JavaScriptTransform",
+      "description": "Persist header in payload",
+      "if": "context.existProcess",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "code": "function transform (message, context) {\n  message.payload = message.header.fileLogs;\n  return message;\n}"
+      }
+    },
+    "Sub-pipeline - Transform Audit File (Custom)": {
+      "class": "SubPipeline",
+      "description": "Transform audit file data",
+      "if": "context.auditCustom",
+      "config": {
+        "isExtensible": true
+      }
+    },
+    "JS - Create Audit file content (Baseline)": {
+      "class": "JavaScriptTransform",
+      "description": "Create content for audit file",
+      "if": "context.auditBaseline",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "code": "function transform(message, context) {\n  const reportLog = message.payload?.reportLog || [];\n  const auditLog = message.payload?.auditLog || [];\n  const errorLog = message.payload?.errorLog || [];\n  const totalErrors = errorLog?.length;\n  const totalProcessed = reportLog?.length;\n  const totalRecords = auditLog?.length\n  \n  if(auditLog?.length > 0 && context.sendAuditFile){\n    context.set(\"existAudit\", true);\n    \n    const universityName = context.universityName || \"Unknown University\";\n    const projectName = context.get(\"__pipelineName\") || \"Project Name\";\n    const todayDate = getFormattedDate('YYYYMMDD_HHmmss')\n    const pipelineParameters = Array.isArray(context.parameters) ? context.parameters : [];\n    const data = auditLog;\n\n    // Format the pipeline parameters safely\n    const parameterContent = pipelineParameters?.[0] ? \n      Object.entries(pipelineParameters[0]).map(([key, value]) => `${key} : ${value}`).join('\\n') : \n      \"\";\n    \n    const pad = (str, length) => (str || \"\")?.toString()?.padEnd(length, \" \");\n    let headers = [];\n    const columnWidths = {};\n    headers = Object.keys(data[0]);\n    const readableHeaders = headers.map((header) => toReadableHeader(header));\n\n    // Initialize column widths with header lengths\n    readableHeaders.forEach((header, index) => {\n      columnWidths[headers[index]] = header.length + 2;\n    });\n\n    data?.forEach((log) => {\n      headers.forEach((header) => {\n        const valueLength = log[header] ? String(log[header]).length : 0;\n        columnWidths[header] = Math.max(\n          columnWidths[header],\n          valueLength + 2\n        );\n      });\n    });\n\n    // Create header row\n    const headerRow = readableHeaders\n      .map((header, index) => pad(header, columnWidths[headers[index]]))\n      .join(\"\");\n\n    // Create dynamic row generator\n    const createRow = (log) => {\n      return headers\n        .map((key) => pad(log[key], columnWidths[key]))\n        .join(\"\");\n    };\n    \n    const auditLogContent = `${getFormattedDate()}                                             ${universityName}\n                                                         ${projectName} \n\nPipeline Parameters\n${parameterContent}\n\n${headerRow}\n${data?.map((log) => createRow(log)).join(\"\\n\")}\n\nTotal Records Processed : ${totalRecords}\nTotal Records Successful: ${totalProcessed || 0}\nTotal Records Failed:    ${totalErrors || 0}`;\n\n    const path = context.auditFilePath.split('/');\n    message.payload = {};\n    message.payload.sendFileName = `${path[path.length-1]}_${todayDate}.txt`;\n    message.payload.fileContent = auditLogContent;\n  }\n  return message;\n}\n\nfunction getFormattedDate(format = 'MM-DD-YYYY HH:mm:ss') {\n    const currentDate = new Date();\n    const year = currentDate.getFullYear();\n    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');\n    const day = currentDate.getDate().toString().padStart(2, '0');\n    const hours = currentDate.getHours().toString().padStart(2, '0');\n    const minutes = currentDate.getMinutes().toString().padStart(2, '0');\n    const seconds = currentDate.getSeconds().toString().padStart(2, '0');\n\n    if (format === 'YYYYMMDD_HHmmss') {\n        return `${year}${month}${day}_${hours}${minutes}${seconds}`;\n    }\n\n    return `${month}-${day}-${year} ${hours}:${minutes}:${seconds}`;\n}\n\nfunction toReadableHeader(key) {\n  return key\n    .replace(/_/g, ' ')\n    .replace(/([a-z])([A-Z])/g, '$1 $2')\n    .replace(/\\b\\w/g, char => char.toUpperCase());\n}\n"
+      }
+    },
+    "JS - No data audit handling (Baseline)": {
+      "class": "JavaScriptTransform",
+      "description": "Create output for audit phase when no data",
+      "if": "context.doCustomAudit",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "code": "function transform (message, context) {\n  const path = context.get(\"auditFilePath\").split('/');\n  context.set(\"existAudit\",true);\n  message.payload = {}\n  message.payload.sendFileName =`${path[path.length-1]}_${getFormattedDateTime()}.txt`;\n  message.payload.fileContent = context.customAuditContent;\n  \n  return message;\n}\n\nfunction getFormattedDateTime() {\n  const now = new Date();\n\n  const pad = (num) => String(num).padStart(2, '0');\n\n  const year = now.getFullYear();\n  const month = pad(now.getMonth() + 1);\n  const day = pad(now.getDate());\n  const hours = pad(now.getHours());\n  const minutes = pad(now.getMinutes());\n  const seconds = pad(now.getSeconds());\n\n  return `${year}${month}${day}_${hours}${minutes}${seconds}`;\n}"
+      }
+    },
+    "Sub-pipeline - Send Audit file (Baseline)": {
+      "class": "SubPipeline",
+      "description": "Send Audit file to S3/SFTP",
+      "if": "context.existAudit,context.sendAuditFile",
+      "config": {
+        "name": "Ellucian-Audit-File-Send-Sub",
+        "isExtensible": false
+      }
+    },
+    "JS - Persist header for Error file (Baseline)": {
+      "class": "JavaScriptTransform",
+      "description": "Persist header in payload",
+      "if": "context.existAudit",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "code": "function transform (message, context) {\n  message.payload = message.header.fileLogs;\n  return message;\n}"
+      }
+    },
+    "Sub-pipeline - Transform Error file (Custom)": {
+      "class": "SubPipeline",
+      "description": "Transform Error File data",
+      "if": "context.errorCustom",
+      "config": {
+        "isExtensible": true
+      }
+    },
+    "JS - Create error file content (Baseline)": {
+      "class": "JavaScriptTransform",
+      "description": "Create content for Error file",
+      "if": "context.errorBaseline",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "code": "function transform(message, context) {\n  const errorLog = message.payload?.errorLog || [];\n  \n  if(errorLog?.length > 0 && context.sendErrorFile){\n    const totalErrors = errorLog.length;\n    \n    context.set(\"errorCount\", totalErrors);\n    context.set(\"existError\", true);\n    context.set(\"pipelineError\", true);\n  \n    const universityName = context.universityName || \"Unknown University\";\n    const projectName = context.get(\"__pipelineName\") || \"Project Name\";\n    const todayDate = getFormattedDate('YYYYMMDD_HHmmss')\n    const data = errorLog;\n\n    const pad = (str, length) => (str || \"\")?.toString()?.padEnd(length, \" \");\n    \n    let headers = [];\n    const columnWidths = {};\n    headers = Object.keys(data[0]);\n    const readableHeaders = headers.map((header) => toReadableHeader(header));\n  \n    // Initialize column widths with header lengths\n    readableHeaders.forEach((header, index) => {\n      columnWidths[headers[index]] = header.length + 2;\n    });\n  \n    data?.forEach((log) => {\n      headers.forEach((header) => {\n        const valueLength = log[header] ? String(log[header]).length : 0;\n        columnWidths[header] = Math.max(\n          columnWidths[header],\n          valueLength + 2\n        );\n      });\n    });\n\n    // Create header row\n    const headerRow = readableHeaders\n      .map((header, index) => pad(header, columnWidths[headers[index]]))\n      .join(\"\");\n\n    // Create dynamic row generator\n    const createRow = (log) => {\n      return headers\n        .map((key) => pad(log[key], columnWidths[key]))\n        .join(\"\");\n    };\n    \n    const errorLogContent = `${getFormattedDate()}                                             ${universityName}            \n                                                         ${projectName} \n\n\n${headerRow}\n${data?.map((log) => createRow(log)).join(\"\\n\")}\n\nTotal Records Failed: ${totalErrors}`;\n  \n    const path = context.errorFilePath.split('/');\n    message.payload = {};\n    message.payload.sendFileName = `${path[path.length-1]}_${todayDate}.txt`;\n    message.payload.fileContent = errorLogContent;\n  }\n  return message;\n}\n\nfunction getFormattedDate(format = 'MM-DD-YYYY HH:mm:ss') {\n    const currentDate = new Date();\n    const year = currentDate.getFullYear();\n    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');\n    const day = currentDate.getDate().toString().padStart(2, '0');\n    const hours = currentDate.getHours().toString().padStart(2, '0');\n    const minutes = currentDate.getMinutes().toString().padStart(2, '0');\n    const seconds = currentDate.getSeconds().toString().padStart(2, '0');\n\n    if (format === 'YYYYMMDD_HHmmss') {\n        return `${year}${month}${day}_${hours}${minutes}${seconds}`;\n    }\n\n    return `${month}-${day}-${year} ${hours}:${minutes}:${seconds}`;\n}\n\nfunction toReadableHeader(key) {\n  return key\n    .replace(/_/g, ' ')\n    .replace(/([a-z])([A-Z])/g, '$1 $2')\n    .replace(/\\b\\w/g, char => char.toUpperCase());\n}"
+      }
+    },
+    "Sub-pipeline - Send Error file (Baseline)": {
+      "class": "SubPipeline",
+      "description": "Send error File file to S3/SFTP",
+      "if": "context.existError,context.sendErrorFile",
+      "config": {
+        "name": "Ellucian-Error-File-Send-Sub",
+        "isExtensible": false
+      }
+    },
+    "Sub-pipeline - Additional Custom Operations (Custom)": {
+      "class": "SubPipeline",
+      "description": "To do additional custom process",
+      "if": "context.additionalCustomOperations",
+      "config": {
+        "isExtensible": true
+      }
+    },
+    "JS - Change pipeline execution status (Baseline)": {
+      "class": "JavaScriptTransform",
+      "description": "Change status when error occurs",
+      "config": {
+        "pushUndefined": true,
+        "stopOnError": false,
+        "code": "function transform (message, context) {\n  if(context.pipelineError) {\n    throw new Error(\"Pipeline has been failed with errors, please review the error file for more details\");\n  }\n  return message;\n}"
+      }
+    }
+  }
+}

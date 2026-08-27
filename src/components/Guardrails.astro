@@ -1,0 +1,30 @@
+---
+import { guardrails } from '../data/site';
+---
+<section id="guardrails" class="border-b border-rule scroll-mt-20">
+  <div class="mx-auto max-w-[1200px] px-4 py-20 sm:px-6 sm:py-28">
+    <p class="u-label text-blue">{guardrails.eyebrow}</p>
+    <h2 class="u-h2 mt-4 text-blue-deep">{guardrails.headline}</h2>
+    <p class="u-lead u-measure mt-5">{guardrails.lead}</p>
+
+    <div class="mt-10 max-w-[52rem] rounded-xl border border-rule-strong bg-paper p-6 sm:p-8">
+      <p class="u-label text-ink-soft">Written into the specification</p>
+      <ul class="mt-4 grid gap-3">
+        {guardrails.examples.map((line) => (
+          <li class="rounded-md border border-rule bg-ground p-4 font-mono text-[0.9375rem] leading-relaxed text-ink">
+            {line}
+          </li>
+        ))}
+      </ul>
+      <p class="u-measure mt-6 text-ink-soft">{guardrails.close}</p>
+    </div>
+
+    {guardrails.enforcementPending && (
+      <p class="mt-6 max-w-[52rem] rounded-md border border-dashed border-rule-strong bg-ground px-4 py-3 font-mono text-[0.8125rem] text-ink-soft">
+        NEEDS-SOURCE — the enforcement paragraph. Read-only credential? Human review of the
+        generated pipeline, or only the spec? What Validate checks. See DESIGN.md and
+        src/data/site.ts. Does not ship as-is.
+      </p>
+    )}
+  </div>
+</section>

@@ -1,0 +1,70 @@
+---
+const basePath = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const demoUrl = `${basePath}akaden-workspace-demo.html`;
+---
+
+<!-- The supplied workspace demo stays in this page, fully interactive. -->
+<section id="workspace-demo" class="border-b border-blue-deep bg-blue-deep scroll-mt-20">
+  <div class="mx-auto max-w-[1200px] px-4 py-20 sm:px-6 sm:py-28">
+    <div class="max-w-[66ch]">
+      <p class="u-label text-agent">Inside Akaden</p>
+      <h2 class="u-h2 mt-4 text-ground">See the workspace, not just a promise.</h2>
+      <p class="u-lead mt-5 !text-tint">
+        Follow a real, guided run from requirement to validation. The workspace stays deliberately
+        concrete: context, specification, review, generated pipeline, and validation are all in view.
+      </p>
+    </div>
+
+    <div class="workspace-preview mt-10 min-w-0">
+      <iframe
+        src={demoUrl}
+        title="Interactive Akaden workspace demo"
+        loading="lazy"
+        data-workspace-demo
+      ></iframe>
+    </div>
+    <p class="mt-4 max-w-[74ch] text-[0.8125rem] text-tint/80">
+      Demonstration workspace with synthetic data only. Use its controls directly here to explore the full run.
+    </p>
+  </div>
+</section>
+
+<style>
+  .workspace-preview {
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--color-tint) 56%, transparent);
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, .28);
+  }
+  .workspace-preview iframe {
+    display: block;
+    width: 100%;
+    min-height: 58rem;
+    border: 0;
+    background: #fff;
+  }
+</style>
+
+<script>
+  const workspaceDemo = document.querySelector<HTMLIFrameElement>('[data-workspace-demo]');
+
+  function fitDemoToContents() {
+    const documentInFrame = workspaceDemo?.contentDocument;
+    if (!workspaceDemo || !documentInFrame) return;
+    const height = Math.max(
+      documentInFrame.body.scrollHeight,
+      documentInFrame.documentElement.scrollHeight,
+    );
+    workspaceDemo.style.height = `${height}px`;
+  }
+
+  workspaceDemo?.addEventListener('load', () => {
+    fitDemoToContents();
+    const documentInFrame = workspaceDemo.contentDocument;
+    if (!documentInFrame?.body) return;
+    new ResizeObserver(fitDemoToContents).observe(documentInFrame.body);
+  });
+</script>

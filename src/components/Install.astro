@@ -1,0 +1,32 @@
+---
+import { install } from '../data/site';
+---
+<section id="install" class="border-b border-rule bg-paper scroll-mt-20">
+  <div class="mx-auto max-w-[1200px] px-4 py-20 sm:px-6 sm:py-28">
+    <p class="u-label text-blue">{install.eyebrow}</p>
+    <h2 class="u-h2 mt-4 text-blue-deep">{install.headline}</h2>
+    <p class="u-lead u-measure mt-5">{install.lead}</p>
+
+    <div class="mt-9 flex flex-wrap items-center gap-4">
+      <a href={install.ctaHref} class="u-btn u-btn-primary !px-7 !py-3.5 !text-[1.0625rem]">
+        {install.ctaLabel}
+      </a>
+    </div>
+
+    {install.pending && (
+      <p class="mt-6 max-w-[52rem] rounded-md border border-dashed border-rule-strong bg-ground px-4 py-3 font-mono text-[0.8125rem] text-ink-soft">
+        NEEDS-SOURCE — the download target and the exact install steps. The CTA is a
+        swappable slot; wiring it is a one-line change in src/data/site.ts.
+      </p>
+    )}
+
+    <div class="mt-12 border-t border-rule pt-8">
+      <p class="u-measure text-ink-soft">
+        {install.secondary.text}{' '}
+        <a href={install.secondary.href} class="font-semibold text-blue-bright underline underline-offset-4 hover:text-blue-deep">
+          {install.secondary.label}
+        </a>
+      </p>
+    </div>
+  </div>
+</section>

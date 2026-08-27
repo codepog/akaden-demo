@@ -1,0 +1,259 @@
+---
+import { marked } from 'marked';
+import { steps, FILES, jobParams, runLog, outputCsv, acceptance } from '../../data/ide';
+
+import requirementRaw from '../../data/demo/01-requirement.md?raw';
+import specRaw from '../../data/demo/02-specification.md?raw';
+import readmeRaw from '../../data/demo/03-pipeline-readme.md?raw';
+import pipelineRaw from '../../data/demo/04-alumni-contact-export.pipeline?raw';
+
+marked.setOptions({ gfm: true, breaks: false });
+const docs: Record<string, string> = {
+  requirement: await marked.parse(requirementRaw),
+  spec: await marked.parse(specRaw),
+  readme: await marked.parse(readmeRaw),
+};
+
+const pipeline = JSON.parse(pipelineRaw) as {
+  name: string;
+  pipeline: string[];
+  segments: Record<string, { class: string; description?: string }>;
+};
+const CLASS_LABEL: Record<string, string> = {
+  JavaScriptTransform: 'JS transform',
+  ethosProxyGetFilter: 'Ethos API',
+  SubPipeline: 'Sub-pipeline',
+  forEach: 'Loop',
+  reducer: 'Reducer',
+};
+---
+<main class="ed" aria-label="Editor">
+  <div class="ed-bar">
+    <p class="suggest">Suggested next: <span data-suggest>{steps[0].suggested}</span></p>
+    <div class="ed-actions">
+      <div data-toolbar></div>
+      <button type="button" class="askai">Ask AI to review</button>
+    </div>
+  </div>
+
+  <div class="tabs" data-tabs hidden>
+    {Object.entries(FILES).map(([key, v]) => (
+      <button type="button" class="tab" data-tab={key} hidden>
+        <span class:list={['ficon', v.kind]} aria-hidden="true">{v.kind === 'pipeline' ? 'S' : 'TXT'}</span>
+        {v.name}
+      </button>
+    ))}
+  </div>
+
+  <div class="ed-body">
+    <!-- step 1: the requirement that landed in inputs/ -->
+    <div class="view drop-stage" data-view="empty">
+      <div class="stage-in">
+        <p class="from">From Alumni &amp; Advancement</p>
+        <button type="button" class="dragcard" data-openreq aria-describedby="dragcard-hint">
+          <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+            <path d="M6 2h8l4 4v16H6z"/><path d="M14 2v4h4"/><path d="M9 12h6M9 16h6" stroke-linecap="round"/>
+          </svg>
+          <span class="dc-name">student-records-specification.md</span>
+          <span class="dc-sub" id="dragcard-hint">Landed in <b>inputs</b> — press to read it</span>
+        </button>
+      </div>
+      <svg class="mark" viewBox="0 0 200 200" aria-hidden="true">
+        <rect x="10" y="10" width="180" height="180" rx="44" fill="#DBDCDE"/>
+        <path d="M74 92a24 24 0 0 1 4.8-47.5A33 33 0 0 1 142 53a21 21 0 0 1-2 39z" fill="#FAFCFF"/>
+        <rect x="76" y="112" width="12" height="20" rx="6" fill="#FAFCFF"/>
+        <rect x="96" y="112" width="12" height="30" rx="6" fill="#FAFCFF"/>
+        <rect x="116" y="112" width="12" height="20" rx="6" fill="#FAFCFF"/>
+      </svg>
+    </div>
+
+    <!-- documents -->
+    {Object.entries(docs).map(([key, html]) => (
+      <div class="view doc" data-view={`doc:${key}`} hidden><article set:html={html} /></div>
+    ))}
+
+    <!-- pipeline -->
+    <div class="view" data-view="pipeline" hidden>
+      <div class="pl">
+        <header class="pl-head">
+          <h2>{pipeline.name}</h2>
+          <p>{pipeline.pipeline.length} segments in run order · generated from the approved specification</p>
+        </header>
+        <ol class="pl-list">
+          {pipeline.pipeline.map((seg, i) => {
+            const def = pipeline.segments[seg];
+            return (
+              <li>
+                <span class="pl-n">{String(i + 1).padStart(2, '0')}</span>
+                <span class="pl-name">{seg}</span>
+                <span class:list={['pl-kind', def?.class]}>{CLASS_LABEL[def?.class ?? ''] ?? def?.class}</span>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    </div>
+
+    <!-- job parameters -->
+    <div class="view" data-view="params" hidden>
+      <div class="form">
+        <h2>Job parameters</h2>
+        <p class="form-note">Read from the pipeline. <b>Date of Birth Cutoff</b> is the value your specification set.</p>
+        {jobParams.map((p) => (
+          <label class="field">
+            <span class="fl">{p.label}{p.required && <b class="req">required</b>}{p.fromSpec && <b class="spec">from the spec</b>}</span>
+            {p.type === 'select'
+              ? <select name={p.name}>{p.options!.map((o) => <option selected={o === p.value}>{o}</option>)}</select>
+              : <input type="text" name={p.name} value={p.value} data-param={p.name} />}
+          </label>
+        ))}
+      </div>
+    </div>
+
+    <!-- run + validate -->
+    <div class="view" data-view="run" hidden>
+      <div class="run">
+        <h2>Job run</h2>
+        <pre class="log" data-log>{runLog.join('\n')}</pre>
+
+        <h3>output.csv</h3>
+        <div class="tw">
+          <table>
+            <thead><tr>{outputCsv.header.map((h) => <th>{h}</th>)}</tr></thead>
+            <tbody>{outputCsv.rows.map((r) => <tr>{r.map((c) => <td>{c || <span class="empty">—</span>}</td>)}</tr>)}</tbody>
+          </table>
+        </div>
+        <p class="synth">Synthetic records. Nothing on this page resembles real student data.</p>
+
+        <h3>Acceptance criteria</h3>
+        <ul class="acc">{acceptance.map((a) => <li><span class="tick" aria-hidden="true">✓</span>{a}</li>)}</ul>
+      </div>
+    </div>
+  </div>
+</main>
+
+<style>
+  .ed{grid-area:ed;background:var(--ide-editor);display:flex;flex-direction:column;min-width:0;min-height:0;border-right:1px solid var(--ide-border);}
+  .ed-bar{
+    display:flex;align-items:center;gap:12px;justify-content:space-between;
+    padding:9px 14px;background:var(--ide-panel);border-bottom:1px solid var(--ide-border);
+    min-height:44px;
+  }
+  .suggest{margin:0;font-size:13px;color:var(--ide-ink-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .suggest span{color:var(--ide-ink);}
+  .ed-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+  .askai,:global(.tb-btn){
+    border:1px solid var(--ide-border-strong);background:var(--ide-editor);color:var(--ide-ink);
+    border-radius:6px;padding:6px 12px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;
+    white-space:nowrap;transition:background-color 120ms,border-color 120ms;
+  }
+  .askai{color:var(--ide-accent);border-color:#BFD4EE;}
+  .askai:hover{background:var(--ide-active);}
+  :global(.tb-btn.primary){background:var(--ide-accent);border-color:var(--ide-accent);color:#fff;}
+  :global(.tb-btn.primary:hover){background:#2A64B0;}
+  :global(.tb-btn:focus-visible),.askai:focus-visible{outline:2px solid var(--ide-ink);outline-offset:2px;}
+
+  .tabs{display:flex;gap:0;background:var(--ide-panel);border-bottom:1px solid var(--ide-border);overflow-x:auto;}
+  .tab{
+    display:flex;align-items:center;gap:7px;padding:8px 14px;border:0;border-right:1px solid var(--ide-border);
+    background:var(--ide-panel);color:var(--ide-ink-soft);font:inherit;font-size:12.5px;cursor:pointer;white-space:nowrap;
+  }
+  .tab[aria-current="true"]{background:var(--ide-editor);color:var(--ide-ink);}
+  .ficon{font-size:7px;font-weight:700;font-family:var(--ide-mono);border:1px solid currentColor;border-radius:2px;padding:1px 2px;color:#5B8DD6;}
+  .ficon.pipeline{color:#C0392B;}
+
+  .ed-body{flex:1;min-height:0;overflow:hidden;position:relative;}
+  .view{position:absolute;inset:0;overflow-y:auto;}
+  .view[hidden]{display:none;}
+  [data-view="empty"]{display:flex;align-items:center;justify-content:center;position:absolute;}
+  .mark{width:min(30%,190px);height:auto;opacity:.45;position:absolute;z-index:0;}
+  /* the card is the subject at step 1 — the watermark stops competing with it */
+  .drop-stage:has(.stage-in:not([hidden])) .mark{display:none;}
+  .stage-in{position:relative;z-index:1;text-align:center;}
+  .from{
+    margin:0 0 12px;font-family:var(--ide-mono);font-size:10.5px;letter-spacing:.11em;
+    text-transform:uppercase;color:var(--ide-ink-soft);
+  }
+  .dragcard{
+    display:flex;flex-direction:column;align-items:center;gap:9px;
+    padding:22px 26px;border:1px solid var(--ide-border-strong);border-radius:12px;
+    background:var(--ide-editor);color:var(--ide-accent);cursor:pointer;font:inherit;
+    box-shadow:0 1px 2px rgba(0,33,99,.06),0 10px 26px rgba(0,33,99,.10);
+    transition:transform 140ms ease-out,box-shadow 140ms ease-out;
+  }
+  .dragcard:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(0,33,99,.08),0 16px 34px rgba(0,33,99,.14);}
+  .dragcard:active{transform:scale(.98);}
+  .dc-name{font-family:var(--ide-mono);font-size:12.5px;color:var(--ide-ink);}
+  .dc-sub{font-size:12px;color:var(--ide-ink-soft);}
+  .dc-sub b{color:var(--ide-ink);}
+  .dragcard:focus-visible{outline:2px solid var(--ide-accent);outline-offset:3px;}
+  @media (prefers-reduced-motion: reduce){
+    .dragcard,.dragcard:hover{transition:none;transform:none;}
+  }
+
+  /* documents */
+  .doc article{max-width:74ch;margin:0 auto;padding:34px 32px 80px;font-size:14.5px;line-height:1.7;color:var(--ide-ink);}
+  .doc :global(h1){font-size:1.7rem;line-height:1.2;margin:0 0 18px;letter-spacing:-.02em;}
+  .doc :global(h2){font-size:1.16rem;margin:32px 0 10px;letter-spacing:-.01em;}
+  .doc :global(h3){font-size:1rem;margin:24px 0 8px;}
+  .doc :global(p),.doc :global(li){color:#33415C;}
+  .doc :global(ul),.doc :global(ol){padding-left:22px;}
+  .doc :global(li){margin:5px 0;}
+  .doc :global(code){font-family:var(--ide-mono);font-size:.86em;background:var(--ide-panel);border:1px solid var(--ide-border);border-radius:3px;padding:1px 4px;}
+  .doc :global(pre){background:var(--ide-panel);border:1px solid var(--ide-border);border-radius:6px;padding:12px 14px;overflow-x:auto;}
+  .doc :global(pre code){background:none;border:0;padding:0;font-size:12.5px;line-height:1.6;}
+  .doc :global(table){border-collapse:collapse;width:100%;font-size:13px;display:block;overflow-x:auto;}
+  .doc :global(th),.doc :global(td){border:1px solid var(--ide-border);padding:7px 10px;text-align:left;vertical-align:top;}
+  .doc :global(th){background:var(--ide-panel);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;}
+  .doc :global(hr){border:0;border-top:1px solid var(--ide-border);margin:28px 0;}
+  .doc :global(blockquote){border-left:3px solid var(--ide-accent);margin:16px 0;padding-left:14px;color:#33415C;}
+
+  /* pipeline */
+  .pl{padding:28px 32px 80px;max-width:900px;}
+  .pl-head h2{margin:0;font-size:1.35rem;letter-spacing:-.015em;}
+  .pl-head p{margin:6px 0 0;font-size:13px;color:var(--ide-ink-soft);}
+  .pl-list{list-style:none;margin:22px 0 0;padding:0;border:1px solid var(--ide-border);border-radius:8px;overflow:hidden;}
+  .pl-list li{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:12px;align-items:center;padding:8px 14px;border-top:1px solid var(--ide-border);font-size:13px;}
+  .pl-list li:first-child{border-top:0;}
+  .pl-list li:nth-child(odd){background:var(--ide-panel);}
+  .pl-n{font-family:var(--ide-mono);font-size:11.5px;color:var(--ide-ink-soft);}
+  .pl-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .pl-kind{font-family:var(--ide-mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:3px;background:#E7EDF7;color:#3B5A85;white-space:nowrap;}
+  .pl-kind.ethosProxyGetFilter{background:#E3F0E8;color:#2C6B45;}
+  .pl-kind.SubPipeline{background:#F1EAF7;color:#5B4380;}
+  .pl-kind.forEach,.pl-kind.reducer{background:#FCF0DC;color:#8A5600;}
+
+  /* params */
+  .form{padding:28px 32px 80px;max-width:560px;}
+  .form h2{margin:0;font-size:1.35rem;letter-spacing:-.015em;}
+  .form-note{margin:6px 0 22px;font-size:13px;color:var(--ide-ink-soft);}
+  .field{display:block;margin-bottom:16px;}
+  .fl{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;margin-bottom:5px;}
+  .req{font-family:var(--ide-mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:#B4451F;font-weight:700;}
+  .spec{font-family:var(--ide-mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ide-accent);font-weight:700;}
+  .field input,.field select{
+    width:100%;padding:8px 11px;border:1px solid var(--ide-border-strong);border-radius:6px;
+    background:var(--ide-editor);font:inherit;font-size:13.5px;color:var(--ide-ink);
+  }
+  .field input:focus-visible,.field select:focus-visible{outline:2px solid var(--ide-accent);outline-offset:1px;}
+
+  /* run */
+  .run{padding:28px 32px 80px;max-width:940px;}
+  .run h2{margin:0 0 14px;font-size:1.35rem;letter-spacing:-.015em;}
+  .run h3{margin:30px 0 10px;font-size:1rem;}
+  .log{
+    font-family:var(--ide-mono);font-size:12px;line-height:1.75;margin:0;
+    background:#F2F5FA;border:1px solid var(--ide-border);border-radius:8px;padding:14px 16px;
+    overflow-x:auto;color:#33415C;white-space:pre;
+  }
+  .tw{overflow-x:auto;border:1px solid var(--ide-border);border-radius:8px;}
+  .run table{border-collapse:collapse;width:100%;min-width:820px;font-size:12.5px;}
+  .run th,.run td{padding:8px 11px;border-bottom:1px solid var(--ide-border);text-align:left;white-space:nowrap;}
+  .run th{background:var(--ide-panel);font-family:var(--ide-mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ide-ink-soft);}
+  .run tr:last-child td{border-bottom:0;}
+  .empty{color:#A9B4C6;}
+  .synth{margin:10px 0 0;font-size:12px;color:var(--ide-ink-soft);}
+  .acc{list-style:none;margin:0;padding:0;display:grid;gap:8px;}
+  .acc li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:#33415C;}
+  .tick{color:#1E7A55;font-weight:700;}
+</style>

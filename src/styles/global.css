@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+/* =========================================================================
+   Akaden design tokens — see DESIGN.md
+   Blue = a person or a system.  Amber = an agent is acting.  Nothing else.
+   ========================================================================= */
+@theme {
+  --color-ground:      #FFFFFF;
+  --color-paper:       #F4F7FC;
+  --color-blue:        #2153C4;
+  --color-blue-deep:   #002163;
+  --color-blue-bright: #146AD8;
+  --color-tint:        #D5E9FF;
+  --color-agent:       #FFBF2E;
+  --color-agent-tint:  #F7DF97;
+  --color-ink:         #0E1A33;
+  --color-ink-soft:    #4A5A78;
+  --color-rule:        #DCE5F2;
+  --color-rule-strong: #7188A8;
+
+  --font-sans: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ---------- base ---------- */
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--color-ground);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Focus lives on the page ground, not on the control fill.
+   A blue ring on the blue CTA measures 1.16:1 — see DESIGN.md §2. */
+:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+::selection { background: var(--color-tint); color: var(--color-ink); }
+
+/* ---------- type roles ---------- */
+.u-display {
+  font-weight: 800;
+  font-size: clamp(2.75rem, 6vw, 4.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.u-h2 {
+  font-weight: 800;
+  font-size: clamp(1.9rem, 3.6vw, 2.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+}
+.u-h3 {
+  font-weight: 700;
+  font-size: 1.375rem;
+  line-height: 1.25;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+}
+.u-lead {
+  font-size: clamp(1.06rem, 1.6vw, 1.25rem);
+  line-height: 1.5;
+  letter-spacing: -0.005em;
+  color: var(--color-ink-soft);
+}
+.u-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.u-measure { max-width: 66ch; }
+
+/* ---------- wordmark ---------- */
+.u-wordmark {
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.035em;
+}
+
+/* ---------- controls ---------- */
+.u-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.2;
+  transition: background-color 160ms ease-out, border-color 160ms ease-out, color 160ms ease-out;
+}
+.u-btn-primary { background: var(--color-blue); color: #fff; }
+.u-btn-primary:hover { background: var(--color-blue-deep); }
+.u-btn-secondary {
+  background: var(--color-ground);
+  color: var(--color-ink);
+  border: 1px solid var(--color-rule-strong);
+}
+.u-btn-secondary:hover { border-color: var(--color-ink); }
+.u-btn-light {
+  background: var(--color-ground);
+  color: var(--color-blue-deep);
+}
+.u-btn-light:hover { background: var(--color-tint); }
+
+/* ---------- screenshot bezel (DESIGN.md §5) ---------- */
+.u-bezel {
+  min-width: 0;
+  border: 1px solid var(--color-rule-strong);
+  border-radius: 8px;
+  background: var(--color-tint);
+  padding: 12px;
+  box-shadow: 0 1px 2px rgba(0,33,99,.06), 0 8px 24px rgba(0,33,99,.08);
+}
+.u-bezel > * { border-radius: 4px; display: block; width: 100%; }
+
+/* Placeholder frame — visibly not a real capture, so nothing ships by accident. */
+.u-placeholder {
+  min-width: 0;
+  aspect-ratio: 16 / 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background:
+    repeating-linear-gradient(135deg,
+      #fff 0 14px, #EEF4FD 14px 28px);
+  border: 1px dashed var(--color-rule-strong);
+  color: var(--color-ink-soft);
+  text-align: center;
+  padding: 1.5rem;
+}
+
+/* ---------- motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .stage-panel { transform: none !important; }
+}
+
+/* Stage advance: 220ms cross-fade + 6px rise (DESIGN.md §6) */
+.stage-panel {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 220ms ease-out, transform 220ms ease-out;
+}
+.stage-panel[data-active="true"] { opacity: 1; transform: translateY(0); }
+
+/* ---------- skip link ---------- */
+.u-skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--color-ink);
+  color: #fff;
+  padding: 0.75rem 1.25rem;
+  z-index: 100;
+  border-radius: 0 0 6px 0;
+}
+.u-skip:focus { left: 0; }
+
+/* Grid and flex children default to min-width:auto, which lets a long unbreakable
+   line (a spec excerpt, a mono caption) push the whole page sideways at 320px. */
+.stage-panel pre { max-width: 100%; }

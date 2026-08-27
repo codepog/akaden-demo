@@ -1,0 +1,181 @@
+---
+import '../styles/global.css';
+import MockIDE from '../components/ide/MockIDE.astro';
+import { steps } from '../data/ide';
+const basePath = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Akaden Workspace Demo</title>
+    <meta name="description" content="Walk a customer requirement through the Akaden SDLC, from inputs to a running pipeline." />
+    <meta name="robots" content="noindex" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,600;0,700;0,800;1,900&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+  </head>
+  <body class="page">
+    <header class="top">
+      <a href={basePath} class="wm">AKADEN</a>
+      <p class="tag">Interactive demo &mdash; walk a requirement through all nine steps</p>
+      <div class="tools">
+        <span class="badge">Recorded run &middot; not a live tenant</span>
+        <button type="button" class="rst" data-reset>Restart</button>
+      </div>
+    </header>
+
+    <div class="frame"><MockIDE /></div>
+
+    <!-- Demo navigation. Deliberately outside the IDE frame: this is the tour, not the product. -->
+    <nav class="guide" data-guide aria-label="Walkthrough">
+      <ol class="g-dots" data-g-dots>
+        {steps.map((s) => (
+          <li><button type="button" data-dot={s.n} aria-label={`Step ${s.n}: ${s.title}`}></button></li>
+        ))}
+      </ol>
+      <div class="g-row">
+        <div class="g-copy">
+          <p class="g-head"><span data-g-count>Step 1 of 9</span> <span aria-hidden="true">·</span> <b data-g-title>Prepare workspace</b></p>
+          <p class="g-text" data-g-text aria-live="polite"></p>
+        </div>
+        <div class="g-btns">
+          <button type="button" class="g-btn" data-g-prev>Back</button>
+          <button type="button" class="g-btn primary" data-g-next>Next</button>
+        </div>
+      </div>
+    </nav>
+
+    <section class="glist-wrap">
+      <p class="glabel">All nine steps</p>
+      <ol class="glist">
+        {steps.map((s) => (
+          <li>
+            <button type="button" data-jump={s.n}>
+              <span class:list={['gn', s.actor]}>{String(s.n).padStart(2, '0')}</span>
+              <span class="gt">{s.title}</span>
+              <span class="gg">{s.gloss}</span>
+            </button>
+          </li>
+        ))}
+      </ol>
+      <p class="gnote">
+        The chrome above is a simplified reconstruction. The requirement, the specification,
+        the 39-segment pipeline and the validation warnings are the real files from a production run.
+      </p>
+    </section>
+  </body>
+</html>
+
+<style>
+  .page{background:var(--color-paper);margin:0;display:flex;flex-direction:column;min-height:100dvh;}
+  .top{
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+    padding:14px clamp(16px,3vw,32px);
+  }
+  .wm{font-weight:900;font-style:italic;letter-spacing:-.035em;font-size:1.25rem;color:var(--color-blue-deep);text-decoration:none;}
+  .tag{margin:0;font-size:.9375rem;color:var(--color-ink-soft);}
+  .tools{margin-left:auto;display:flex;align-items:center;gap:10px;}
+  .badge{
+    font-family:var(--font-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--color-ink-soft);border:1px solid var(--color-rule-strong);border-radius:99px;padding:4px 10px;
+  }
+  .rst{
+    border:1px solid var(--color-rule-strong);background:var(--color-ground);color:var(--color-ink);
+    border-radius:6px;padding:6px 14px;font:inherit;font-size:.875rem;font-weight:600;cursor:pointer;
+  }
+  .rst:hover{border-color:var(--color-ink);}
+
+  .frame{
+    margin:0 clamp(12px,3vw,32px);
+    height:min(72dvh,820px);min-height:460px;
+    border:1px solid var(--color-rule-strong);border-radius:12px 12px 0 0;overflow:hidden;
+    box-shadow:0 1px 2px rgba(0,33,99,.06),0 12px 40px rgba(0,33,99,.10);
+    background:#FAFCFF;
+  }
+
+  /* ---------- walkthrough control bar ---------- */
+  .guide{
+    position:sticky;bottom:0;z-index:20;
+    margin:0 clamp(12px,3vw,32px);
+    background:var(--color-ground);
+    border:1px solid var(--color-rule-strong);border-top:0;
+    border-radius:0 0 12px 12px;
+    box-shadow:0 -1px 0 var(--color-rule),0 -8px 26px rgba(0,33,99,.07);
+    padding:12px clamp(14px,2.4vw,22px) 14px;
+  }
+  .g-dots{list-style:none;display:flex;gap:6px;margin:0 0 11px;padding:0;}
+  .g-dots li{flex:1;}
+  .g-dots button{
+    display:block;width:100%;height:4px;border:0;padding:0;border-radius:2px;
+    background:var(--color-rule);cursor:pointer;transition:background-color 180ms;
+  }
+  .g-dots button.past{background:#9CC0A8;}
+  .g-dots button.on{background:var(--color-blue);}
+  .g-dots button:hover{background:var(--color-rule-strong);}
+  .g-dots button:focus-visible{outline:2px solid var(--color-ink);outline-offset:2px;}
+
+  .g-row{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+  .g-copy{flex:1;min-width:0;}
+  .g-head{
+    margin:0;font-family:var(--font-mono);font-size:11px;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--color-ink-soft);
+  }
+  .g-head b{color:var(--color-blue);font-weight:700;}
+  .g-text{margin:5px 0 0;max-width:70ch;font-size:.9375rem;line-height:1.5;color:var(--color-ink);}
+  .g-btns{display:flex;gap:10px;flex-shrink:0;margin-left:auto;}
+  .g-btn{
+    border:1px solid var(--color-rule-strong);background:var(--color-ground);color:var(--color-ink);
+    border-radius:7px;padding:10px 18px;font:inherit;font-size:.9375rem;font-weight:600;cursor:pointer;
+    white-space:nowrap;transition:background-color 140ms,border-color 140ms;
+  }
+  .g-btn:hover:not(:disabled){border-color:var(--color-ink);}
+  .g-btn:disabled{opacity:.4;cursor:not-allowed;}
+  .g-btn.primary{background:var(--color-blue);border-color:var(--color-blue);color:#fff;}
+  .g-btn.primary:hover{background:var(--color-blue-deep);border-color:var(--color-blue-deep);}
+  .g-btn:focus-visible{outline:2px solid var(--color-ink);outline-offset:2px;}
+  /* the gate reads differently from the rest of the spine */
+  .guide[data-step="3"] .g-btn.primary{box-shadow:0 0 0 4px rgba(33,83,196,.18);}
+
+  @media (max-width:620px){
+    .g-row{gap:12px;}
+    .g-copy{flex:1 1 100%;}
+    .g-btns{width:100%;margin-left:0;}
+    /* long labels like "Approve specification" have to be allowed to wrap at 320px */
+    .g-btn{padding:12px 14px;white-space:normal;min-width:0;}
+    .g-btn[data-g-prev]{flex:0 0 auto;}
+    .g-btn[data-g-next]{flex:1 1 auto;}
+    .g-text{font-size:.875rem;}
+    .g-dots{gap:4px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .g-dots button,.g-btn{transition:none;}
+  }
+
+  .glist-wrap{padding:40px clamp(16px,3vw,32px) 72px;max-width:1200px;}
+  .glabel{
+    font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--color-blue);margin:0 0 16px;
+  }
+  .glist{list-style:none;margin:0;padding:0;display:grid;gap:8px;}
+  @media(min-width:760px){.glist{grid-template-columns:1fr 1fr;gap:8px 24px;}}
+  .glist button{
+    width:100%;display:grid;grid-template-columns:34px 1fr;gap:4px 12px;align-items:baseline;
+    border:0;background:transparent;text-align:left;cursor:pointer;padding:8px;border-radius:8px;font:inherit;
+  }
+  .glist button:hover{background:var(--color-ground);}
+  .glist button:focus-visible{outline:2px solid var(--color-ink);outline-offset:1px;}
+  .gn{
+    grid-row:span 2;font-family:var(--font-mono);font-size:11.5px;font-weight:700;
+    width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+  }
+  .gn.you{background:var(--color-blue);color:#fff;}
+  .gn.agent{background:var(--color-agent);color:var(--color-ink);}
+  .gn.system{background:transparent;border:2px solid var(--color-blue);color:var(--color-blue);}
+  .gt{font-weight:600;color:var(--color-blue-deep);}
+  .gg{font-size:.875rem;color:var(--color-ink-soft);}
+  .gnote{margin:26px 0 0;max-width:62ch;font-size:.875rem;color:var(--color-ink-soft);}
+</style>

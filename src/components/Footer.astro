@@ -1,0 +1,29 @@
+---
+import { footer, site } from '../data/site';
+---
+<footer class="bg-blue-deep text-white">
+  <div class="mx-auto max-w-[1200px] px-4 py-14 sm:px-6">
+    <div class="flex flex-wrap items-start justify-between gap-8">
+      <div>
+        <p class="u-wordmark text-[1.5rem]">AKADEN</p>
+        <p class="mt-2 text-[0.9375rem] text-tint">{site.tagline}</p>
+        <p class="mt-4 text-[0.9375rem] text-tint">{footer.note}</p>
+      </div>
+      <nav aria-label="Footer">
+        <ul class="grid gap-2">
+          {footer.links.map((l) => (
+            <li>
+              <a href={l.href} class="text-[0.9375rem] text-tint underline-offset-4 hover:text-white hover:underline">
+                {l.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+    <div class="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-white/15 pt-6">
+      <p class="font-mono text-[0.75rem] uppercase tracking-[0.12em] text-tint">{footer.event}</p>
+      <p class="font-mono text-[0.75rem] text-tint">© 2026 ABCloudz</p>
+    </div>
+  </div>
+</footer>

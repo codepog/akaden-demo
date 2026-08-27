@@ -1,0 +1,48 @@
+---
+const icons = [
+  { id: 'files', label: 'Explorer', d: 'M4 3h6l2 2h8v14H4z' },
+  { id: 'search', label: 'Search', d: 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4.5-4.5' },
+  { id: 'secrets', label: 'Secrets', d: 'M7 11V8a5 5 0 0 1 10 0v3M5 11h14v9H5z' },
+  { id: 'api', label: 'API catalog', text: 'API' },
+  { id: 'skills', label: 'Skills', d: 'M12 3v6M12 15v6M3 12h6M15 12h6M8 8l3 3M16 16l-3-3' },
+  { id: 'deploy', label: 'Deployments', d: 'M6 16a4 4 0 0 1 .8-7.9 5.5 5.5 0 0 1 10.6 1.4A3.5 3.5 0 0 1 17 16zM12 12v6M9.5 14.5 12 12l2.5 2.5' },
+  { id: 'data', label: 'Data', d: 'M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3zM4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6' },
+  { id: 'git', label: 'Source control', d: 'M7 4v10M7 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM7 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM17 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM17 8v2a4 4 0 0 1-4 4H7' },
+];
+---
+<nav class="rail" aria-label="Workbench">
+  <ul>
+    {icons.map((i, idx) => (
+      <li>
+        <button type="button" class:list={['rail-btn', idx === 0 && 'on']} title={i.label} aria-label={i.label} aria-current={idx === 0 ? 'true' : undefined}>
+          {i.text
+            ? <span class="rail-text">{i.text}</span>
+            : <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={i.d} /></svg>}
+        </button>
+      </li>
+    ))}
+  </ul>
+  <button type="button" class="rail-btn" title="Settings" aria-label="Settings">
+    <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <circle cx="12" cy="12" r="3" /><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1" stroke-linecap="round" />
+    </svg>
+  </button>
+</nav>
+
+<style>
+  .rail{
+    grid-area:rail; background:var(--ide-rail); border-right:1px solid var(--ide-border);
+    display:flex; flex-direction:column; align-items:center; justify-content:space-between;
+    padding:10px 0 12px; gap:8px; overflow:hidden;
+  }
+  .rail ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;align-items:center;}
+  .rail-btn{
+    width:38px;height:38px;border:0;background:transparent;border-radius:7px;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--ide-icon);cursor:pointer;transition:background-color 120ms,color 120ms;
+  }
+  .rail-btn:hover{background:var(--ide-hover);color:var(--ide-ink);}
+  .rail-btn.on{color:var(--ide-accent);}
+  .rail-text{font-family:var(--ide-mono);font-size:11px;font-weight:700;letter-spacing:.02em;}
+  .rail-btn:focus-visible{outline:2px solid var(--ide-accent);outline-offset:-2px;}
+</style>
