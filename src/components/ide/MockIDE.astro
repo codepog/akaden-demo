@@ -59,7 +59,7 @@ import Chat from './Chat.astro';
   .menubar{
     grid-area:menu; display:flex; align-items:center; gap:4px;
     background:var(--ide-menubar); border-bottom:1px solid #D8D8D8;
-    padding:6px 10px; font-size:13px; overflow:hidden;
+    position:relative;z-index:60;padding:6px 10px; font-size:13px; overflow:visible;
   }
   .mi{border:0;background:transparent;padding:5px 9px;border-radius:5px;color:var(--ide-ink);font:inherit;white-space:nowrap;cursor:pointer;}
   .mi.plus{color:var(--ide-ink-soft);font-size:16px;padding:2px 8px;}
@@ -76,7 +76,7 @@ import Chat from './Chat.astro';
   .top-item{position:relative;}
   .top-popover{display:none;position:absolute;z-index:30;top:calc(100% + 8px);left:0;width:13.5rem;border:1px solid #B9C7D9;border-radius:7px;background:#fff;padding:.55rem .65rem;box-shadow:0 12px 28px rgba(0,33,99,.18);color:var(--ide-ink);text-align:left;white-space:normal;}
   .top-popover b{display:block;font-size:11.5px;}.top-popover small{display:block;margin-top:2px;color:var(--ide-ink-soft);font-size:10.5px;line-height:1.35;}
-  .ide[data-explore="true"] .top-item:hover .top-popover,.ide[data-explore="true"] .top-item:focus-visible .top-popover{display:block;}
+  .top-item:hover .top-popover,.top-item:focus-visible .top-popover{display:block;}
 
   /* ---- focus: the pane holding the action stays bright, the rest recede ---- */
   .ide :global(.side),.ide :global(.ed),.ide :global(.chat){
@@ -158,20 +158,24 @@ import Chat from './Chat.astro';
     const panes    = { side: q<HTMLElement>('.side'), ed: q<HTMLElement>('.ed'), chat: q<HTMLElement>('.chat') };
     const topActions = qa<HTMLButtonElement>('[data-top-action]');
 
-    // guide bar lives outside the IDE frame — it is demo navigation, not product UI
+    // The guide bar lives outside the IDE frame — it is demo navigation, not product UI.
     const bar      = document.querySelector<HTMLElement>('[data-guide]');
     const gCount   = document.querySelector<HTMLElement>('[data-g-count]');
     const gTitle   = document.querySelector<HTMLElement>('[data-g-title]');
-    const gText    = document.querySelector<HTMLElement>('[data-g-text]');
     const gPrev    = document.querySelector<HTMLButtonElement>('[data-g-prev]');
     const gNext    = document.querySelector<HTMLButtonElement>('[data-g-next]');
     const gDots    = document.querySelector<HTMLElement>('[data-g-dots]');
+    const callout  = document.querySelector<HTMLElement>('[data-callout]');
+    const calloutCount = document.querySelector<HTMLElement>('[data-callout-count]');
+    const calloutTitle = document.querySelector<HTMLElement>('[data-callout-title]');
+    const calloutText = document.querySelector<HTMLElement>('[data-callout-text]');
 
     let cur = 1;
     let openFile: string | null = null;
     let uploadPlaying = false;
     let deployOpen = false;
     let exploreMode = false;
+    let calloutTarget: HTMLElement | null = null;
 
     const step = () => steps[cur - 1];
     const promptFor = (candidate = step()) => candidate.chat.find((message) => message.from === 'you')?.text ?? null;
@@ -189,6 +193,54 @@ import Chat from './Chat.astro';
 
     const viewFor = (file: string | null, fallback: string) =>
       !file ? fallback : file === 'pipeline' ? 'pipeline' : `doc:${file}`;
+
+    function positionCallout() {
+      if (!callout || !calloutTarget || callout.hidden) return;
+      const target = calloutTarget.getBoundingClientRect();
+      const bubble = callout.getBoundingClientRect();
+      const inset = 14;
+      const gap = 18;
+      const room = {
+        top: target.top,
+        right: window.innerWidth - target.right,
+        bottom: window.innerHeight - target.bottom,
+        left: target.left,
+      };
+      let side: 'top' | 'right' | 'bottom' | 'left';
+      if (room.right >= bubble.width + gap && target.left < window.innerWidth * .62) side = 'right';
+      else if (room.left >= bubble.width + gap) side = 'left';
+      else if (room.top >= bubble.height + gap) side = 'top';
+      else side = 'bottom';
+
+      let left = target.left + target.width / 2 - bubble.width / 2;
+      let top = target.top + target.height / 2 - bubble.height / 2;
+      if (side === 'right') left = target.right + gap;
+      if (side === 'left') left = target.left - bubble.width - gap;
+      if (side === 'top') top = target.top - bubble.height - gap;
+      if (side === 'bottom') top = target.bottom + gap;
+
+      left = Math.max(inset, Math.min(left, window.innerWidth - bubble.width - inset));
+      top = Math.max(inset, Math.min(top, window.innerHeight - bubble.height - inset));
+      callout.dataset.side = side;
+      callout.style.left = `${left}px`;
+      callout.style.top = `${top}px`;
+      callout.style.setProperty('--callout-arrow-y', `${Math.max(22, Math.min(target.top + target.height / 2 - top, bubble.height - 22))}px`);
+      callout.style.setProperty('--callout-arrow-x', `${Math.max(22, Math.min(target.left + target.width / 2 - left, bubble.width - 22))}px`);
+    }
+
+    function updateCallout(target: HTMLElement | null, s = step()) {
+      calloutTarget = target;
+      if (!callout) return;
+      if (exploreMode || !target) {
+        callout.hidden = true;
+        return;
+      }
+      if (calloutCount) calloutCount.textContent = `Step ${cur} of ${steps.length}`;
+      if (calloutTitle) calloutTitle.textContent = s.title;
+      if (calloutText) calloutText.textContent = s.instruct;
+      callout.hidden = false;
+      window.requestAnimationFrame(positionCallout);
+    }
 
     function render() {
       const s = step();
@@ -235,6 +287,7 @@ import Chat from './Chat.astro';
           const el = document.createElement('button');
           el.type = 'button';
           el.className = 'tb-btn' + (b.kind === 'primary' ? ' primary' : '');
+          el.dataset.toolbarAction = b.action;
           el.textContent = b.label;
           el.addEventListener('click', next);
           toolbarEl.appendChild(el);
@@ -263,12 +316,13 @@ import Chat from './Chat.astro';
 
       // ring the one control worth looking at
       qa<HTMLElement>('.is-target').forEach((e) => e.classList.remove('is-target'));
-      if (!exploreMode) (q<HTMLElement>(s.ring) ?? document.querySelector<HTMLElement>(s.ring))?.classList.add('is-target');
+      const target = !exploreMode ? (q<HTMLElement>(s.ring) ?? document.querySelector<HTMLElement>(s.ring)) : null;
+      target?.classList.add('is-target');
+      updateCallout(target, s);
 
       // guide bar
       if (gCount) gCount.textContent = exploreMode ? 'Workspace tour' : `Step ${cur} of ${steps.length}`;
       if (gTitle) gTitle.textContent = exploreMode ? 'Explore Akaden' : s.title;
-      if (gText)  gText.textContent  = exploreMode ? 'Hover over a rail or top-bar item to see what it does.' : s.instruct;
       if (gPrev)  gPrev.disabled = cur === 1;
       if (gNext) { gNext.textContent = exploreMode ? 'Explore the workspace' : s.nextLabel; gNext.disabled = exploreMode; }
       if (bar) bar.dataset.step = String(cur);
@@ -353,6 +407,9 @@ import Chat from './Chat.astro';
       if (promptFor()) {
         const currentChat = panes.chat;
         const prompt = promptFor();
+        // Once the message leaves the composer, its coaching cue has done its job.
+        // Keep the response animation clear, then introduce the next cue with the next step.
+        updateCallout(null);
         if (ask) ask.value = '';
         if (pendingMessage) pendingMessage.textContent = prompt ?? '';
         if (pendingTurn) pendingTurn.hidden = false;
@@ -416,7 +473,6 @@ import Chat from './Chat.astro';
     topActions.forEach((button) =>
       button.addEventListener('click', () => button.dataset.topAction === 'deploy' ? openDeploy() : go(8)));
     deployClose?.addEventListener('click', () => { deployOpen = false; if (deployPanel) deployPanel.hidden = true; });
-    q<HTMLButtonElement>('[data-deploy-confirm]')?.addEventListener('click', () => go(7));
     explorerToggle?.addEventListener('click', () => {
       const fileMode = explorer?.dataset.explorerMode === 'files';
       if (explorer) explorer.dataset.explorerMode = fileMode ? 'folders' : 'files';
@@ -432,6 +488,7 @@ import Chat from './Chat.astro';
       if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
       if (e.key === 'ArrowLeft')  { e.preventDefault(); prev(); }
     });
+    window.addEventListener('resize', () => window.requestAnimationFrame(positionCallout));
 
     go(1);
   }

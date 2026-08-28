@@ -1,0 +1,69 @@
+---
+const capabilities = [
+  {
+    title: 'Plan with context',
+    body: 'Carry requirements, decisions, and institutional context forward so each task starts from what the team already knows.',
+    tag: 'Plan',
+  },
+  {
+    title: 'Work safely',
+    body: 'Keep files, settings, protected connections, and delivery constraints in the same guided workspace.',
+    tag: 'Guard',
+  },
+  {
+    title: 'Understand the ecosystem',
+    body: 'Bring the right Ellucian, Ethos, database, and API practices into the task without asking every developer to memorize them first.',
+    tag: 'Know',
+  },
+  {
+    title: 'Build the right artifact',
+    body: 'Turn an approved plan into inspectable DataConnect pipeline work instead of generating an opaque answer in a chat window.',
+    tag: 'Build',
+  },
+  {
+    title: 'Test what was agreed',
+    body: 'Use the specification as the reference for validation, so the team can check the result against the decisions it approved.',
+    tag: 'Check',
+  },
+];
+---
+
+<section id="skills-system" class="border-b border-rule bg-paper scroll-mt-20">
+  <div class="mx-auto max-w-[1200px] px-4 py-20 sm:px-6 sm:py-28">
+    <div class="grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(19rem,.72fr)]">
+      <div class="max-w-[46rem]">
+        <p class="u-label text-blue">Why Akaden is different</p>
+        <h2 class="u-h2 mt-4 text-blue-deep">Specialized skills, matched to the work in front of you.</h2>
+        <p class="u-lead mt-5">Akaden is not a blank AI canvas. It is a guided delivery environment shaped by ABCloudz engineers’ experience with Ellucian integrations and pipeline work.</p>
+      </div>
+
+      <div class="skill-proof" aria-label="Akaden skill system facts">
+        <div><strong>41</strong><span>specialized skills</span></div>
+        <div><strong>Auto</strong><span>matched to each task</span></div>
+        <div><strong>You</strong><span>can adjust the selection</span></div>
+      </div>
+    </div>
+
+    <div class="capabilities mt-12">
+      {capabilities.map((capability) => (
+        <article class="capability">
+          <span class="cap-tag" aria-hidden="true">{capability.tag}</span>
+          <h3>{capability.title}</h3>
+          <p>{capability.body}</p>
+        </article>
+      ))}
+    </div>
+
+    <p class="skill-close mt-10">The result is faster delivery and a lower barrier to entry, without taking the important business and technical decisions away from your team.</p>
+  </div>
+</section>
+
+<style>
+  .skill-proof{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid #C9D8ED;border-radius:1rem;background:#F3F7FD;overflow:hidden;}
+  .skill-proof div{min-width:0;padding:1rem .85rem;border-right:1px solid #D5E0F0;}.skill-proof div:last-child{border-right:0;}
+  .skill-proof strong{display:block;color:var(--color-blue-deep);font-family:var(--font-mono);font-size:1.1rem;line-height:1.1;}.skill-proof span{display:block;margin-top:.38rem;color:var(--color-ink-soft);font-size:.77rem;line-height:1.35;}
+  .capabilities{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1rem;}
+  .capability{border-top:2px solid var(--color-blue);padding:1.15rem 0 0;}.cap-tag{display:inline-flex;align-items:center;min-height:1.55rem;border:1px solid #C4D4EB;border-radius:999px;background:#F3F7FD;padding:0 .55rem;color:var(--color-blue);font-family:var(--font-mono);font-size:.63rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}.capability h3{margin:.85rem 0 0;color:var(--color-blue-deep);font-size:1.05rem;line-height:1.2;letter-spacing:-.02em;}.capability p{margin:.55rem 0 0;color:var(--color-ink-soft);font-size:.92rem;line-height:1.55;}
+  .skill-close{max-width:54rem;border-left:3px solid var(--color-agent);padding-left:1rem;color:var(--color-ink);font-size:1.1rem;line-height:1.55;}
+  @media(max-width:960px){.capabilities{grid-template-columns:repeat(3,minmax(0,1fr));}}@media(max-width:640px){.skill-proof{grid-template-columns:1fr;}.skill-proof div{border-right:0;border-bottom:1px solid #D5E0F0;}.skill-proof div:last-child{border-bottom:0;}.capabilities{grid-template-columns:1fr;gap:1.4rem;}}
+</style>

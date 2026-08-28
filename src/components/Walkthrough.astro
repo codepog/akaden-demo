@@ -1,23 +1,23 @@
 ---
 const stages = [
-  { number: '01', title: 'Add the request', detail: 'Start with the real business request and its context. This gives everyone, people and agents, one shared source of truth.', icon: 'workflow-upload.png' },
-  { number: '02', title: 'Ask the specification agent', detail: 'The agent turns the request into a plain-language plan. It makes the data, business rules, and safety limits clear before anything is built.', icon: 'workflow-spec-agent.png' },
-  { number: '03', title: 'Review the plan', detail: 'Your team checks the plan and changes what needs changing. This approval is the human checkpoint that keeps the implementation grounded in the real need.', icon: 'workflow-review.png' },
-  { number: '04', title: 'Generate the pipeline', detail: 'The pipeline agent creates the technical implementation from the approved plan. The specification is the blueprint, so the result is easier to understand and update.', icon: 'workflow-build-agent.png' },
-  { number: '05', title: 'Deploy and run it', detail: 'Choose a tenant, set the runtime values, and validate the output against the plan. You can trace every result back to the decision that created it.', icon: 'workflow-deploy.png' },
+  { number: '01', title: 'Start with the real request', detail: 'Bring in the business need, institutional context, and constraints. Akaden starts with what your team knows instead of asking a developer to begin from a blank prompt.', icon: 'workflow-upload.png' },
+  { number: '02', title: 'Build a plan with the right skills', detail: 'Akaden automatically selects the planning and design skills the task needs. It applies established practices, explores the missing decisions, and asks the questions that make the plan complete.', icon: 'workflow-spec-agent.png', agent: true },
+  { number: '03', title: 'Keep the decision with your team', detail: 'Your team edits and approves the plan. This is where business priorities, technical judgment, and institutional knowledge stay firmly in human hands.', icon: 'workflow-review.png' },
+  { number: '04', title: 'Build from an approved blueprint', detail: 'Akaden brings pipeline-building skills to the approved plan, creating an implementation that developers can inspect, understand, and update.', icon: 'workflow-build-agent.png', agent: true },
+  { number: '05', title: 'Test, deploy, and learn', detail: 'Set the runtime values, deploy to the right tenant, and validate the output against the agreed acceptance criteria. The next change starts from the same shared context.', icon: 'workflow-deploy.png' },
 ];
-const assetPath = (name: string) => `${import.meta.env.BASE_URL}${name}`;
+const assetPath = (name: string) => `${import.meta.env.BASE_URL.replace(/\/?$/, '/')}${name}`;
 ---
 
 <section id="walkthrough" class="border-b border-blue-deep bg-blue-deep scroll-mt-20">
   <div class="mx-auto max-w-[1200px] px-4 py-20 sm:px-6 sm:py-28">
     <div class="mx-auto max-w-[42rem] text-center">
       <p class="u-label text-agent">How it works</p>
-      <h2 class="u-h2 mt-4 text-ground">A clear path from request to running pipeline.</h2>
-      <p class="u-lead mt-5 !text-tint">Each stage appears as the work is ready for it: people decide what matters, agents handle the repeatable work.</p>
+      <h2 class="u-h2 mt-4 text-ground">A clear path from request to pipeline.</h2>
+      <p class="u-lead mt-5 !text-tint">Akaden brings practical guidance to each stage. Your team sets the direction, reviews the decisions, and stays accountable for the result.</p>
     </div>
 
-    <ol class="vertical-flow mt-20" aria-label="The Akaden workflow">
+    <ol class="vertical-flow" aria-label="The Akaden workflow">
       {stages.map((stage) => (
         <li class:list={['flow-step', Number(stage.number) % 2 === 0 && 'right']} data-flow-step>
           <div class="flow-copy">
@@ -25,7 +25,7 @@ const assetPath = (name: string) => `${import.meta.env.BASE_URL}${name}`;
             <h3>{stage.title}</h3>
             <p>{stage.detail}</p>
           </div>
-          <div class="flow-mark" aria-hidden="true"><img src={assetPath(stage.icon)} alt="" /></div>
+          <div class:list={['flow-mark', stage.agent && 'agent-mark']} aria-hidden="true"><img src={assetPath(stage.icon)} alt="" /></div>
           <div class="flow-spacer" aria-hidden="true"></div>
         </li>
       ))}
@@ -34,12 +34,12 @@ const assetPath = (name: string) => `${import.meta.env.BASE_URL}${name}`;
 </section>
 
 <style>
-  .vertical-flow{position:relative;list-style:none;margin:0;padding:0;}
+  .vertical-flow{position:relative;list-style:none;margin:5.5rem 0 0;padding:0;}
   .vertical-flow::before{content:"";position:absolute;top:2.8rem;bottom:2.8rem;left:50%;width:1px;background:color-mix(in srgb,var(--color-tint) 46%,transparent);}
   .flow-step{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 6.5rem minmax(0,1fr);min-height:14rem;padding:0 0 4rem;opacity:.16;transform:translateY(2.5rem);transition:opacity .65s ease,transform .65s ease;}.flow-step:last-child{min-height:0;padding-bottom:0;}.flow-step.is-visible{opacity:1;transform:translateY(0);}
   .flow-copy{justify-self:end;width:min(100%,28rem);border:1px solid rgba(220,229,242,.42);border-radius:1rem;background:rgba(255,255,255,.96);padding:1.5rem 1.65rem;box-shadow:0 18px 36px rgba(0,19,57,.16);}.flow-step.right .flow-copy{grid-column:3;justify-self:start;}.flow-step.right .flow-mark{grid-column:2;grid-row:1;}.flow-step.right .flow-spacer{grid-column:1;grid-row:1;}
-  .flow-mark{position:relative;z-index:1;grid-column:2;display:grid;place-items:center;justify-self:center;align-self:start;width:6.4rem;height:6.4rem;border:2px solid #DCE5F2;border-radius:1rem;background:#fff;padding:.25rem;box-shadow:0 0 0 8px var(--color-blue-deep),0 12px 26px rgba(0,19,57,.22);}.flow-mark img{width:100%;height:100%;object-fit:contain;display:block;}.flow-number{margin:0 0 .5rem;font-family:var(--font-mono);font-size:.78rem;font-weight:700;letter-spacing:.12em;color:var(--color-blue);}.flow-copy h3{margin:0;color:var(--color-blue-deep);font-size:clamp(1.48rem,2.8vw,2.15rem);line-height:1.08;letter-spacing:-.035em;}.flow-copy > p:last-child{margin:1rem 0 0;color:var(--color-ink-soft);font-size:1.13rem;line-height:1.62;}
-  @media(max-width:720px){.vertical-flow::before{left:2rem;}.flow-step,.flow-step.right{grid-template-columns:4rem minmax(0,1fr);min-height:0;padding:0 0 3.5rem;}.flow-copy,.flow-step.right .flow-copy{grid-column:2;justify-self:stretch;width:auto;}.flow-mark,.flow-step.right .flow-mark{grid-column:1;grid-row:1;width:4rem;height:4rem;padding:.15rem;box-shadow:0 0 0 6px var(--color-blue-deep);}.flow-spacer,.flow-step.right .flow-spacer{display:none;}.flow-copy h3{font-size:1.45rem;}.flow-copy > p:last-child{font-size:1.03rem;}}
+  .flow-mark{position:relative;z-index:1;grid-column:2;display:grid;place-items:center;justify-self:center;align-self:start;width:6.4rem;height:6.4rem;border:2px solid #DCE5F2;border-radius:1rem;background:#fff;padding:.25rem;box-shadow:0 0 0 8px var(--color-blue-deep),0 12px 26px rgba(0,19,57,.22);}.flow-mark img{width:100%;height:100%;object-fit:contain;display:block;}.flow-mark.agent-mark img{width:80%;height:80%;}.flow-number{margin:0 0 .5rem;font-family:var(--font-mono);font-size:.78rem;font-weight:700;letter-spacing:.12em;color:var(--color-blue);}.flow-copy h3{margin:0;color:var(--color-blue-deep);font-size:clamp(1.48rem,2.8vw,2.15rem);line-height:1.08;letter-spacing:-.035em;}.flow-copy > p:last-child{margin:1rem 0 0;color:var(--color-ink-soft);font-size:1.13rem;line-height:1.62;}
+  @media(max-width:720px){.vertical-flow{margin-top:3.75rem;}.vertical-flow::before{left:2rem;}.flow-step,.flow-step.right{grid-template-columns:4rem minmax(0,1fr);min-height:0;padding:0 0 3.5rem;}.flow-copy,.flow-step.right .flow-copy{grid-column:2;justify-self:stretch;width:auto;}.flow-mark,.flow-step.right .flow-mark{grid-column:1;grid-row:1;width:4rem;height:4rem;padding:.15rem;box-shadow:0 0 0 6px var(--color-blue-deep);}.flow-spacer,.flow-step.right .flow-spacer{display:none;}.flow-copy h3{font-size:1.45rem;}.flow-copy > p:last-child{font-size:1.03rem;}}
   @media(prefers-reduced-motion:reduce){.flow-step{opacity:1;transform:none;transition:none;}}
 </style>
 

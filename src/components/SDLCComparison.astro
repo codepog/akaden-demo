@@ -1,0 +1,38 @@
+---
+const assetPath = (name: string) => `${import.meta.env.BASE_URL.replace(/\/?$/, '/')}${name}`;
+---
+
+<section id="sdlc-comparison" class="border-b border-blue-deep bg-tint scroll-mt-20">
+  <div class="mx-auto max-w-[1200px] px-4 py-20 sm:px-6 sm:py-28">
+    <div class="mx-auto max-w-[46rem] text-center">
+      <p class="u-label text-blue">The shift</p>
+      <h2 class="u-h2 mt-4 text-blue-deep">The engineer stays in control. The delivery burden changes.</h2>
+      <p class="u-lead mt-5 text-ink-soft">The systems, standards, and accountability stay with your team. What changes is that specialized delivery skills handle repeatable work, so one expert does not have to carry every integration detail alone.</p>
+    </div>
+
+    <div class="comparison-grid mt-12">
+      <figure class="comparison-card">
+        <figcaption><span>Before</span><strong>One person carries every task</strong></figcaption>
+        <img src={assetPath('manual-sdlc.png')} alt="Manual SDLC diagram showing an engineer directly managing every connected system." />
+      </figure>
+      <div class="comparison-arrow" aria-hidden="true">→</div>
+      <figure class="comparison-card agentic">
+        <figcaption><span>With Akaden</span><strong>One person directs specialized skills</strong></figcaption>
+        <img src={assetPath('agentic-sdlc.png')} alt="Agentic SDLC diagram showing an engineer supervising a team of agents that work across connected systems." />
+      </figure>
+    </div>
+  </div>
+</section>
+
+<style>
+  .comparison-grid{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:1rem;}
+  .comparison-card{margin:0;overflow:hidden;border:1px solid #CBD8EA;border-radius:1rem;background:#fff;box-shadow:0 16px 32px rgba(0,33,99,.09);}
+  .comparison-card figcaption{display:flex;align-items:baseline;gap:.55rem;padding:.9rem 1.05rem;border-bottom:1px solid #DCE5F2;background:#F8FAFD;}
+  .comparison-card figcaption span{font-family:var(--font-mono);font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#667085;}
+  .comparison-card figcaption strong{font-size:1.05rem;color:var(--color-blue-deep);}
+  .comparison-card img{display:block;width:100%;height:auto;aspect-ratio:1.78;object-fit:contain;background:#fff;}
+  .comparison-card.agentic{border-color:#B7CBEF;box-shadow:0 18px 38px rgba(33,83,196,.14);}
+  .comparison-card.agentic figcaption{background:#F2F6FE;}
+  .comparison-arrow{display:grid;place-items:center;width:2.6rem;height:2.6rem;border-radius:999px;background:var(--color-blue);color:#fff;font-size:1.4rem;font-weight:700;box-shadow:0 6px 16px rgba(33,83,196,.25);}
+  @media(max-width:760px){.comparison-grid{grid-template-columns:1fr;gap:1rem;}.comparison-arrow{margin:auto;transform:rotate(90deg);}.comparison-card figcaption{padding:.75rem .9rem;}}
+</style>

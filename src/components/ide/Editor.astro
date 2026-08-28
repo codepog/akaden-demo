@@ -52,6 +52,8 @@ const pipelineDetail = (name: string, kind?: string) => {
     ))}
   </div>
 
+  <div class="editor-toolbar" data-toolbar aria-label="Editor actions"></div>
+
   <div class="ed-body">
     <!-- step 1: the incoming request visibly lands in inputs/ -->
     <div class="view drop-stage" data-view="empty">
@@ -61,7 +63,7 @@ const pipelineDetail = (name: string, kind?: string) => {
           <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
             <path d="M6 2h8l4 4v16H6z"/><path d="M14 2v4h4"/><path d="M9 12h6M9 16h6" stroke-linecap="round"/>
           </svg>
-          <span class="dc-name">nightly-contact-export.md</span>
+          <span class="dc-name">contact-request.md</span>
           <span class="dc-sub" id="dragcard-hint">Ready to upload to <b>inputs</b></span>
         </div>
       </div>
@@ -164,7 +166,9 @@ const pipelineDetail = (name: string, kind?: string) => {
       </div>
     </div>
 
-    <section class="deploy-drawer" data-deploy-panel hidden aria-label="Deploy pipeline">
+  </div>
+
+  <section class="deploy-drawer" data-deploy-panel hidden aria-label="Deploy pipeline">
       <header class="deploy-head">
         <div class="deploy-tabs" role="tablist" aria-label="Deployment panels">
           <button type="button" role="tab" aria-selected="true">↥&nbsp; Deploy</button>
@@ -183,12 +187,11 @@ const pipelineDetail = (name: string, kind?: string) => {
         <label class="deploy-field"><span>Package</span><select aria-label="Package"><option>demo-package</option></select></label>
         <label class="deploy-field"><span>Pipeline name</span><input type="text" value="contact-export" aria-label="Pipeline name" /></label>
       </div>
-    </section>
-  </div>
+  </section>
 </main>
 
 <style>
-  .ed{grid-area:ed;background:var(--ide-editor);display:flex;flex-direction:column;min-width:0;min-height:0;border-right:1px solid var(--ide-border);}
+  .ed{grid-area:ed;position:relative;background:var(--ide-editor);display:flex;flex-direction:column;min-width:0;min-height:0;border-right:1px solid var(--ide-border);}
 
   .tabs{display:flex;gap:0;background:var(--ide-panel);border-bottom:1px solid var(--ide-border);overflow-x:auto;}
   .tab{
@@ -198,6 +201,13 @@ const pipelineDetail = (name: string, kind?: string) => {
   .tab[aria-current="true"]{background:var(--ide-editor);color:var(--ide-ink);}
   .ficon{font-size:7px;font-weight:700;font-family:var(--ide-mono);border:1px solid currentColor;border-radius:2px;padding:1px 2px;color:#5B8DD6;}
   .ficon.pipeline{color:#C0392B;}
+
+  .editor-toolbar{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-height:43px;padding:6px 14px;background:#F5F8FC;border-bottom:1px solid var(--ide-border);}
+  .editor-toolbar:empty{display:none;}
+  .tb-btn{height:30px;border:1px solid var(--ide-border-strong);border-radius:6px;background:var(--ide-editor);padding:0 11px;color:var(--ide-ink);font:inherit;font-size:12px;font-weight:600;cursor:pointer;}
+  .tb-btn:hover{border-color:var(--ide-ink-soft);}.tb-btn:focus-visible{outline:2px solid var(--ide-accent);outline-offset:2px;}
+  .tb-btn.primary{border-color:var(--ide-accent);background:var(--ide-accent);color:#fff;}
+  .tb-btn.primary:hover{background:#2866B5;border-color:#2866B5;}
 
   .ed-body{flex:1;min-height:0;overflow:hidden;position:relative;}
   .view{position:absolute;inset:0;overflow-y:auto;}

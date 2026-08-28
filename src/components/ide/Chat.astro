@@ -46,7 +46,7 @@ import { steps, AGENTS } from '../../data/ide';
 
     <div class="picker" data-picker hidden>
       <p class="pk-head">Agent</p>
-      <p class="pk-sub">Skill candidates and tool policy follow this agent; edit bindings in AI Settings.</p>
+      <p class="pk-sub">Akaden recommends the specialized skills this task needs. Developers can review the choice and adjust it when needed.</p>
       <div class="pk-list" role="radiogroup" aria-label="Agent">
         {AGENTS.map((a) => (
           <label class="pk-row"><input type="radio" name="agent" value={a} /> <span>{a}</span></label>
@@ -60,7 +60,7 @@ import { steps, AGENTS } from '../../data/ide';
         <span data-agent-label>Agent</span> <span class="cv" aria-hidden="true">⌄</span>
       </button>
       <button type="button" class="cbtn" tabindex="-1">✦ Auto <span class="cv" aria-hidden="true">⌄</span></button>
-      <button type="button" class="cbtn" tabindex="-1">Skills <span class="cv" aria-hidden="true">⌄</span></button>
+      <button type="button" class="cbtn" tabindex="-1">41 skills <span class="cv" aria-hidden="true">⌄</span></button>
       <button type="button" class="cbtn" tabindex="-1">Tools <span class="cv" aria-hidden="true">⌄</span></button>
       <button type="button" class="send" data-send aria-label="Send">
         <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>

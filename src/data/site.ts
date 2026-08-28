@@ -10,9 +10,8 @@ export const site = {
   name: 'Akaden',
   tagline: 'Technology modernization through Agentic AI',
   description:
-    'Akaden turns a written specification into a deployed Ellucian data pipeline. ' +
-    'An agent drafts the spec, you approve it, a second agent builds the pipeline. ' +
-    'When the requirement changes, you edit the spec and regenerate.',
+    'Akaden turns a written specification into a reviewed, deployable Ellucian data pipeline. ' +
+    'It guides teams through the delivery work with practices built for integrations, while people keep the decisions.',
   owner: 'ABCloudz',
   ownerUrl: 'https://abcloudz.com/',
 };
@@ -31,7 +30,7 @@ export const hero = {
   eyebrow: 'For Ellucian Banner and Ethos',
   headline: 'From request\nto reliable pipeline.',
   lead:
-    'Akaden turns a written request into a reviewed, deployable Ellucian data pipeline.',
+    'Akaden turns a written request into a reviewed, deployable Ellucian data pipeline, with the right delivery practices ready when the work needs them.',
   thesis: 'You stop maintaining pipelines. You start maintaining specifications.',
   thesisSub: 'The pipeline is the output. The spec is the asset.',
   install: { label: 'Get Akaden', href: '#install' },
@@ -160,10 +159,9 @@ export const benefits = {
 
 export const wholePicture = {
   eyebrow: 'The whole picture',
-  headline: 'One engineer, supervising',
+  headline: 'One engineer, supervising.',
   lead:
-    'Every integration used to run through a person configuring it by hand. The systems have not ' +
-    'changed. What changed is where the engineer stands.',
+    'Every integration used to run through a person configuring it by hand. The systems have not changed. Akaden helps the engineer carry the repeatable work with familiar delivery practices close at hand.',
 };
 
 export const install = {
