@@ -22,7 +22,7 @@ export const nav = {
     { label: 'Product', href: './', live: true },
     { label: 'Setup', href: '#', live: false },
     { label: 'Specs', href: '#', live: false },
-    { label: 'Security', href: '#', live: false },
+    { label: 'Archived', href: './archived', live: true },
   ],
   cta: { label: 'Get Akaden', href: '#install' },
 };

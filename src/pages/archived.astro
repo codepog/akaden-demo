@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import WhySpec from '../components/WhySpec.astro';
+import Guardrails from '../components/Guardrails.astro';
+import Proof from '../components/Proof.astro';
+import WalkthroughArchive from '../components/WalkthroughArchive.astro';
+import Footer from '../components/Footer.astro';
+---
+<Base title="Akaden — archived product material">
+  <Nav />
+  <main id="main">
+    <section class="border-b border-rule bg-ground">
+      <div class="mx-auto max-w-[1200px] px-4 py-16 sm:px-6 sm:py-20">
+        <p class="u-label text-blue">Archived</p>
+        <h1 class="u-h2 mt-4 text-blue-deep">Earlier product material</h1>
+        <p class="u-lead u-measure mt-5">Kept here for reference while the main product page stays focused on the workflow and the product tour.</p>
+      </div>
+    </section>
+    <WalkthroughArchive />
+    <WhySpec />
+    <Guardrails />
+    <Proof />
+  </main>
+  <Footer />
+</Base>

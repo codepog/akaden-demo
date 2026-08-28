@@ -2,9 +2,14 @@
 import { FILES, FOLDERS } from '../../data/ide';
 const byFolder = (f: string) => Object.entries(FILES).filter(([, v]) => v.folder === f);
 ---
-<aside class="side">
+<aside class="side" data-explorer data-explorer-mode="folders">
   <section class="panel explorer">
-    <header class="panel-head"><span>Explorer</span></header>
+    <header class="panel-head">
+      <span>Explorer</span>
+      <button type="button" class="explorer-mode" data-explorer-toggle aria-label="Switch to file view" title="Switch Explorer view">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 5h6l2 2h10v12H3z"/><path d="M9 11h8M9 15h6" stroke-linecap="round"/></svg><span aria-hidden="true">⌄</span>
+      </button>
+    </header>
     <div class="tree">
       <div class="root"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 5h6l2 2h8v12H4z"/></svg> test-env</div>
       {FOLDERS.map((folder) => {
@@ -41,12 +46,16 @@ const byFolder = (f: string) => Object.entries(FILES).filter(([, v]) => v.folder
     padding:11px 14px 9px; font-size:11.5px; font-weight:600; letter-spacing:.06em;
     text-transform:uppercase; color:var(--ide-ink-soft);
   }
+  .explorer-mode{display:inline-flex;align-items:center;gap:2px;border:0;border-radius:5px;background:transparent;color:var(--ide-ink-soft);cursor:pointer;padding:3px 4px;}.explorer-mode:hover{background:var(--ide-hover);color:var(--ide-ink);}.explorer-mode:focus-visible{outline:2px solid var(--ide-accent);outline-offset:1px;}
   .tree{padding:0 8px 16px;overflow-y:auto;min-height:0;font-size:13.5px;}
   .root{
     display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:6px;
     background:var(--ide-selected);font-weight:600;color:var(--ide-ink);margin-bottom:2px;
   }
   .folder-row{display:flex;align-items:center;gap:6px;padding:4px 8px 4px 12px;color:var(--ide-ink);font-weight:600;border-radius:6px;}
+  .side[data-explorer-mode="files"] .folder-row{display:none;}.side[data-explorer-mode="files"] .file{padding-left:12px;}.side[data-explorer-mode="files"] .root{margin-bottom:6px;}
+  .folder-row.upload-target{background:#CFE3FF;box-shadow:0 0 0 2px rgba(51,118,205,.35);animation:folderTarget .9s ease-out both;}
+  @keyframes folderTarget{50%{transform:scale(1.03)}}
 
   .chev{width:10px;font-size:11px;color:var(--ide-ink-soft);}
   .file{
@@ -56,6 +65,10 @@ const byFolder = (f: string) => Object.entries(FILES).filter(([, v]) => v.folder
   }
   .file:hover{background:var(--ide-hover);}
   .file[aria-current="true"]{background:var(--ide-selected);}
+  @media (prefers-reduced-motion: no-preference){
+    .file.file-arrived{animation:fileArrives 1.1s ease-out .95s both;}
+    @keyframes fileArrives{0%{opacity:0;transform:translateX(-16px)}55%{opacity:0;transform:translateX(-16px)}78%{opacity:1;transform:translateX(2px);background:#CFE3FF}100%{opacity:1;transform:translateX(0)}}
+  }
   .file:focus-visible{outline:2px solid var(--ide-accent);outline-offset:-2px;}
   .fname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .ficon{

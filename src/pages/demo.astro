@@ -25,7 +25,7 @@ import { steps } from '../data/ide';
       </ol>
       <div class="g-row">
         <div class="g-copy">
-          <p class="g-head"><span data-g-count>Step 1 of 9</span> <span aria-hidden="true">·</span> <b data-g-title>Prepare workspace</b></p>
+          <p class="g-head"><span data-g-count>Step 1 of 8</span> <span aria-hidden="true">·</span> <b data-g-title>Upload request</b></p>
           <p class="g-text" data-g-text aria-live="polite"></p>
         </div>
         <div class="g-btns">
@@ -40,7 +40,7 @@ import { steps } from '../data/ide';
 </html>
 
 <style>
-  .page{background:var(--color-paper);margin:0;display:grid;grid-template-areas:"frame" "guide";grid-template-rows:minmax(0,1fr) auto;height:100dvh;overflow:hidden;}
+  .page{background:var(--color-paper);margin:0;display:grid;grid-template-areas:"frame" "guide";grid-template-rows:minmax(0,1fr) auto;height:clamp(40rem,59vw,50rem);overflow:hidden;}
 
   .frame{
     grid-area:frame;
@@ -58,28 +58,28 @@ import { steps } from '../data/ide';
     background:var(--color-ground);
     border:0;border-top:1px solid var(--color-rule-strong);
     border-radius:0;
-    padding:9px clamp(12px,2.4vw,20px) 10px;
-    min-height:106px;
+    padding:7px clamp(12px,2.4vw,20px) 8px;
+    min-height:94px;
   }
-  .g-dots{list-style:none;display:flex;gap:6px;margin:0 0 9px;padding:0;}
+  .g-dots{list-style:none;display:flex;gap:6px;margin:0 0 6px;padding:0;}
   .g-dots li{flex:1;}
   .g-dots button{
     display:block;width:100%;height:4px;border:0;padding:0;border-radius:2px;
-    background:var(--color-rule);cursor:pointer;transition:background-color 180ms;
+    background:var(--color-rule);cursor:pointer;transition:background-color 180ms,transform 180ms;
   }
   .g-dots button.past{background:#9CC0A8;}
-  .g-dots button.on{background:var(--color-blue);}
+  .g-dots button.on{background:var(--color-blue);transform:scaleY(1.65);}
   .g-dots button:hover{background:var(--color-rule-strong);}
   .g-dots button:focus-visible{outline:2px solid var(--color-ink);outline-offset:2px;}
 
   .g-row{display:flex;align-items:center;gap:20px;}
-  .g-copy{flex:1;min-width:0;min-height:51px;}
+  .g-copy{flex:1;min-width:0;min-height:50px;}
   .g-head{
     margin:0;font-family:var(--font-mono);font-size:11px;letter-spacing:.09em;
     text-transform:uppercase;color:var(--color-ink-soft);
   }
   .g-head b{color:var(--color-blue);font-weight:700;}
-  .g-text{margin:3px 0 0;max-width:70ch;height:2.9em;overflow:hidden;font-size:.8125rem;line-height:1.45;color:var(--color-ink);}
+  .g-text{height:1.45em;overflow:hidden;margin:4px 0 0;color:var(--color-ink-soft);font-size:.98rem;line-height:1.45;white-space:nowrap;text-overflow:ellipsis;}
   .g-btns{display:flex;gap:10px;flex:0 0 18rem;margin-left:auto;}
   .g-btn{
     border:1px solid var(--color-rule-strong);background:var(--color-ground);color:var(--color-ink);
@@ -96,6 +96,7 @@ import { steps } from '../data/ide';
   .guide[data-step="3"] .g-btn.primary{box-shadow:0 0 0 4px rgba(33,83,196,.18);}
 
   @media (max-width:620px){
+    .page{height:100dvh;}
     .g-row{gap:10px;}
     .g-text{display:none;}
     .g-copy{min-height:0;}

@@ -12,11 +12,11 @@ const systems = [
 const W = 153, GAP = 16, X0 = 20, TOP = 330, H = 80;
 const cx = (i: number) => X0 + i * (W + GAP) + W / 2;
 ---
-<section id="picture" class="border-b border-rule scroll-mt-20">
+<section id="picture" class="border-b border-blue-deep bg-blue-deep scroll-mt-20">
   <div class="mx-auto max-w-[1200px] px-4 py-20 sm:px-6 sm:py-28">
-    <p class="u-label text-blue">{wholePicture.eyebrow}</p>
-    <h2 class="u-h2 mt-4 text-blue-deep">{wholePicture.headline}</h2>
-    <p class="u-lead u-measure mt-5">{wholePicture.lead}</p>
+    <p class="u-label text-agent">{wholePicture.eyebrow}</p>
+    <h2 class="u-h2 mt-4 text-ground">{wholePicture.headline}</h2>
+    <p class="u-lead u-measure mt-5 !text-tint">{wholePicture.lead}</p>
 
     <div class="mt-12 overflow-x-auto">
       <svg

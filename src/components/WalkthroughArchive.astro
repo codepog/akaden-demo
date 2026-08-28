@@ -1,0 +1,32 @@
+---
+const stages = [
+  { number: '01', title: 'Upload request', detail: 'Add the business request and the context Akaden needs.', kind: 'upload', mark: '↑' },
+  { number: '02', title: 'Draft specification', detail: 'The Specification Builder Agent turns the request into a clear plan.', kind: 'agent', mark: 'AI' },
+  { number: '03', title: 'Review specification', detail: 'A person checks the decisions and approves the work to continue.', kind: 'review', mark: '✓' },
+  { number: '04', title: 'Build pipeline', detail: 'The Pipeline Builder Agent generates the pipeline from the approved plan.', kind: 'agent', mark: 'AI' },
+  { number: '05', title: 'Deploy and validate', detail: 'Deploy to the tenant, run it, and check the result against the specification.', kind: 'deploy', mark: '↑' },
+];
+---
+
+<!-- Retained from the prior horizontal product story for internal reference. -->
+<section class="border-b border-rule bg-paper">
+  <div class="mx-auto max-w-[1200px] px-4 py-20 sm:px-6">
+    <p class="u-label text-blue">Archived: How it works</p>
+    <h2 class="u-h2 mt-4 text-blue-deep">From request to reliable pipeline.</h2>
+    <ol class="archive-flow mt-12" aria-label="Previous workflow design">
+      {stages.map((stage) => (
+        <li>
+          <span class:list={['archive-icon', stage.kind]}>{stage.mark}</span>
+          <p>{stage.number}</p><h3>{stage.title}</h3><small>{stage.detail}</small>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .archive-flow{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1.5rem;}
+  .archive-icon{display:grid;place-items:center;width:4.5rem;height:4.5rem;border:2px solid var(--color-blue);border-radius:50%;color:var(--color-blue);font-family:var(--font-mono);font-weight:700;}.archive-icon.upload{border-radius:.7rem;background:var(--color-blue-deep);color:#fff;}.archive-icon.agent{border-color:var(--color-agent);color:#8a5600;font-size:.8rem;}.archive-icon.review{font-family:var(--font-sans);font-size:2.4rem;}.archive-icon.deploy{border-radius:1.2rem;font-size:2rem;}
+  .archive-flow p{margin:1rem 0 .25rem;font-family:var(--font-mono);font-size:.7rem;color:var(--color-ink-soft);}.archive-flow h3{margin:0;color:var(--color-blue-deep);font-size:1rem;}.archive-flow small{display:block;margin-top:.4rem;color:var(--color-ink-soft);line-height:1.45;}
+  @media(max-width:800px){.archive-flow{grid-template-columns:repeat(2,minmax(0,1fr));}.archive-flow li:last-child{grid-column:span 2;}}
+</style>

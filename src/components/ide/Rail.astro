@@ -1,31 +1,33 @@
 ---
 const icons = [
-  { id: 'files', label: 'Explorer', d: 'M4 3h6l2 2h8v14H4z' },
-  { id: 'search', label: 'Search', d: 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4.5-4.5' },
-  { id: 'secrets', label: 'Secrets', d: 'M7 11V8a5 5 0 0 1 10 0v3M5 11h14v9H5z' },
-  { id: 'api', label: 'API catalog', text: 'API' },
-  { id: 'skills', label: 'Skills', d: 'M12 3v6M12 15v6M3 12h6M15 12h6M8 8l3 3M16 16l-3-3' },
-  { id: 'deploy', label: 'Deployments', d: 'M6 16a4 4 0 0 1 .8-7.9 5.5 5.5 0 0 1 10.6 1.4A3.5 3.5 0 0 1 17 16zM12 12v6M9.5 14.5 12 12l2.5 2.5' },
-  { id: 'data', label: 'Data', d: 'M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3zM4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6' },
-  { id: 'git', label: 'Source control', d: 'M7 4v10M7 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM7 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM17 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM17 8v2a4 4 0 0 1-4 4H7' },
+  { id: 'files', label: 'Explorer', description: 'Browse files, folders, specifications, and pipelines.', d: 'M3 6h6l2 2h10v11H3z' },
+  { id: 'search', label: 'Search', description: 'Find an artifact or text across this workspace.', d: 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4.5-4.5' },
+  { id: 'secrets', label: 'Secrets', description: 'Manage the protected credentials used by integrations.', d: 'M7 11V8a5 5 0 0 1 10 0v3M5 11h14v9H5z' },
+  { id: 'api', label: 'Ethos / Colleague API', description: 'Connect to approved Ethos and Colleague endpoints.', text: 'API' },
+  { id: 'skills', label: 'Spec APIs', description: 'Define the APIs and reusable rules in your specification.', d: 'M12 3v5a4 4 0 0 1-4 4H5a3 3 0 1 0 0 6h3a4 4 0 0 1 4 4v5M12 3v5a4 4 0 0 0 4 4h3a3 3 0 1 1 0 6h-3a4 4 0 0 0-4 4v5' },
+  { id: 'deploy', label: 'Ellucian DataConnect', description: 'Deploy and operate pipelines in Integration Designer.', d: 'M6 15a4 4 0 0 1 .8-7.9 5.5 5.5 0 0 1 10.6 1.4A3.5 3.5 0 0 1 17 15zM5 19h14M12 15v4M9 19a1 1 0 1 0 0 .01M15 19a1 1 0 1 0 0 .01' },
+  { id: 'data', label: 'Database', description: 'Inspect the data sources and records this work uses.', d: 'M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3zM4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6' },
+  { id: 'git', label: 'Source control', description: 'Track the files and decisions that define this pipeline.', d: 'M7 4v10M7 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM7 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM17 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM17 8v2a4 4 0 0 1-4 4H7' },
 ];
 ---
 <nav class="rail" aria-label="Workbench">
   <ul>
-    {icons.map((i, idx) => (
+    {icons.map((i) => (
       <li>
-        <button type="button" class:list={['rail-btn', idx === 0 && 'on']} title={i.label} aria-label={i.label} aria-current={idx === 0 ? 'true' : undefined}>
+        <button type="button" class="rail-btn" data-rail-tool title={i.label} aria-label={i.label} aria-expanded="false">
           {i.text
             ? <span class="rail-text">{i.text}</span>
-            : <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={i.d} /></svg>}
+            : <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={i.d} /></svg>}
+          <span class="rail-popover"><b>{i.label}</b><small>{i.description}</small></span>
         </button>
       </li>
     ))}
   </ul>
-  <button type="button" class="rail-btn" title="Settings" aria-label="Settings">
+  <button type="button" class="rail-btn" data-rail-tool title="Settings" aria-label="Settings" aria-expanded="false">
     <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
       <circle cx="12" cy="12" r="3" /><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1" stroke-linecap="round" />
     </svg>
+    <span class="rail-popover"><b>Settings</b><small>Configure this workspace and your preferences.</small></span>
   </button>
 </nav>
 
@@ -33,16 +35,31 @@ const icons = [
   .rail{
     grid-area:rail; background:var(--ide-rail); border-right:1px solid var(--ide-border);
     display:flex; flex-direction:column; align-items:center; justify-content:space-between;
-    padding:10px 0 12px; gap:8px; overflow:hidden;
+    position:relative;z-index:40;padding:10px 0 12px;gap:8px;overflow:visible;
   }
   .rail ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;align-items:center;}
   .rail-btn{
     width:38px;height:38px;border:0;background:transparent;border-radius:7px;
     display:flex;align-items:center;justify-content:center;
-    color:var(--ide-icon);cursor:pointer;transition:background-color 120ms,color 120ms;
+    position:relative;color:var(--ide-icon);cursor:pointer;transition:background-color 120ms,color 120ms;
   }
   .rail-btn:hover{background:var(--ide-hover);color:var(--ide-ink);}
-  .rail-btn.on{color:var(--ide-accent);}
   .rail-text{font-family:var(--ide-mono);font-size:11px;font-weight:700;letter-spacing:.02em;}
   .rail-btn:focus-visible{outline:2px solid var(--ide-accent);outline-offset:-2px;}
+  .rail-popover{display:none;position:absolute;z-index:45;left:calc(100% + 8px);top:0;width:13rem;border:1px solid #B9C7D9;border-radius:7px;background:#fff;padding:.55rem .65rem;box-shadow:0 12px 28px rgba(0,33,99,.18);color:var(--ide-ink);text-align:left;white-space:normal;}
+  .rail-popover b{display:block;font-size:11.5px;}.rail-popover small{display:block;margin-top:2px;color:var(--ide-ink-soft);font-size:10.5px;line-height:1.35;}
+  .rail-btn:hover .rail-popover,.rail-btn:focus-visible .rail-popover,.rail-btn.open .rail-popover{display:block;}
 </style>
+
+<script>
+  const railTools = document.querySelectorAll<HTMLButtonElement>('[data-rail-tool]');
+  railTools.forEach((tool) => tool.addEventListener('click', () => {
+    const willOpen = !tool.classList.contains('open');
+    railTools.forEach((item) => { item.classList.remove('open'); item.setAttribute('aria-expanded', 'false'); });
+    if (willOpen) { tool.classList.add('open'); tool.setAttribute('aria-expanded', 'true'); }
+  }));
+  railTools.forEach((tool) => tool.addEventListener('pointerleave', () => {
+    tool.classList.remove('open');
+    tool.setAttribute('aria-expanded', 'false');
+  }));
+</script>

@@ -6,22 +6,18 @@ import Chat from './Chat.astro';
 ---
 <div class="ide" data-ide>
   <div class="menubar">
-    <span class="mi">File</span><span class="mi">Edit</span><span class="mi">View</span><span class="mi">Help</span>
-    <span class="chipbtn"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h16v14H4z"/><path d="M8 10l2 2-2 2M13 14h4" stroke-linecap="round"/></svg> Command Palette</span>
-    <span class="chipbtn"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h6l2 2h8v12H4z"/></svg> test-env <span class="cv">⌄</span></span>
-    <span class="mi plus">+</span>
-    <span class="spacer"></span>
-    <div class="pane-tools" role="group" aria-label="Choose a workspace pane">
-      <button type="button" class="pane-toggle" data-pane-toggle="ed" aria-pressed="false">Editor</button>
-      <button type="button" class="pane-toggle" data-pane-toggle="chat" aria-pressed="false">Assistant</button>
+    <button type="button" class="mi top-item">File<span class="top-popover"><b>File</b><small>Create, open, or manage workspace files.</small></span></button>
+    <button type="button" class="mi top-item">Edit<span class="top-popover"><b>Edit</b><small>Make changes to the active artifact.</small></span></button>
+    <button type="button" class="mi top-item">View<span class="top-popover"><b>View</b><small>Choose what you see in the workspace.</small></span></button>
+    <button type="button" class="mi top-item">Help<span class="top-popover"><b>Help</b><small>Find guidance for the current task.</small></span></button>
+    <button type="button" class="chipbtn top-item"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h16v14H4z"/><path d="M8 10l2 2-2 2M13 14h4" stroke-linecap="round"/></svg> Command Palette<span class="top-popover"><b>Command Palette</b><small>Jump straight to a workspace action.</small></span></button>
+    <button type="button" class="chipbtn top-item"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h6l2 2h8v12H4z"/></svg> test-env <span class="cv">⌄</span><span class="top-popover"><b>test-env</b><small>The selected workspace environment.</small></span></button>
+    <button type="button" class="mi plus top-item" aria-label="New item">+<span class="top-popover"><b>New</b><small>Add a file, folder, or pipeline item.</small></span></button>
+    <div class="run-actions" role="group" aria-label="Pipeline actions">
+      <button type="button" class="top-item" data-top-action="deploy">Deploy<span class="top-popover"><b>Deploy</b><small>Choose a tenant and send the approved pipeline.</small></span></button>
+      <button type="button" class="top-item" data-top-action="run">Run<span class="top-popover"><b>Run</b><small>Execute the current pipeline with its parameters.</small></span></button>
     </div>
-  </div>
-
-  <!-- pane switcher, narrow viewports only -->
-  <div class="mtabs" role="tablist" aria-label="Panels">
-    <button type="button" role="tab" data-pane="side" aria-selected="true">Steps</button>
-    <button type="button" role="tab" data-pane="ed" aria-selected="false">Editor</button>
-    <button type="button" role="tab" data-pane="chat" aria-selected="false">Assistant</button>
+    <span class="spacer"></span>
   </div>
 
   <Rail />
@@ -65,24 +61,22 @@ import Chat from './Chat.astro';
     background:var(--ide-menubar); border-bottom:1px solid #D8D8D8;
     padding:6px 10px; font-size:13px; overflow:hidden;
   }
-  .mi{padding:5px 9px;border-radius:5px;color:var(--ide-ink);white-space:nowrap;}
+  .mi{border:0;background:transparent;padding:5px 9px;border-radius:5px;color:var(--ide-ink);font:inherit;white-space:nowrap;cursor:pointer;}
   .mi.plus{color:var(--ide-ink-soft);font-size:16px;padding:2px 8px;}
   .chipbtn{
     display:inline-flex;align-items:center;gap:6px;background:var(--ide-editor);
     border:1px solid #D2D2D2;border-radius:6px;padding:4px 10px;white-space:nowrap;font-size:12.5px;
   }
   .cv{color:var(--ide-ink-soft);font-size:11px;}
+  .run-actions{display:flex;align-items:center;gap:5px;}
+  .run-actions button{border:1px solid #C5D7EF;background:var(--ide-editor);border-radius:5px;padding:4px 10px;font:inherit;font-size:11.5px;font-weight:700;color:var(--ide-accent);cursor:pointer;}
+  .run-actions button:hover,.run-actions button[aria-current="true"]{background:var(--ide-accent);border-color:var(--ide-accent);color:#fff;}
+  .run-actions button:focus-visible{outline:2px solid var(--ide-ink);outline-offset:2px;}
   .spacer{flex:1;}
-  .pane-tools{display:flex;align-items:center;gap:4px;}
-  .pane-toggle{
-    border:1px solid #D2D2D2;background:var(--ide-editor);border-radius:5px;
-    padding:4px 9px;font:inherit;font-size:11.5px;font-weight:600;color:var(--ide-ink);cursor:pointer;
-  }
-  .pane-toggle:hover{background:var(--ide-hover);}
-  .pane-toggle[aria-pressed="true"]{background:var(--ide-accent);border-color:var(--ide-accent);color:#fff;}
-  .pane-toggle:focus-visible{outline:2px solid var(--ide-ink);outline-offset:2px;}
-
-  .mtabs{display:none;}
+  .top-item{position:relative;}
+  .top-popover{display:none;position:absolute;z-index:30;top:calc(100% + 8px);left:0;width:13.5rem;border:1px solid #B9C7D9;border-radius:7px;background:#fff;padding:.55rem .65rem;box-shadow:0 12px 28px rgba(0,33,99,.18);color:var(--ide-ink);text-align:left;white-space:normal;}
+  .top-popover b{display:block;font-size:11.5px;}.top-popover small{display:block;margin-top:2px;color:var(--ide-ink-soft);font-size:10.5px;line-height:1.35;}
+  .ide[data-explore="true"] .top-item:hover .top-popover,.ide[data-explore="true"] .top-item:focus-visible .top-popover{display:block;}
 
   /* ---- focus: the pane holding the action stays bright, the rest recede ---- */
   .ide :global(.side),.ide :global(.ed),.ide :global(.chat){
@@ -112,38 +106,24 @@ import Chat from './Chat.astro';
   /* done markers in the step list */
   .ide :global(.sdlc-row.done .sdlc-n){background:#1E7A55;color:#fff;font-size:11px;}
   .ide :global(.sdlc-row.done .sdlc-t){color:var(--ide-ink-soft);}
-
-  /* The top-right controls let a viewer focus either workspace pane without
-     losing the other one. Click the active control again to restore both. */
-  @media (min-width:1021px){
-    .ide[data-pane-layout="ed"]{grid-template-columns:56px 300px minmax(0,1fr);grid-template-areas:
-      "menu menu menu" "rail side ed";}
-    .ide[data-pane-layout="ed"] :global(.chat){display:none;}
-    .ide[data-pane-layout="chat"]{grid-template-columns:56px 300px minmax(0,1fr);grid-template-areas:
-      "menu menu menu" "rail side chat";}
-    .ide[data-pane-layout="chat"] :global(.ed){display:none;}
+  @media (prefers-reduced-motion: no-preference){
+    .ide.step-change :global(.side){animation:paneArrive .34s ease-out both;}
+    .ide.step-change :global(.ed-bar){animation:paneArrive .38s ease-out both;}
+    .ide.step-change :global(.chat){animation:paneArrive .42s ease-out both;}
+    @keyframes paneArrive{from{opacity:.55;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
   }
 
   @media (max-width:1020px){
-    .ide{grid-template-columns:56px 270px minmax(0,1fr);grid-template-areas:
-      "menu menu menu" "rail side ed";}
-    .ide :global(.chat){display:none;}
-    .ide[data-pane="chat"] :global(.chat){display:flex;grid-area:ed;}
-    .ide[data-pane="chat"] :global(.ed){display:none;}
-    .pane-tools{display:none;}
-    .mtabs{display:flex;grid-area:menu;justify-self:end;gap:2px;padding-right:10px;}
-    .mtabs button{border:1px solid #D2D2D2;background:var(--ide-editor);border-radius:5px;padding:4px 9px;font:inherit;font-size:11.5px;cursor:pointer;}
-    .mtabs button[aria-selected="true"]{background:var(--ide-accent);color:#fff;border-color:var(--ide-accent);}
+    .ide{grid-template-columns:48px 220px minmax(0,1fr) minmax(250px,.8fr);}
+    .menubar .chipbtn{max-width:9rem;overflow:hidden;text-overflow:ellipsis;}
   }
   @media (max-width:820px){
-    .ide{grid-template-columns:minmax(0,1fr);grid-template-areas:"menu" "ed";}
+    .ide{grid-template-columns:minmax(0,1fr) minmax(235px,.82fr);grid-template-areas:"menu menu" "ed chat";}
     .ide :global(.rail){display:none;}
     .ide :global(.side){display:none;}
-    .ide[data-pane="side"] :global(.side){display:flex;grid-area:ed;border-right:0;}
-    .ide[data-pane="side"] :global(.ed){display:none;}
     .menubar .mi:not(.plus){display:none;}
     .menubar .chipbtn:first-of-type{display:none;}
-    .mtabs{position:static;justify-self:end;}
+    .menubar{gap:2px;}
   }
 </style>
 
@@ -161,14 +141,22 @@ import Chat from './Chat.astro';
     const tabBar   = q<HTMLElement>('[data-tabs]');
     const views    = qa<HTMLElement>('.view');
     const turnsets = qa<HTMLElement>('[data-turns]');
-    const suggestEl= q<HTMLElement>('[data-suggest]');
     const toolbarEl= q<HTMLElement>('[data-toolbar]');
     const agentLbl = q<HTMLElement>('[data-agent-label]');
     const agentBtn = q<HTMLButtonElement>('[data-agent-btn]');
     const picker   = q<HTMLElement>('[data-picker]');
     const thread   = q<HTMLElement>('[data-thread]');
+    const pendingTurn = q<HTMLElement>('[data-pending-turn]');
+    const pendingMessage = q<HTMLElement>('[data-pending-message]');
+    const ask      = q<HTMLTextAreaElement>('[data-ask]');
+    const send     = q<HTMLButtonElement>('[data-send]');
+    const typing   = q<HTMLElement>('[data-typing]');
+    const deployPanel = q<HTMLElement>('[data-deploy-panel]');
+    const deployClose = q<HTMLButtonElement>('[data-deploy-close]');
+    const explorer = q<HTMLElement>('[data-explorer]');
+    const explorerToggle = q<HTMLButtonElement>('[data-explorer-toggle]');
     const panes    = { side: q<HTMLElement>('.side'), ed: q<HTMLElement>('.ed'), chat: q<HTMLElement>('.chat') };
-    const paneToggles = qa<HTMLButtonElement>('[data-pane-toggle]');
+    const topActions = qa<HTMLButtonElement>('[data-top-action]');
 
     // guide bar lives outside the IDE frame — it is demo navigation, not product UI
     const bar      = document.querySelector<HTMLElement>('[data-guide]');
@@ -181,8 +169,12 @@ import Chat from './Chat.astro';
 
     let cur = 1;
     let openFile: string | null = null;
+    let uploadPlaying = false;
+    let deployOpen = false;
+    let exploreMode = false;
 
     const step = () => steps[cur - 1];
+    const promptFor = (candidate = step()) => candidate.chat.find((message) => message.from === 'you')?.text ?? null;
 
     /* The cutoff typed at step 8 turns up in the run log at step 9. The value flows
        forward — the product thesis, in miniature. */
@@ -197,20 +189,6 @@ import Chat from './Chat.astro';
 
     const viewFor = (file: string | null, fallback: string) =>
       !file ? fallback : file === 'pipeline' ? 'pipeline' : `doc:${file}`;
-
-    function setPane(name: string) {
-      ide!.dataset.pane = name;
-      qa<HTMLButtonElement>('[data-pane]').forEach((o) =>
-        o.setAttribute('aria-selected', String(o.dataset.pane === name)));
-    }
-
-    function setPaneLayout(name: 'ed' | 'chat') {
-      const current = ide!.dataset.paneLayout ?? 'both';
-      ide!.dataset.paneLayout = current === name ? 'both' : name;
-      paneToggles.forEach((button) =>
-        button.setAttribute('aria-pressed', String(ide!.dataset.paneLayout === button.dataset.paneToggle)));
-      if (window.matchMedia('(max-width: 1020px)').matches) setPane(name);
-    }
 
     function render() {
       const s = step();
@@ -230,6 +208,7 @@ import Chat from './Chat.astro';
       fileBtns.forEach((b) => {
         b.hidden = !s.files.includes(b.dataset.file!);
         b.setAttribute('aria-current', String(b.dataset.file === openFile));
+        b.classList.toggle('file-arrived', cur === 1 && b.dataset.file === 'requirement');
       });
       tabBtns.forEach((t) => {
         t.hidden = t.dataset.tab !== openFile;
@@ -247,7 +226,6 @@ import Chat from './Chat.astro';
         }
       });
 
-      if (suggestEl) suggestEl.textContent = s.suggested;
       if (agentLbl) agentLbl.textContent = s.agent;
       qa<HTMLInputElement>('input[name="agent"]').forEach((i) => { i.checked = i.value === s.agent; });
 
@@ -263,27 +241,47 @@ import Chat from './Chat.astro';
         });
       }
 
-      turnsets.forEach((t) => { t.hidden = Number(t.dataset.turns) !== cur; });
+      const draft = promptFor(s);
+      if (ask) {
+        ask.value = draft ?? '';
+        ask.readOnly = Boolean(draft);
+        ask.placeholder = draft ? '' : 'Ask anything';
+      }
+      turnsets.forEach((t) => {
+        const turn = Number(t.dataset.turns);
+        const turnHasDraft = Boolean(promptFor(steps[turn - 1]));
+        t.hidden = turn > cur || (turn === cur && turnHasDraft);
+      });
+      if (pendingTurn) pendingTurn.hidden = true;
+      if (typing) typing.hidden = true;
+      if (deployPanel) deployPanel.hidden = !deployOpen;
       applyCutoff();
-      if (thread) thread.scrollTop = 0;
+      if (thread) thread.scrollTop = thread.scrollHeight;
 
       // dim every pane except the one holding the action
-      Object.entries(panes).forEach(([k, el]) => el?.classList.toggle('dim', k !== s.focus));
+      Object.entries(panes).forEach(([k, el]) => el?.classList.toggle('dim', !exploreMode && (cur === 1 ? k === 'chat' : k !== s.focus)));
 
       // ring the one control worth looking at
       qa<HTMLElement>('.is-target').forEach((e) => e.classList.remove('is-target'));
-      q<HTMLElement>(s.ring)?.classList.add('is-target');
-
-      // on narrow screens, bring the focused pane forward
-      if (window.matchMedia('(max-width: 1020px)').matches) setPane(s.focus);
+      if (!exploreMode) (q<HTMLElement>(s.ring) ?? document.querySelector<HTMLElement>(s.ring))?.classList.add('is-target');
 
       // guide bar
-      if (gCount) gCount.textContent = `Step ${cur} of ${steps.length}`;
-      if (gTitle) gTitle.textContent = s.title;
-      if (gText)  gText.textContent  = s.instruct;
+      if (gCount) gCount.textContent = exploreMode ? 'Workspace tour' : `Step ${cur} of ${steps.length}`;
+      if (gTitle) gTitle.textContent = exploreMode ? 'Explore Akaden' : s.title;
+      if (gText)  gText.textContent  = exploreMode ? 'Hover over a rail or top-bar item to see what it does.' : s.instruct;
       if (gPrev)  gPrev.disabled = cur === 1;
-      if (gNext)  gNext.textContent = s.nextLabel;
+      if (gNext) { gNext.textContent = exploreMode ? 'Explore the workspace' : s.nextLabel; gNext.disabled = exploreMode; }
       if (bar) bar.dataset.step = String(cur);
+      topActions.forEach((button) => {
+        const action = button.dataset.topAction;
+        const current = action === 'deploy' ? cur >= 6 && cur < 8 : cur === 8;
+        button.setAttribute('aria-current', String(current));
+      });
+      ide!.dataset.step = String(cur);
+      ide!.dataset.explore = String(exploreMode);
+      ide!.classList.remove('step-change');
+      void ide!.offsetWidth;
+      ide!.classList.add('step-change');
       qa<HTMLElement>('[data-dot]', gDots ?? document).forEach((d) => {
         const n = Number(d.dataset.dot);
         d.classList.toggle('on', n === cur);
@@ -293,15 +291,100 @@ import Chat from './Chat.astro';
     }
 
     function go(n: number) {
-      cur = Math.min(Math.max(n, 1), steps.length);
+      const nextStep = Math.min(Math.max(n, 1), steps.length);
+      if (nextStep !== 6) deployOpen = false;
+      exploreMode = false;
+      cur = nextStep;
       openFile = step().open;
       if (openFile && !step().files.includes(openFile)) openFile = null;
       render();
     }
-    function next() { cur === steps.length ? go(1) : go(cur + 1); }
+    function openDeploy() {
+      deployOpen = true;
+      go(6);
+    }
+    function next() {
+      if (exploreMode) return;
+      if (cur === 1 && !uploadPlaying) {
+        uploadPlaying = true;
+        const uploadView = q<HTMLElement>('[data-view="empty"]');
+        const requestFile = q<HTMLButtonElement>('[data-file="requirement"]');
+        const source = q<HTMLElement>('[data-upload-source]');
+        const destination = q<HTMLElement>('[data-folder="inputs"] .folder-row');
+        uploadView?.classList.add('is-uploading');
+        if (source && destination) {
+          const sourceBox = source.getBoundingClientRect();
+          const destinationBox = destination.getBoundingClientRect();
+          const flying = source.cloneNode(true) as HTMLElement;
+          flying.classList.add('upload-flying');
+          flying.removeAttribute('data-upload-source');
+          flying.style.left = `${sourceBox.left}px`;
+          flying.style.top = `${sourceBox.top}px`;
+          flying.style.width = `${sourceBox.width}px`;
+          flying.style.height = `${sourceBox.height}px`;
+          document.body.appendChild(flying);
+          destination.classList.add('upload-target');
+          const dx = destinationBox.left + destinationBox.width / 2 - (sourceBox.left + sourceBox.width / 2);
+          const dy = destinationBox.top + destinationBox.height / 2 - (sourceBox.top + sourceBox.height / 2);
+          flying.animate([
+            { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+            { transform: `translate(${dx}px, ${dy}px) scale(.2)`, opacity: .55 },
+          ], { duration: 900, easing: 'cubic-bezier(.2,.78,.25,1)', fill: 'forwards' });
+          window.setTimeout(() => {
+            flying.remove();
+            destination.classList.remove('upload-target');
+          }, 930);
+        }
+        if (requestFile) {
+          requestFile.hidden = false;
+          requestFile.classList.remove('file-arrived');
+          void requestFile.offsetWidth;
+          requestFile.classList.add('file-arrived');
+        }
+        if (gNext) gNext.disabled = true;
+        window.setTimeout(() => {
+          uploadView?.classList.remove('is-uploading');
+          uploadPlaying = false;
+          if (gNext) gNext.disabled = false;
+          go(2);
+        }, 1060);
+        return;
+      }
+      if (promptFor()) {
+        const currentChat = panes.chat;
+        const prompt = promptFor();
+        if (ask) ask.value = '';
+        if (pendingMessage) pendingMessage.textContent = prompt ?? '';
+        if (pendingTurn) pendingTurn.hidden = false;
+        if (typing) typing.hidden = false;
+        if (thread) thread.scrollTop = thread.scrollHeight;
+        if (currentChat) currentChat.dataset.sending = 'true';
+        if (gNext) gNext.disabled = true;
+        if (send) send.disabled = true;
+        window.setTimeout(() => {
+          if (typing) typing.hidden = true;
+          if (currentChat) delete currentChat.dataset.sending;
+          if (gNext) gNext.disabled = false;
+          if (send) send.disabled = false;
+          go(cur + 1);
+        }, 820);
+        return;
+      }
+      if (step().id === 'refine') {
+        openDeploy();
+        return;
+      }
+      if (cur === steps.length) {
+        exploreMode = true;
+        render();
+        return;
+      }
+      go(cur + 1);
+    }
     function prev() { go(cur - 1); }
 
     gNext?.addEventListener('click', next);
+    send?.addEventListener('click', next);
     gPrev?.addEventListener('click', prev);
     sdlcRows.forEach((r) => r.addEventListener('click', () => go(Number(r.dataset.goto))));
     fileBtns.forEach((b) => b.addEventListener('click', () => { openFile = b.dataset.file!; render(); }));
@@ -330,10 +413,15 @@ import Chat from './Chat.astro';
       }
     });
 
-    qa<HTMLButtonElement>('[data-pane]').forEach((b) =>
-      b.addEventListener('click', () => setPane(b.dataset.pane!)));
-    paneToggles.forEach((b) =>
-      b.addEventListener('click', () => setPaneLayout(b.dataset.paneToggle as 'ed' | 'chat')));
+    topActions.forEach((button) =>
+      button.addEventListener('click', () => button.dataset.topAction === 'deploy' ? openDeploy() : go(8)));
+    deployClose?.addEventListener('click', () => { deployOpen = false; if (deployPanel) deployPanel.hidden = true; });
+    q<HTMLButtonElement>('[data-deploy-confirm]')?.addEventListener('click', () => go(7));
+    explorerToggle?.addEventListener('click', () => {
+      const fileMode = explorer?.dataset.explorerMode === 'files';
+      if (explorer) explorer.dataset.explorerMode = fileMode ? 'folders' : 'files';
+      explorerToggle.setAttribute('aria-label', fileMode ? 'Switch to file view' : 'Switch to folder view');
+    });
 
     document.querySelector('[data-reset]')?.addEventListener('click', () => go(1));
 
@@ -345,8 +433,6 @@ import Chat from './Chat.astro';
       if (e.key === 'ArrowLeft')  { e.preventDefault(); prev(); }
     });
 
-    ide.dataset.paneLayout = 'both';
-    setPane('ed');
     go(1);
   }
 </script>

@@ -26,7 +26,7 @@ export interface Step {
   id: string;
   title: string;
   actor: Actor;
-  /** Shown in the "Suggested next" bar. */
+  /** Available for internal state descriptions; the on-screen guide carries the next action. */
   suggested: string;
   /** Files that exist in the explorer by this step. */
   files: string[];
@@ -70,28 +70,28 @@ export const FOLDERS = ['inputs', 'pipelines', 'specifications', 'sub-pipelines'
 
 export const steps: Step[] = [
   {
-    n: 1, id: 'prepare', title: 'Prepare workspace', actor: 'you',
-    gloss: 'You drop the requirement in. Nothing is generated yet.',
-    suggested: 'Build specification — ask the Specification Builder Agent',
-    files: ['requirement'], open: null, view: 'empty', agent: 'Agent',
+    n: 1, id: 'prepare', title: 'Upload request', actor: 'you',
+    gloss: 'Upload the request file into inputs. Nothing is generated yet.',
+    suggested: 'Upload the request into inputs',
+    files: [], open: null, view: 'empty', agent: 'Agent',
     chat: [],
-    instruct: 'A team needs a nightly file of student contact details. Their request is ready in the workspace.',
-    focus: 'side',
-    ring: '[data-file="requirement"]',
-    nextLabel: 'Build the specification',
+    instruct: 'Upload the request file. It lands in inputs, ready for Akaden to read.',
+    focus: 'ed',
+    ring: '[data-upload-source]',
+    nextLabel: 'Upload request',
     toolbar: [],
   },
   {
     n: 2, id: 'build-spec', title: 'Build specification', actor: 'agent',
     gloss: 'The Specification Builder Agent reads the requirement and drafts a spec.',
-    suggested: 'Review specification — read the draft, then approve',
+    suggested: 'Send the ready prompt to the Specification Builder Agent',
     files: ['requirement'], open: 'requirement', view: 'markdown',
     agent: 'Specification Builder Agent',
     toolbar: [],
-    instruct: 'You asked the Specification Builder Agent for a spec. It read the requirement and wrote one.',
+    instruct: 'The request is open in the editor. The prompt is ready in the chat composer.',
     focus: 'chat',
-    ring: '[data-agent-btn]',
-    nextLabel: 'Read the specification',
+    ring: '[data-ask]',
+    nextLabel: 'Send to builder',
     chat: [
       { from: 'you', text: 'Turn the request in inputs/ into a clear plan for this integration.' },
       {
@@ -122,9 +122,9 @@ export const steps: Step[] = [
     files: ['requirement', 'spec'], open: 'spec', view: 'markdown',
     agent: 'Specification QA Agent',
     toolbar: [{ label: 'Approve specification', kind: 'primary', action: 'next' }],
-    instruct: 'This one is yours. Read it, change anything you want — nothing gets built until you approve it.',
+    instruct: 'This one is yours. Read it and change anything you want. Nothing gets built until you approve it.',
     focus: 'ed',
-    ring: '.tb-btn',
+    ring: '[data-g-next]',
     nextLabel: 'Approve specification',
     chat: [
       {
@@ -142,15 +142,15 @@ export const steps: Step[] = [
   },
   {
     n: 4, id: 'generate', title: 'Generate / Implement', actor: 'agent',
-    gloss: 'The Pipeline Builder Agent turns the approved spec into a real pipeline.',
-    suggested: 'Refine — review the validation warnings',
-    files: ['requirement', 'spec', 'pipeline', 'readme'], open: 'pipeline', view: 'pipeline',
+    gloss: 'The Pipeline Builder Agent is ready to turn the approved spec into a pipeline.',
+    suggested: 'Send the ready prompt to the Pipeline Builder Agent',
+    files: ['requirement', 'spec'], open: 'spec', view: 'markdown',
     agent: 'Pipeline Builder Agent',
     toolbar: [],
-    instruct: 'The Pipeline Builder Agent turned your approved spec into a working pipeline. 39 segments.',
-    focus: 'ed',
-    ring: '[data-agent-btn]',
-    nextLabel: 'See what QA found',
+    instruct: 'The approved specification is open. The generation prompt is ready in the chat composer.',
+    focus: 'chat',
+    ring: '[data-ask]',
+    nextLabel: 'Send to builder',
     chat: [
       { from: 'you', text: 'Generate the pipeline (.pipeline) from the ready specification in specifications/. Save the artifact under the project.' },
       {
@@ -169,19 +169,19 @@ export const steps: Step[] = [
     ],
   },
   {
-    n: 5, id: 'refine', title: 'Refine', actor: 'agent',
-    gloss: 'QA checks the generated pipeline. Warnings are surfaced, not hidden.',
+    n: 5, id: 'refine', title: 'Review generated pipeline', actor: 'agent',
+    gloss: 'The generated pipeline is ready to inspect before deployment.',
     suggested: 'Deploy — open a file or pick an SDLC step',
-    files: ['requirement', 'spec', 'pipeline', 'readme'], open: 'readme', view: 'markdown',
+    files: ['requirement', 'spec', 'pipeline', 'readme'], open: 'pipeline', view: 'pipeline',
     agent: 'Pipeline QA Agent',
     toolbar: [],
-    instruct: 'QA checked it and flagged five warnings on endpoint names. Expected — and shown to you rather than hidden.',
-    focus: 'chat',
-    ring: '[data-thread]',
+    instruct: 'The Pipeline Builder Agent responded and the generated pipeline is open for review.',
+    focus: 'ed',
+    ring: '[data-g-next]',
     nextLabel: 'Deploy it',
     chat: [
       {
-        from: 'agent', agent: 'Pipeline QA Agent', meta: 'Anthropic Claude Haiku 4.5 · 53 minutes ago',
+        from: 'agent', agent: 'Pipeline QA Agent', meta: 'Anthropic Claude Haiku 4.5 · just now',
         text: '', blocks: [
           { kind: 'p', text: '**Pipeline is valid** with 5 warnings (expected):' },
           { kind: 'p', text: 'Warnings are on API endpoint names (`names`, `emails`, `phones`) — these are expected to be either:' },
@@ -217,11 +217,11 @@ export const steps: Step[] = [
   {
     n: 6, id: 'deploy', title: 'Deploy', actor: 'system',
     gloss: 'The pipeline goes to your Ellucian Integration Designer tenant.',
-    suggested: 'Publish — make the pipeline runnable',
+    suggested: 'Set job parameters — choose the runtime values',
     files: ['requirement', 'spec', 'pipeline', 'readme'], open: 'pipeline', view: 'pipeline',
     agent: 'Pipeline Builder Agent',
-    instruct: 'Deployed to your Ellucian Integration Designer tenant — this artifact is what went out.',
-    focus: 'ed', ring: '.pl-head', nextLabel: 'Publish it',
+    instruct: 'Choose the tenant and deployment package, then move directly to the job parameters.',
+    focus: 'ed', ring: '[data-deploy-confirm]', nextLabel: 'Set job parameters',
     chat: [
       { from: 'agent', agent: 'Pipeline Builder Agent', meta: 'just now', text: '', blocks: [
         { kind: 'p', text: 'Ready to deploy `Student Contact Export` to the Ellucian Integration Designer tenant.' },
@@ -229,27 +229,13 @@ export const steps: Step[] = [
     ],
   },
   {
-    n: 7, id: 'publish', title: 'Publish', actor: 'system',
-    gloss: 'Published, so it can be scheduled and run as a job.',
-    suggested: 'Set job parameters — S3 target and cutoff date',
-    files: ['requirement', 'spec', 'pipeline', 'readme'], open: 'pipeline', view: 'pipeline',
-    agent: 'Pipeline Builder Agent',
-    instruct: 'Published, so it can be scheduled and run as a job by whoever owns the schedule.',
-    focus: 'ed', ring: '.pl-list', nextLabel: 'Set job parameters',
-    chat: [
-      { from: 'agent', agent: 'Pipeline Builder Agent', meta: 'just now', text: '', blocks: [
-        { kind: 'p', text: 'Deployed. Publishing makes the pipeline available as a runnable job in the tenant.' },
-      ]},
-    ],
-  },
-  {
-    n: 8, id: 'params', title: 'Set job parameters', actor: 'you',
+    n: 7, id: 'params', title: 'Set job parameters', actor: 'you',
     gloss: 'The runtime values. The cutoff here is the one from your specification.',
-    suggested: 'Job run and validate — run it and check the criteria',
+    suggested: 'Job run and validate. Run it and check the criteria.',
     files: ['requirement', 'spec', 'pipeline', 'readme'], open: null, view: 'params',
     agent: 'Agent',
-    instruct: 'Every value is filled in already. Change the cutoff date if you like — you will see it again in a second.',
-    focus: 'ed', ring: '[data-param="dateOfBirthCutoff"]', nextLabel: 'Run the job',
+    instruct: 'Every value is filled in already. Change the cutoff date if you like. You will see it again in a second.',
+    focus: 'ed', ring: '[data-g-next]', nextLabel: 'Run the job',
     chat: [
       { from: 'agent', agent: 'Agent', meta: 'just now', text: '', blocks: [
         { kind: 'p', text: 'Five runtime parameters come from the specification. `s3BucketName` is the only required one without a default.' },
@@ -257,13 +243,13 @@ export const steps: Step[] = [
     ],
   },
   {
-    n: 9, id: 'run', title: 'Job run and validate', actor: 'system',
+    n: 8, id: 'run', title: 'Job run and validate', actor: 'system',
     gloss: 'It runs. The output is checked against the criteria written in the spec.',
-    suggested: 'Done — the spec that built this is still in git',
+    suggested: 'Done. The specification that built this is still in git.',
     files: ['requirement', 'spec', 'pipeline', 'readme'], open: null, view: 'run',
     agent: 'Pipeline Testing Agent',
     instruct: '1,200 records exported and checked against the acceptance criteria in the spec. The spec is still in git, ready for the next change.',
-    focus: 'ed', ring: '[data-log]', nextLabel: 'Start over',
+    focus: 'ed', ring: '[data-g-next]', nextLabel: 'Explore the workspace',
     chat: [
       { from: 'agent', agent: 'Pipeline Testing Agent', meta: 'just now', text: '', blocks: [
         { kind: 'p', text: 'Run complete. Output written and validated against the acceptance criteria in the specification.' },
