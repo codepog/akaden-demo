@@ -1,0 +1,47 @@
+---
+const assetPath = (name: string) => `${import.meta.env.BASE_URL.replace(/\/?$/, '/')}${name}`;
+---
+
+<!-- Archived side-by-side comparison retained for product-reference purposes. -->
+<section class="border-b border-blue-deep bg-tint">
+  <div class="mx-auto max-w-[1200px] px-4 py-20 sm:px-6 sm:py-28">
+    <div class="mx-auto max-w-[46rem] text-center">
+      <p class="u-label text-blue">Archived comparison</p>
+      <h2 class="u-h2 mt-4 text-blue-deep">The engineer stays in control. The delivery burden changes.</h2>
+      <p class="u-lead mt-5 text-ink-soft">The systems, standards, and accountability stay with your team. What changes is that specialized delivery skills handle repeatable work, so one expert does not have to carry every integration detail alone.</p>
+    </div>
+
+    <div class="comparison-grid mt-12">
+      <figure class="comparison-card">
+        <figcaption><strong>Manual SDLC</strong><span>One person carries every task</span></figcaption>
+        <div class="comparison-media manual-media titleless-media">
+          <img src={assetPath('manual-sdlc.png')} alt="Manual SDLC diagram showing an engineer directly managing every connected system." />
+        </div>
+      </figure>
+      <div class="comparison-arrow" aria-hidden="true">→</div>
+      <figure class="comparison-card agentic">
+        <figcaption><strong>Agentic SDLC</strong><span>One person directs specialized skills</span></figcaption>
+        <div class="comparison-media agentic-media titleless-media">
+          <img src={assetPath('agentic-sdlc.png')} alt="Agentic SDLC diagram showing an engineer supervising a team of agents that work across connected systems." />
+        </div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<style>
+  .comparison-grid{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:stretch;gap:1rem;}
+  .comparison-card{display:grid;grid-template-rows:auto 1fr;margin:0;overflow:hidden;border:1px solid #CBD8EA;border-radius:1rem;background:#fff;box-shadow:0 16px 32px rgba(0,33,99,.09);}
+  .comparison-card figcaption{display:flex;flex-wrap:wrap;align-items:baseline;gap:.55rem;min-height:3.5rem;padding:.75rem 1.05rem;border-bottom:1px solid #DCE5F2;background:#F8FAFD;}
+  .comparison-card figcaption span{font-size:.84rem;color:#667085;}
+  .comparison-card figcaption strong{font-size:1.08rem;color:var(--color-blue-deep);}
+  .comparison-media{position:relative;aspect-ratio:16 / 9;overflow:hidden;background:#fff;container-type:inline-size;}
+  .comparison-card img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;background:#fff;}
+  .manual-media img{transform:translateY(-5cqw) scale(1.075);transform-origin:center bottom;}
+  .agentic-media img{transform:translateY(-5cqw);}
+  .titleless-media::before{content:"";position:absolute;z-index:1;top:0;left:0;width:50cqw;height:10cqw;background:#fff;}
+  .comparison-card.agentic{border-color:#B7CBEF;box-shadow:0 18px 38px rgba(33,83,196,.14);}
+  .comparison-card.agentic figcaption{background:#F2F6FE;}
+  .comparison-arrow{align-self:center;display:grid;place-items:center;width:2.6rem;height:2.6rem;border-radius:999px;background:var(--color-blue);color:#fff;font-size:1.4rem;font-weight:700;box-shadow:0 6px 16px rgba(33,83,196,.25);}
+  @media(max-width:760px){.comparison-grid{grid-template-columns:1fr;gap:1rem;}.comparison-arrow{margin:auto;transform:rotate(90deg);}.comparison-card figcaption{padding:.75rem .9rem;}}
+</style>

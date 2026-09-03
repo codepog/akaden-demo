@@ -7,32 +7,131 @@ const assetPath = (name: string) => `${import.meta.env.BASE_URL.replace(/\/?$/, 
     <div class="mx-auto max-w-[46rem] text-center">
       <p class="u-label text-blue">The shift</p>
       <h2 class="u-h2 mt-4 text-blue-deep">The engineer stays in control. The delivery burden changes.</h2>
-      <p class="u-lead mt-5 text-ink-soft">The systems, standards, and accountability stay with your team. What changes is that specialized delivery skills handle repeatable work, so one expert does not have to carry every integration detail alone.</p>
+      <p class="u-lead mt-5 text-ink-soft">A clear view of the systems and pipelines behind a manual delivery model.</p>
     </div>
 
-    <div class="comparison-grid mt-12">
-      <figure class="comparison-card">
-        <figcaption><span>Before</span><strong>One person carries every task</strong></figcaption>
-        <img src={assetPath('manual-sdlc.png')} alt="Manual SDLC diagram showing an engineer directly managing every connected system." />
-      </figure>
-      <div class="comparison-arrow" aria-hidden="true">→</div>
-      <figure class="comparison-card agentic">
-        <figcaption><span>With Akaden</span><strong>One person directs specialized skills</strong></figcaption>
-        <img src={assetPath('agentic-sdlc.png')} alt="Agentic SDLC diagram showing an engineer supervising a team of agents that work across connected systems." />
-      </figure>
-    </div>
+    <figure class="manual-base mt-12">
+      <div class="supervision-transition" data-supervision-transition role="img" aria-label="An engineer moves into a supervisory role as an amber ray opens to a group of agents.">
+        <div class="supervision-ray" aria-hidden="true"></div>
+        <div class="supervision-agent-squad" aria-hidden="true">
+          <img class="supervision-robot" data-transparent-robot src={assetPath('workflow-spec-agent.png')} alt="" />
+          <img class="supervision-robot" data-transparent-robot src={assetPath('workflow-spec-agent.png')} alt="" />
+          <img class="supervision-robot" data-transparent-robot src={assetPath('workflow-spec-agent.png')} alt="" />
+          <img class="supervision-robot" data-transparent-robot src={assetPath('workflow-spec-agent.png')} alt="" />
+          <img class="supervision-robot" data-transparent-robot src={assetPath('workflow-spec-agent.png')} alt="" />
+        </div>
+        <div class="supervision-engineer" aria-hidden="true">
+          <span class="supervision-label">Engineer</span>
+          <span class="supervision-person">
+            <span class="supervision-head"></span>
+            <span class="supervision-shoulders"></span>
+          </span>
+        </div>
+      </div>
+      <img class="manual-base-diagram" data-transparent-diagram src={assetPath('manual-sdlc-no-engineer.png')} alt="Manual SDLC diagram showing the systems and pipelines an engineer is responsible for." />
+    </figure>
   </div>
 </section>
 
 <style>
-  .comparison-grid{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:1rem;}
-  .comparison-card{margin:0;overflow:hidden;border:1px solid #CBD8EA;border-radius:1rem;background:#fff;box-shadow:0 16px 32px rgba(0,33,99,.09);}
-  .comparison-card figcaption{display:flex;align-items:baseline;gap:.55rem;padding:.9rem 1.05rem;border-bottom:1px solid #DCE5F2;background:#F8FAFD;}
-  .comparison-card figcaption span{font-family:var(--font-mono);font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#667085;}
-  .comparison-card figcaption strong{font-size:1.05rem;color:var(--color-blue-deep);}
-  .comparison-card img{display:block;width:100%;height:auto;aspect-ratio:1.78;object-fit:contain;background:#fff;}
-  .comparison-card.agentic{border-color:#B7CBEF;box-shadow:0 18px 38px rgba(33,83,196,.14);}
-  .comparison-card.agentic figcaption{background:#F2F6FE;}
-  .comparison-arrow{display:grid;place-items:center;width:2.6rem;height:2.6rem;border-radius:999px;background:var(--color-blue);color:#fff;font-size:1.4rem;font-weight:700;box-shadow:0 6px 16px rgba(33,83,196,.25);}
-  @media(max-width:760px){.comparison-grid{grid-template-columns:1fr;gap:1rem;}.comparison-arrow{margin:auto;transform:rotate(90deg);}.comparison-card figcaption{padding:.75rem .9rem;}}
+  .manual-base{position:relative;isolation:isolate;margin-left:auto;margin-right:auto;overflow:hidden;max-width:70rem;border:1px solid #CBD8EA;border-radius:1.15rem;background:#fff;box-shadow:0 20px 42px rgba(0,33,99,.12);}
+  .manual-base-diagram{position:relative;z-index:2;display:block;width:100%;height:auto;}
+  .supervision-transition{position:absolute;z-index:1;top:0;left:36%;width:32%;aspect-ratio:.84;overflow:visible;}
+  .supervision-engineer{position:absolute;z-index:2;top:77%;left:50%;display:grid;justify-items:center;gap:.45rem;transform:translate(-50%,-50%);color:#111;transition:top 1.35s cubic-bezier(.22,.8,.22,1),left 1.35s cubic-bezier(.22,.8,.22,1);}
+  .supervision-label{font-family:"Montserrat",var(--font-sans);font-size:clamp(.875rem,2.4vw,1.5rem);font-weight:400;line-height:1;letter-spacing:-.035em;}
+  .supervision-person{position:relative;display:block;width:clamp(3.4rem,8vw,5.8rem);aspect-ratio:1;border:3px solid currentColor;border-radius:50%;overflow:hidden;background:#fff;}
+  .supervision-head{position:absolute;top:18%;left:50%;width:32%;aspect-ratio:1;transform:translateX(-50%);border-radius:50%;background:currentColor;}
+  .supervision-shoulders{position:absolute;bottom:-3%;left:50%;width:88%;height:48%;transform:translateX(-50%);border-radius:58% 58% 42% 42%;background:currentColor;}
+  .supervision-ray{position:absolute;z-index:0;top:22%;left:50%;width:36%;height:54%;transform:translateX(-50%) scaleY(.03);transform-origin:50% 100%;clip-path:polygon(55% 0,79% 0,100% 100%,0 100%);background:linear-gradient(180deg,rgba(255,191,46,.62),rgba(255,191,46,.24));opacity:0;transition:opacity .2s ease .5s,transform .82s cubic-bezier(.16,.9,.32,1) .5s;}
+  .supervision-agent-squad{position:absolute;z-index:1;bottom:24%;left:50%;display:flex;align-items:flex-end;justify-content:center;width:44%;opacity:0;transform:translate(-50%,1.1rem) scale(.76);transform-origin:50% 100%;transition:opacity .36s ease 1.02s,transform .58s cubic-bezier(.22,.8,.22,1) 1.02s;}
+  .supervision-robot{position:relative;z-index:1;display:block;width:30%;height:auto;margin-left:-15%;opacity:0;transform-origin:center bottom;transition:opacity .12s ease;}.supervision-robot.is-clean{opacity:1;}.supervision-robot:first-child{z-index:1;margin-left:0;transform:scale(.75);}.supervision-robot:nth-child(2){z-index:2;transform:scale(1.02);}.supervision-robot:nth-child(3){z-index:3;transform:scale(1.2);}.supervision-robot:nth-child(4){z-index:2;transform:scale(1.02);}.supervision-robot:last-child{z-index:1;transform:scale(.75);}
+  .supervision-transition.is-supervising .supervision-engineer{top:22%;left:56%;}
+  .supervision-transition.is-supervising .supervision-ray{opacity:1;transform:translateX(-50%) scaleY(1);}
+  .supervision-transition.is-supervising .supervision-agent-squad{opacity:1;transform:translate(-50%,0) scale(1);}
+  @media(prefers-reduced-motion:reduce){.supervision-engineer,.supervision-ray,.supervision-agent-squad{transition:none;}}
 </style>
+
+<script>
+  const supervisionTransition = document.querySelector<HTMLElement>('[data-supervision-transition]');
+  if (supervisionTransition) {
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          (entry.target as HTMLElement).classList.add('is-supervising');
+          observer.unobserve(entry.target);
+        }
+      }), { threshold: .42 });
+      observer.observe(supervisionTransition);
+    } else supervisionTransition.classList.add('is-supervising');
+  }
+
+  const makeWhiteTransparent = (source: HTMLImageElement) => {
+    if (!source.naturalWidth || !source.naturalHeight) return;
+    const canvas = document.createElement('canvas');
+    canvas.width = source.naturalWidth;
+    canvas.height = source.naturalHeight;
+    const context = canvas.getContext('2d');
+    if (!context) return;
+    context.drawImage(source, 0, 0);
+    const pixels = context.getImageData(0, 0, canvas.width, canvas.height);
+    const totalPixels = canvas.width * canvas.height;
+    const visited = new Uint8Array(totalPixels);
+    const queue = new Uint32Array(totalPixels);
+    let head = 0;
+    let tail = 0;
+    const enqueueWhitePixel = (pixel: number) => {
+      if (pixel < 0 || pixel >= totalPixels || visited[pixel]) return;
+      const offset = pixel * 4;
+      if (pixels.data[offset] <= 240 || pixels.data[offset + 1] <= 240 || pixels.data[offset + 2] <= 240) return;
+      visited[pixel] = 1;
+      queue[tail++] = pixel;
+    };
+    for (let column = 0; column < canvas.width; column += 1) {
+      enqueueWhitePixel(column);
+      enqueueWhitePixel(totalPixels - canvas.width + column);
+    }
+    for (let row = 0; row < canvas.height; row += 1) {
+      enqueueWhitePixel(row * canvas.width);
+      enqueueWhitePixel(row * canvas.width + canvas.width - 1);
+    }
+    while (head < tail) {
+      const pixel = queue[head++];
+      const offset = pixel * 4;
+      const column = pixel % canvas.width;
+      pixels.data[offset + 3] = 0;
+      if (column > 0) enqueueWhitePixel(pixel - 1);
+      if (column < canvas.width - 1) enqueueWhitePixel(pixel + 1);
+      if (pixel >= canvas.width) enqueueWhitePixel(pixel - canvas.width);
+      if (pixel < totalPixels - canvas.width) enqueueWhitePixel(pixel + canvas.width);
+    }
+    context.putImageData(pixels, 0, 0);
+    return canvas.toDataURL('image/png');
+  };
+
+  const robots = Array.from(document.querySelectorAll<HTMLImageElement>('[data-transparent-robot]'));
+  const cleanRobots = () => {
+    if (!robots[0]) return;
+    const transparentSource = makeWhiteTransparent(robots[0]);
+    if (!transparentSource) return;
+    robots.forEach((robot) => {
+      robot.src = transparentSource;
+      robot.classList.add('is-clean');
+    });
+  };
+  if (robots[0]) {
+    if (robots[0].complete) cleanRobots();
+    else robots[0].addEventListener('load', cleanRobots, { once: true });
+  }
+
+  const diagram = document.querySelector<HTMLImageElement>('[data-transparent-diagram]');
+  const cleanDiagram = () => {
+    if (!diagram) return;
+    const transparentSource = makeWhiteTransparent(diagram);
+    if (!transparentSource) return;
+    diagram.src = transparentSource;
+  };
+  if (diagram) {
+    if (diagram.complete) cleanDiagram();
+    else diagram.addEventListener('load', cleanDiagram, { once: true });
+  }
+</script>
