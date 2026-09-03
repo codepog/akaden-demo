@@ -20,6 +20,7 @@ const assetPath = (name: string) => `${import.meta.env.BASE_URL.replace(/\/?$/, 
           <img class="supervision-robot" data-transparent-robot src={assetPath('workflow-spec-agent.png')} alt="" />
           <img class="supervision-robot" data-transparent-robot src={assetPath('workflow-spec-agent.png')} alt="" />
         </div>
+        <span class="supervision-agents-label" aria-hidden="true">Agents</span>
         <div class="supervision-engineer" aria-hidden="true">
           <span class="supervision-label">Engineer</span>
           <span class="supervision-person">
@@ -45,10 +46,12 @@ const assetPath = (name: string) => `${import.meta.env.BASE_URL.replace(/\/?$/, 
   .supervision-ray{position:absolute;z-index:0;top:22%;left:50%;width:36%;height:54%;transform:translateX(-50%) scaleY(.03);transform-origin:50% 100%;clip-path:polygon(55% 0,79% 0,100% 100%,0 100%);background:linear-gradient(180deg,rgba(255,191,46,.62),rgba(255,191,46,.24));opacity:0;transition:opacity .2s ease .5s,transform .82s cubic-bezier(.16,.9,.32,1) .5s;}
   .supervision-agent-squad{position:absolute;z-index:1;bottom:24%;left:50%;display:flex;align-items:flex-end;justify-content:center;width:44%;opacity:0;transform:translate(-50%,1.1rem) scale(.76);transform-origin:50% 100%;transition:opacity .36s ease 1.02s,transform .58s cubic-bezier(.22,.8,.22,1) 1.02s;}
   .supervision-robot{position:relative;z-index:1;display:block;width:30%;height:auto;margin-left:-15%;opacity:0;transform-origin:center bottom;transition:opacity .12s ease;}.supervision-robot.is-clean{opacity:1;}.supervision-robot:first-child{z-index:1;margin-left:0;transform:scale(.75);}.supervision-robot:nth-child(2){z-index:2;transform:scale(1.02);}.supervision-robot:nth-child(3){z-index:3;transform:scale(1.2);}.supervision-robot:nth-child(4){z-index:2;transform:scale(1.02);}.supervision-robot:last-child{z-index:1;transform:scale(.75);}
+  .supervision-agents-label{position:absolute;z-index:2;bottom:14%;left:50%;color:var(--color-agent);font-family:"Montserrat",var(--font-sans);font-size:clamp(.75rem,1.7vw,1rem);font-weight:600;letter-spacing:.04em;opacity:0;transform:translate(-50%,.5rem);transition:opacity .3s ease 1.12s,transform .45s cubic-bezier(.22,.8,.22,1) 1.12s;}
   .supervision-transition.is-supervising .supervision-engineer{top:22%;left:56%;}
   .supervision-transition.is-supervising .supervision-ray{opacity:1;transform:translateX(-50%) scaleY(1);}
   .supervision-transition.is-supervising .supervision-agent-squad{opacity:1;transform:translate(-50%,0) scale(1);}
-  @media(prefers-reduced-motion:reduce){.supervision-engineer,.supervision-ray,.supervision-agent-squad{transition:none;}}
+  .supervision-transition.is-supervising .supervision-agents-label{opacity:1;transform:translate(-50%,0);}
+  @media(prefers-reduced-motion:reduce){.supervision-engineer,.supervision-ray,.supervision-agent-squad,.supervision-agents-label{transition:none;}}
 </style>
 
 <script>
