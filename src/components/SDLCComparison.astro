@@ -10,7 +10,7 @@ const assetPath = (name: string) => `${import.meta.env.BASE_URL.replace(/\/?$/, 
       <p class="u-lead mt-5 text-ink-soft">A clear view of the systems and pipelines behind a manual delivery model.</p>
     </div>
 
-    <figure class="manual-base mt-12">
+    <figure class="manual-base mt-12" data-supervision-graphic>
       <div class="supervision-transition" data-supervision-transition role="img" aria-label="An engineer moves into a supervisory role as an amber ray opens to a group of agents.">
         <div class="supervision-ray" aria-hidden="true"></div>
         <div class="supervision-agent-squad" aria-hidden="true">
@@ -38,15 +38,15 @@ const assetPath = (name: string) => `${import.meta.env.BASE_URL.replace(/\/?$/, 
   .manual-base{position:relative;isolation:isolate;margin-left:auto;margin-right:auto;overflow:hidden;max-width:70rem;border:1px solid #CBD8EA;border-radius:1.15rem;background:#fff;box-shadow:0 20px 42px rgba(0,33,99,.12);}
   .manual-base-diagram{position:relative;z-index:2;display:block;width:100%;height:auto;}
   .supervision-transition{position:absolute;z-index:1;top:0;left:36%;width:32%;aspect-ratio:.84;overflow:visible;}
-  .supervision-engineer{position:absolute;z-index:2;top:77%;left:50%;display:grid;justify-items:center;gap:.45rem;transform:translate(-50%,-50%);color:#111;transition:top 1.35s cubic-bezier(.22,.8,.22,1),left 1.35s cubic-bezier(.22,.8,.22,1);}
+  .supervision-engineer{position:absolute;z-index:2;top:77%;left:50%;display:grid;justify-items:center;gap:.45rem;transform:translate(-50%,-50%);color:#111;transition:top 2.3s cubic-bezier(.22,.8,.22,1),left 2.3s cubic-bezier(.22,.8,.22,1);}
   .supervision-label{font-family:"Montserrat",var(--font-sans);font-size:clamp(.875rem,2.4vw,1.5rem);font-weight:400;line-height:1;letter-spacing:-.035em;}
   .supervision-person{position:relative;display:block;width:clamp(3.4rem,8vw,5.8rem);aspect-ratio:1;border:3px solid currentColor;border-radius:50%;overflow:hidden;background:#fff;}
   .supervision-head{position:absolute;top:18%;left:50%;width:32%;aspect-ratio:1;transform:translateX(-50%);border-radius:50%;background:currentColor;}
   .supervision-shoulders{position:absolute;bottom:-3%;left:50%;width:88%;height:48%;transform:translateX(-50%);border-radius:58% 58% 42% 42%;background:currentColor;}
-  .supervision-ray{position:absolute;z-index:0;top:22%;left:50%;width:36%;height:54%;transform:translateX(-50%) scaleY(.03);transform-origin:50% 100%;clip-path:polygon(55% 0,79% 0,100% 100%,0 100%);background:linear-gradient(180deg,rgba(255,191,46,.62),rgba(255,191,46,.24));opacity:0;transition:opacity .2s ease .5s,transform .82s cubic-bezier(.16,.9,.32,1) .5s;}
-  .supervision-agent-squad{position:absolute;z-index:1;bottom:24%;left:50%;display:flex;align-items:flex-end;justify-content:center;width:44%;opacity:0;transform:translate(-50%,1.1rem) scale(.76);transform-origin:50% 100%;transition:opacity .36s ease 1.02s,transform .58s cubic-bezier(.22,.8,.22,1) 1.02s;}
+  .supervision-ray{position:absolute;z-index:0;top:22%;left:50%;width:36%;height:54%;transform:translateX(-50%) scaleY(.03);transform-origin:50% 100%;clip-path:polygon(55% 0,79% 0,100% 100%,0 100%);background:linear-gradient(180deg,rgba(255,191,46,.62),rgba(255,191,46,.24));opacity:0;transition:opacity .25s ease .75s,transform 1.65s cubic-bezier(.16,.9,.32,1) .75s;}
+  .supervision-agent-squad{position:absolute;z-index:1;bottom:24%;left:50%;display:flex;align-items:flex-end;justify-content:center;width:44%;opacity:0;transform:translate(-50%,1.1rem) scale(.76);transform-origin:50% 100%;transition:opacity .4s ease 2s,transform .85s cubic-bezier(.22,.8,.22,1) 2s;}
   .supervision-robot{position:relative;z-index:1;display:block;width:30%;height:auto;margin-left:-15%;opacity:0;transform-origin:center bottom;transition:opacity .12s ease;}.supervision-robot.is-clean{opacity:1;}.supervision-robot:first-child{z-index:1;margin-left:0;transform:scale(.75);}.supervision-robot:nth-child(2){z-index:2;transform:scale(1.02);}.supervision-robot:nth-child(3){z-index:3;transform:scale(1.2);}.supervision-robot:nth-child(4){z-index:2;transform:scale(1.02);}.supervision-robot:last-child{z-index:1;transform:scale(.75);}
-  .supervision-agents-label{position:absolute;z-index:2;bottom:14%;left:50%;color:var(--color-agent);font-family:"Montserrat",var(--font-sans);font-size:clamp(.75rem,1.7vw,1rem);font-weight:600;letter-spacing:.04em;opacity:0;transform:translate(-50%,.5rem);transition:opacity .3s ease 1.12s,transform .45s cubic-bezier(.22,.8,.22,1) 1.12s;}
+  .supervision-agents-label{position:absolute;z-index:2;bottom:14%;left:50%;color:var(--color-agent);font-family:"Montserrat",var(--font-sans);font-size:clamp(.75rem,1.7vw,1rem);font-weight:600;letter-spacing:.04em;opacity:0;transform:translate(-50%,.5rem);transition:opacity .3s ease 2.25s,transform .6s cubic-bezier(.22,.8,.22,1) 2.25s;}
   .supervision-transition.is-supervising .supervision-engineer{top:22%;left:56%;}
   .supervision-transition.is-supervising .supervision-ray{opacity:1;transform:translateX(-50%) scaleY(1);}
   .supervision-transition.is-supervising .supervision-agent-squad{opacity:1;transform:translate(-50%,0) scale(1);}
@@ -56,16 +56,28 @@ const assetPath = (name: string) => `${import.meta.env.BASE_URL.replace(/\/?$/, 
 
 <script>
   const supervisionTransition = document.querySelector<HTMLElement>('[data-supervision-transition]');
+  const supervisionGraphic = document.querySelector<HTMLElement>('[data-supervision-graphic]');
   if (supervisionTransition) {
-    if ('IntersectionObserver' in window) {
-      const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          (entry.target as HTMLElement).classList.add('is-supervising');
-          observer.unobserve(entry.target);
-        }
-      }), { threshold: .42 });
-      observer.observe(supervisionTransition);
-    } else supervisionTransition.classList.add('is-supervising');
+    let hasStarted = false;
+    const startSupervision = () => {
+      if (hasStarted) return;
+      hasStarted = true;
+      window.setTimeout(() => supervisionTransition.classList.add('is-supervising'), 700);
+    };
+    const startWhenGraphicIsFullyVisible = () => {
+      const target = supervisionGraphic ?? supervisionTransition;
+      const bounds = target.getBoundingClientRect();
+      const isFullyVisible = bounds.top >= 0 && bounds.bottom <= window.innerHeight;
+      if (!isFullyVisible) return;
+
+      window.removeEventListener('scroll', startWhenGraphicIsFullyVisible);
+      window.removeEventListener('resize', startWhenGraphicIsFullyVisible);
+      startSupervision();
+    };
+
+    window.addEventListener('scroll', startWhenGraphicIsFullyVisible, { passive: true });
+    window.addEventListener('resize', startWhenGraphicIsFullyVisible);
+    startWhenGraphicIsFullyVisible();
   }
 
   const makeWhiteTransparent = (source: HTMLImageElement) => {
