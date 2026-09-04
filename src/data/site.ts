@@ -19,11 +19,11 @@ export const site = {
 export const nav = {
   tabs: [
     { label: 'Product', href: './', live: true },
-    { label: 'Setup', href: '#', live: false },
+    { label: 'Demo', href: './demo', live: true },
     { label: 'Specs', href: '#', live: false },
     { label: 'Archived', href: './archived', live: true },
   ],
-  cta: { label: 'Get Akaden', href: '#install' },
+  cta: { label: 'Book a call', href: '#book-a-call' },
 };
 
 export const hero = {
@@ -33,7 +33,7 @@ export const hero = {
     'Akaden turns a written request into a reviewed, deployable Ellucian data pipeline, with the right delivery practices ready when the work needs them.',
   thesis: 'You stop maintaining pipelines. You start maintaining specifications.',
   thesisSub: 'The pipeline is the output. The spec is the asset.',
-  install: { label: 'Get Akaden', href: '#install' },
+  install: { label: 'Book a call', href: '#book-a-call' },
 };
 
 /** Honesty label on the walkthrough. Presets are pre-recorded; the page says so (spec §7.2). */
@@ -165,17 +165,16 @@ export const wholePicture = {
 };
 
 export const install = {
-  eyebrow: 'Get started',
-  headline: 'Install Akaden',
-  /** NEEDS-SOURCE — exact install instructions and the download/repo target (review finding 01). */
-  lead: 'Akaden installs from a release you download and run against your own workspace.',
-  ctaLabel: 'Download Akaden',
-  ctaHref: '#',
-  pending: true,
-  /** §2 rules out a demo funnel as the PRIMARY cta — a quiet secondary path is still needed. */
+  eyebrow: 'Bring your roadmap',
+  headline: 'See Akaden in your workflow',
+  lead:
+    'Book a working session with an ABCloudz specialist. We will talk through the systems you need to connect, the delivery work in front of your team, and where Akaden can help you move from request to tested pipeline faster.',
+  ctaLabel: 'Book a call with ABCloudz',
+  ctaHref: 'https://abcloudz.com/',
+  pending: false,
   secondary: {
-    text: 'Not ready to install? Talk to the team about how Akaden fits your Ellucian estate.',
-    label: 'Contact ABCloudz',
+    text: 'Want to learn more about ABCloudz first?',
+    label: 'Visit ABCloudz',
     href: 'https://abcloudz.com/',
   },
 };
@@ -186,6 +185,6 @@ export const footer = {
   links: [
     { label: 'ABCloudz', href: 'https://abcloudz.com/' },
     { label: 'Accessibility', href: '#accessibility' },
-    { label: 'Install', href: '#install' },
+    { label: 'Book a call', href: '#book-a-call' },
   ],
 };

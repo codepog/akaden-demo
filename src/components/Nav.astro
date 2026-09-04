@@ -1,5 +1,20 @@
 ---
 import { nav, site } from '../data/site';
+const basePath = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const currentPath = Astro.url.pathname.replace(/\/$/, '');
+const pageHref = (href: string) => {
+  const route = href.replace(/^\.\//, '').replace(/\/$/, '');
+  if (!route) return basePath;
+  return import.meta.env.DEV ? `${basePath}${route}` : `${basePath}${route}.html`;
+};
+const isCurrentPage = (href: string) => {
+  const route = href.replace(/^\.\//, '').replace(/\/$/, '');
+  if (!route) return currentPath === '' || currentPath === basePath.replace(/\/$/, '');
+  return currentPath.endsWith(`/${route}`) || currentPath.endsWith(`/${route}.html`);
+};
+const bookingHref = isCurrentPage('./') ? nav.cta.href : `${basePath}${nav.cta.href}`;
 ---
 <header class="sticky top-0 z-50 border-b border-rule bg-ground/95 backdrop-blur">
   <nav class="mx-auto flex h-16 max-w-[1200px] items-center gap-6 px-4 sm:px-6" aria-label="Primary">
@@ -12,8 +27,8 @@ import { nav, site } from '../data/site';
         <li>
           {tab.live ? (
             <a
-              href={tab.href}
-              aria-current="page"
+              href={pageHref(tab.href)}
+              aria-current={isCurrentPage(tab.href) ? 'page' : undefined}
               class="rounded-md px-3 py-2 text-[0.9375rem] font-semibold text-ink hover:text-blue-bright"
             >
               {tab.label}
@@ -37,7 +52,7 @@ import { nav, site } from '../data/site';
       <a href={site.ownerUrl} class="hidden text-[0.9375rem] text-ink-soft hover:text-ink sm:inline">
         ABCloudz
       </a>
-      <a href={nav.cta.href} class="u-btn u-btn-primary !px-4 !py-2 !text-[0.9375rem]">
+      <a href={bookingHref} class="u-btn u-btn-primary !px-4 !py-2 !text-[0.9375rem]">
         {nav.cta.label}
       </a>
     </div>

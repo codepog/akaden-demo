@@ -1,0 +1,39 @@
+---
+const playlistId = 'PLZHQObOWTQDM4E-dwvbnQTiyKDO-y9T2t';
+const playlistUrl = `https://www.youtube.com/embed?listType=playlist&list=${playlistId}`;
+const playlistLink = `https://www.youtube.com/playlist?list=${playlistId}`;
+---
+
+<section id="video-playlist" class="border-b border-rule bg-paper scroll-mt-20">
+  <div class="mx-auto max-w-[1200px] px-4 py-16 sm:px-6 sm:py-20">
+    <div class="max-w-[52ch]">
+      <p class="u-label text-blue">Video playlist</p>
+      <h2 class="u-h2 mt-4 text-blue-deep">Keep exploring.</h2>
+      <p class="u-lead mt-4">
+        Watch the playlist without leaving Akaden. The player keeps the next videos available while you explore the product tour.
+      </p>
+    </div>
+
+    <div class="playlist-player mt-8">
+      <iframe
+        src={playlistUrl}
+        title="YouTube playlist"
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen
+      ></iframe>
+    </div>
+    <p class="mt-3 text-[0.8125rem] text-ink-soft">
+      Having trouble with the embedded player?
+      <a href={playlistLink} target="_blank" rel="noreferrer" class="font-semibold text-blue-bright underline underline-offset-4 hover:text-blue-deep">
+        Open the playlist on YouTube
+      </a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .playlist-player{overflow:hidden;border:1px solid var(--color-rule-strong);border-radius:8px;background:#000;box-shadow:0 18px 40px rgba(0,33,99,.16);}
+  .playlist-player iframe{display:block;width:100%;aspect-ratio:16/9;border:0;}
+</style>

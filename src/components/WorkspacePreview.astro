@@ -5,19 +5,19 @@ const basePath = import.meta.env.BASE_URL.endsWith('/')
 // Astro's local development server serves page routes without the static .html
 // extension; GitHub Pages serves the built demo.html file. Keep the iframe valid
 // in both places so the product tour is always embedded rather than a broken link.
-const demoUrl = import.meta.env.DEV ? `${basePath}demo` : `${basePath}demo.html`;
+const demoUrl = import.meta.env.DEV ? `${basePath}workspace` : `${basePath}workspace.html`;
 ---
 
 <!-- The supplied workspace demo stays in this page, fully interactive. -->
 <section id="product-tour" class="border-b border-rule bg-ground scroll-mt-20">
   <div class="mx-auto max-w-[1440px] px-4 py-16 sm:px-6 sm:py-20">
     <div class="max-w-[52ch]">
-      <p class="u-label text-blue">Product tour</p>
-      <h2 class="u-h2 tour-title mt-4 text-blue-deep">See the workflow in action.</h2>
+      <p class="u-label text-blue">Interactive walkthrough</p>
+      <h2 class="u-h2 tour-title mt-4 text-blue-deep">Turn a request into a working pipeline.</h2>
       <p class="u-lead mt-4">
-        This recorded demo follows a fictional campus communications team that needs a nightly file of student contact details. See the request become a specification, then a pipeline the team can review, run, and change with confidence.
+        Follow a short, guided scenario from an incoming business request to an approved data pipeline. The walkthrough shows how your team reviews the specification, directs the agents, and validates the result.
       </p>
-      <p class="tour-skill-note">Akaden brings the right supporting tools into each phase. Developers can inspect and adjust them when they need to.</p>
+      <p class="tour-skill-note">Akaden automatically brings the right delivery practices and specialized skills to each phase. Developers can inspect or choose the skills whenever they want direct control.</p>
     </div>
 
     <div class="workspace-preview mt-8 min-w-0">

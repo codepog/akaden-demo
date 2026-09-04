@@ -59,9 +59,18 @@ import { steps, AGENTS } from '../../data/ide';
         <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M14 3l7 7-9 9H5v-7z"/></svg>
         <span data-agent-label>Agent</span> <span class="cv" aria-hidden="true">⌄</span>
       </button>
-      <button type="button" class="cbtn" tabindex="-1">✦ Auto <span class="cv" aria-hidden="true">⌄</span></button>
-      <button type="button" class="cbtn" tabindex="-1">41 skills <span class="cv" aria-hidden="true">⌄</span></button>
-      <button type="button" class="cbtn" tabindex="-1">Tools <span class="cv" aria-hidden="true">⌄</span></button>
+      <button type="button" class="cbtn composer-help" aria-label="About automatic model selection">
+        ✦ Auto <span class="cv" aria-hidden="true">⌄</span>
+        <span class="composer-tip"><b>Auto</b><small>Akaden selects the model that best fits this task. Developers can choose a specific model whenever they want direct control.</small></span>
+      </button>
+      <button type="button" class="cbtn composer-help" aria-label="About Akaden skills">
+        Skills <span class="cv" aria-hidden="true">⌄</span>
+        <span class="composer-tip"><b>Skills</b><small>Custom guidance built by engineers for Ellucian products and pipeline delivery. Akaden selects the right skills automatically; developers can review or choose them.</small></span>
+      </button>
+      <button type="button" class="cbtn composer-help" aria-label="About workspace tools">
+        Tools <span class="cv" aria-hidden="true">⌄</span>
+        <span class="composer-tip"><b>Tools</b><small>Give agents practical, controlled access to workspace files, Ethos APIs, secrets, databases, pipelines, and tests.</small></span>
+      </button>
       <button type="button" class="send" data-send aria-label="Send">
         <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
       </button>
@@ -114,6 +123,9 @@ import { steps, AGENTS } from '../../data/ide';
   .cbtn:hover{background:var(--ide-hover);}
   .cbtn.on{border-color:#E0A93A;background:#FEF8EB;}
   .cbtn:focus-visible{outline:2px solid var(--ide-ink);outline-offset:1px;}
+  .composer-help{position:relative;cursor:help;}
+  .composer-tip{display:none;position:absolute;z-index:12;bottom:calc(100% + 8px);left:0;width:15.75rem;border:1px solid var(--ide-border-strong);border-radius:7px;background:#fff;padding:.6rem .7rem;box-shadow:0 12px 28px rgba(0,33,99,.18);color:var(--ide-ink);text-align:left;white-space:normal;}
+  .composer-tip b{display:block;font-size:11.5px;}.composer-tip small{display:block;margin-top:2px;color:var(--ide-ink-soft);font-size:10.5px;line-height:1.4;}.composer-help:hover .composer-tip,.composer-help:focus-visible .composer-tip{display:block;}
   .cv{color:var(--ide-ink-soft);font-size:11px;}
   .send{
     margin-left:auto;width:34px;height:34px;border-radius:50%;border:0;background:var(--ide-accent);color:#fff;

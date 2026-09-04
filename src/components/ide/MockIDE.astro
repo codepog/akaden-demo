@@ -10,8 +10,8 @@ import Chat from './Chat.astro';
     <button type="button" class="mi top-item">Edit<span class="top-popover"><b>Edit</b><small>Make changes to the active artifact.</small></span></button>
     <button type="button" class="mi top-item">View<span class="top-popover"><b>View</b><small>Choose what you see in the workspace.</small></span></button>
     <button type="button" class="mi top-item">Help<span class="top-popover"><b>Help</b><small>Find guidance for the current task.</small></span></button>
-    <button type="button" class="chipbtn top-item"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h16v14H4z"/><path d="M8 10l2 2-2 2M13 14h4" stroke-linecap="round"/></svg> Command Palette<span class="top-popover"><b>Command Palette</b><small>Jump straight to a workspace action.</small></span></button>
-    <button type="button" class="chipbtn top-item"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h6l2 2h8v12H4z"/></svg> test-env <span class="cv">⌄</span><span class="top-popover"><b>test-env</b><small>The selected workspace environment.</small></span></button>
+    <button type="button" class="chipbtn top-item"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h16v14H4z"/><path d="M8 10l2 2-2 2M13 14h4" stroke-linecap="round"/></svg> Command Palette<span class="top-popover"><b>Command Palette</b><small>Search for and run workspace commands without navigating menus.</small></span></button>
+    <button type="button" class="chipbtn top-item"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h6l2 2h8v12H4z"/></svg> test-env <span class="cv">⌄</span><span class="top-popover"><b>test-env</b><small>The active test workspace. Use it to safely build and validate before production.</small></span></button>
     <button type="button" class="mi plus top-item" aria-label="New item">+<span class="top-popover"><b>New</b><small>Add a file, folder, or pipeline item.</small></span></button>
     <div class="run-actions" role="group" aria-label="Pipeline actions">
       <button type="button" class="top-item" data-top-action="deploy">Deploy<span class="top-popover"><b>Deploy</b><small>Choose a tenant and send the approved pipeline.</small></span></button>
@@ -76,7 +76,7 @@ import Chat from './Chat.astro';
   .top-item{position:relative;}
   .top-popover{display:none;position:absolute;z-index:30;top:calc(100% + 8px);left:0;width:13.5rem;border:1px solid #B9C7D9;border-radius:7px;background:#fff;padding:.55rem .65rem;box-shadow:0 12px 28px rgba(0,33,99,.18);color:var(--ide-ink);text-align:left;white-space:normal;}
   .top-popover b{display:block;font-size:11.5px;}.top-popover small{display:block;margin-top:2px;color:var(--ide-ink-soft);font-size:10.5px;line-height:1.35;}
-  .top-item:hover .top-popover,.top-item:focus-visible .top-popover{display:block;}
+  .top-item:hover .top-popover,.top-item:focus .top-popover{display:block;}
 
   /* ---- focus: the pane holding the action stays bright, the rest recede ---- */
   .ide :global(.side),.ide :global(.ed),.ide :global(.chat){
@@ -158,17 +158,12 @@ import Chat from './Chat.astro';
     const panes    = { side: q<HTMLElement>('.side'), ed: q<HTMLElement>('.ed'), chat: q<HTMLElement>('.chat') };
     const topActions = qa<HTMLButtonElement>('[data-top-action]');
 
-    // The guide bar lives outside the IDE frame — it is demo navigation, not product UI.
-    const bar      = document.querySelector<HTMLElement>('[data-guide]');
-    const gCount   = document.querySelector<HTMLElement>('[data-g-count]');
-    const gTitle   = document.querySelector<HTMLElement>('[data-g-title]');
-    const gPrev    = document.querySelector<HTMLButtonElement>('[data-g-prev]');
-    const gNext    = document.querySelector<HTMLButtonElement>('[data-g-next]');
+    // The guide rail lives outside the IDE frame. The one action is kept in the
+    // contextual coaching bubble, beside the feature it explains.
     const gDots    = document.querySelector<HTMLElement>('[data-g-dots]');
     const callout  = document.querySelector<HTMLElement>('[data-callout]');
-    const calloutCount = document.querySelector<HTMLElement>('[data-callout-count]');
-    const calloutTitle = document.querySelector<HTMLElement>('[data-callout-title]');
     const calloutText = document.querySelector<HTMLElement>('[data-callout-text]');
+    const calloutNext = document.querySelector<HTMLButtonElement>('[data-callout-next]');
 
     let cur = 1;
     let openFile: string | null = null;
@@ -235,9 +230,11 @@ import Chat from './Chat.astro';
         callout.hidden = true;
         return;
       }
-      if (calloutCount) calloutCount.textContent = `Step ${cur} of ${steps.length}`;
-      if (calloutTitle) calloutTitle.textContent = s.title;
       if (calloutText) calloutText.textContent = s.instruct;
+      if (calloutNext) {
+        calloutNext.textContent = s.nextLabel;
+        calloutNext.disabled = false;
+      }
       callout.hidden = false;
       window.requestAnimationFrame(positionCallout);
     }
@@ -320,12 +317,6 @@ import Chat from './Chat.astro';
       target?.classList.add('is-target');
       updateCallout(target, s);
 
-      // guide bar
-      if (gCount) gCount.textContent = exploreMode ? 'Workspace tour' : `Step ${cur} of ${steps.length}`;
-      if (gTitle) gTitle.textContent = exploreMode ? 'Explore Akaden' : s.title;
-      if (gPrev)  gPrev.disabled = cur === 1;
-      if (gNext) { gNext.textContent = exploreMode ? 'Explore the workspace' : s.nextLabel; gNext.disabled = exploreMode; }
-      if (bar) bar.dataset.step = String(cur);
       topActions.forEach((button) => {
         const action = button.dataset.topAction;
         const current = action === 'deploy' ? cur >= 6 && cur < 8 : cur === 8;
@@ -344,10 +335,10 @@ import Chat from './Chat.astro';
       });
     }
 
-    function go(n: number) {
+    function go(n: number, { preserveExplore = false } = {}) {
       const nextStep = Math.min(Math.max(n, 1), steps.length);
       if (nextStep !== 6) deployOpen = false;
-      exploreMode = false;
+      if (!preserveExplore) exploreMode = false;
       cur = nextStep;
       openFile = step().open;
       if (openFile && !step().files.includes(openFile)) openFile = null;
@@ -355,7 +346,11 @@ import Chat from './Chat.astro';
     }
     function openDeploy() {
       deployOpen = true;
-      go(6);
+      go(6, { preserveExplore: exploreMode });
+    }
+    function openRun() {
+      deployOpen = false;
+      go(8, { preserveExplore: exploreMode });
     }
     function next() {
       if (exploreMode) return;
@@ -395,11 +390,11 @@ import Chat from './Chat.astro';
           void requestFile.offsetWidth;
           requestFile.classList.add('file-arrived');
         }
-        if (gNext) gNext.disabled = true;
+        if (calloutNext) calloutNext.disabled = true;
         window.setTimeout(() => {
           uploadView?.classList.remove('is-uploading');
           uploadPlaying = false;
-          if (gNext) gNext.disabled = false;
+          if (calloutNext) calloutNext.disabled = false;
           go(2);
         }, 1060);
         return;
@@ -416,12 +411,12 @@ import Chat from './Chat.astro';
         if (typing) typing.hidden = false;
         if (thread) thread.scrollTop = thread.scrollHeight;
         if (currentChat) currentChat.dataset.sending = 'true';
-        if (gNext) gNext.disabled = true;
+        if (calloutNext) calloutNext.disabled = true;
         if (send) send.disabled = true;
         window.setTimeout(() => {
           if (typing) typing.hidden = true;
           if (currentChat) delete currentChat.dataset.sending;
-          if (gNext) gNext.disabled = false;
+          if (calloutNext) calloutNext.disabled = false;
           if (send) send.disabled = false;
           go(cur + 1);
         }, 820);
@@ -440,9 +435,8 @@ import Chat from './Chat.astro';
     }
     function prev() { go(cur - 1); }
 
-    gNext?.addEventListener('click', next);
+    calloutNext?.addEventListener('click', next);
     send?.addEventListener('click', next);
-    gPrev?.addEventListener('click', prev);
     sdlcRows.forEach((r) => r.addEventListener('click', () => go(Number(r.dataset.goto))));
     fileBtns.forEach((b) => b.addEventListener('click', () => { openFile = b.dataset.file!; render(); }));
     tabBtns.forEach((t) => t.addEventListener('click', () => { openFile = t.dataset.tab!; render(); }));
@@ -471,8 +465,12 @@ import Chat from './Chat.astro';
     });
 
     topActions.forEach((button) =>
-      button.addEventListener('click', () => button.dataset.topAction === 'deploy' ? openDeploy() : go(8)));
-    deployClose?.addEventListener('click', () => { deployOpen = false; if (deployPanel) deployPanel.hidden = true; });
+      button.addEventListener('click', () => button.dataset.topAction === 'deploy' ? openDeploy() : openRun()));
+    deployClose?.addEventListener('click', (event) => {
+      event.stopPropagation();
+      deployOpen = false;
+      render();
+    });
     explorerToggle?.addEventListener('click', () => {
       const fileMode = explorer?.dataset.explorerMode === 'files';
       if (explorer) explorer.dataset.explorerMode = fileMode ? 'folders' : 'files';

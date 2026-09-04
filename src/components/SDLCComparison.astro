@@ -64,20 +64,21 @@ const assetPath = (name: string) => `${import.meta.env.BASE_URL.replace(/\/?$/, 
       hasStarted = true;
       window.setTimeout(() => supervisionTransition.classList.add('is-supervising'), 700);
     };
-    const startWhenGraphicIsFullyVisible = () => {
+    const startWhenGraphicIsReady = () => {
       const target = supervisionGraphic ?? supervisionTransition;
       const bounds = target.getBoundingClientRect();
-      const isFullyVisible = bounds.top >= 0 && bounds.bottom <= window.innerHeight;
-      if (!isFullyVisible) return;
+      const earlyStartOffset = 48;
+      const isReady = bounds.top >= 0 && bounds.bottom <= window.innerHeight + earlyStartOffset;
+      if (!isReady) return;
 
-      window.removeEventListener('scroll', startWhenGraphicIsFullyVisible);
-      window.removeEventListener('resize', startWhenGraphicIsFullyVisible);
+      window.removeEventListener('scroll', startWhenGraphicIsReady);
+      window.removeEventListener('resize', startWhenGraphicIsReady);
       startSupervision();
     };
 
-    window.addEventListener('scroll', startWhenGraphicIsFullyVisible, { passive: true });
-    window.addEventListener('resize', startWhenGraphicIsFullyVisible);
-    startWhenGraphicIsFullyVisible();
+    window.addEventListener('scroll', startWhenGraphicIsReady, { passive: true });
+    window.addEventListener('resize', startWhenGraphicIsReady);
+    startWhenGraphicIsReady();
   }
 
   const makeWhiteTransparent = (source: HTMLImageElement) => {

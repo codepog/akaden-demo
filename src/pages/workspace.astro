@@ -1,0 +1,97 @@
+---
+import '../styles/global.css';
+import MockIDE from '../components/ide/MockIDE.astro';
+import { steps } from '../data/ide';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Akaden Workspace Demo</title>
+    <meta name="description" content="Walk a customer requirement through the Akaden SDLC, from inputs to a running pipeline." />
+    <meta name="robots" content="noindex" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,600;0,700;0,800;1,900&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+  </head>
+  <body class="page">
+    <!-- Keep the controls in DOM before the workspace so its script can bind to them. -->
+    <aside class="coach-callout" data-callout aria-live="polite" aria-atomic="true" hidden>
+      <p data-callout-text></p>
+      <div class="coach-actions">
+        <button type="button" class="coach-next" data-callout-next>Upload request</button>
+      </div>
+    </aside>
+
+    <nav class="guide" data-guide aria-label="Walkthrough controls">
+      <ol class="g-dots" data-g-dots>
+        {steps.map((s) => (
+          <li><button type="button" data-dot={s.n} aria-label={`Step ${s.n}: ${s.title}`}></button></li>
+        ))}
+      </ol>
+    </nav>
+
+    <div class="frame"><MockIDE /></div>
+  </body>
+</html>
+
+<style>
+  .page{background:var(--color-paper);margin:0;display:grid;grid-template-areas:"guide" "frame";grid-template-rows:auto minmax(0,1fr);height:clamp(40rem,59vw,50rem);overflow:hidden;}
+
+  .frame{
+    grid-area:frame;
+    margin:0;
+    min-height:0;
+    border:0;border-radius:0;overflow:hidden;
+    box-shadow:none;
+    background:#FAFCFF;
+  }
+
+  /* ---------- walkthrough control bar ---------- */
+  .guide{
+    grid-area:guide;
+    margin:0;
+    background:var(--color-ground);
+    border:0;border-bottom:1px solid var(--color-rule-strong);
+    border-radius:0;
+    padding:10px clamp(12px,2.4vw,20px);
+  }
+  .g-dots{list-style:none;display:flex;gap:6px;margin:0;padding:0;}
+  .g-dots li{flex:1;}
+  .g-dots button{
+    display:block;width:100%;height:4px;border:0;padding:0;border-radius:2px;
+    background:var(--color-rule);cursor:pointer;transition:background-color 180ms,transform 180ms;
+  }
+  .g-dots button.past{background:#9CC0A8;}
+  .g-dots button.on{background:var(--color-blue);transform:scaleY(1.65);}
+  .g-dots button:hover{background:var(--color-rule-strong);}
+  .g-dots button:focus-visible{outline:2px solid var(--color-ink);outline-offset:2px;}
+
+  /* The guide is only navigation. The explanation lives beside the product control it describes. */
+  .coach-callout{
+    position:fixed;z-index:80;width:min(21rem,calc(100vw - 2rem));
+    border:1px solid #B9CDEA;border-radius:12px;background:#F3F7FD;
+    box-shadow:0 18px 40px rgba(0,33,99,.2);padding:10px 17px 12px;
+    color:var(--color-ink);pointer-events:auto;
+  }
+  .coach-callout[hidden]{display:none;}
+  .coach-callout::after{content:"";position:absolute;width:0;height:0;border:10px solid transparent;}
+  .coach-callout[data-side="right"]::after{left:-20px;top:var(--callout-arrow-y,50%);transform:translateY(-50%);border-right-color:#F3F7FD;}
+  .coach-callout[data-side="left"]::after{right:-20px;top:var(--callout-arrow-y,50%);transform:translateY(-50%);border-left-color:#F3F7FD;}
+  .coach-callout[data-side="bottom"]::after{top:-20px;left:var(--callout-arrow-x,50%);transform:translateX(-50%);border-bottom-color:#F3F7FD;}
+  .coach-callout[data-side="top"]::after{bottom:-20px;left:var(--callout-arrow-x,50%);transform:translateX(-50%);border-top-color:#F3F7FD;}
+  .coach-callout p:last-child{margin:10px 0 0;color:var(--color-ink-soft);font-size:.88rem;line-height:1.48;}
+  .coach-actions{margin-top:10px;border-top:1px solid #D3DFEF;padding-top:10px;}
+  .coach-next{width:100%;min-height:34px;border:1px solid var(--color-blue);border-radius:7px;background:var(--color-blue);padding:7px 11px;color:#fff;font:inherit;font-size:.8rem;font-weight:700;cursor:pointer;transition:background-color 140ms,border-color 140ms;}
+  .coach-next:hover:not(:disabled){border-color:var(--color-blue-deep);background:var(--color-blue-deep);}.coach-next:disabled{opacity:.5;cursor:not-allowed;}.coach-next:focus-visible{outline:2px solid var(--color-ink);outline-offset:2px;}
+
+  @media (max-width:620px){
+    .page{height:100dvh;}
+    .g-dots{gap:4px;}
+    .coach-callout{width:min(19rem,calc(100vw - 1.5rem));padding:10px 14px 12px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .g-dots button,.coach-next{transition:none;}
+  }
+</style>
