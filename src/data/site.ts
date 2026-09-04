@@ -169,8 +169,8 @@ export const install = {
   headline: 'See Akaden in your workflow',
   lead:
     'Book a working session with an ABCloudz specialist. We will talk through the systems you need to connect, the delivery work in front of your team, and where Akaden can help you move from request to tested pipeline faster.',
-  ctaLabel: 'Book a call with ABCloudz',
-  ctaHref: 'https://abcloudz.com/',
+  ctaLabel: 'Contact us',
+  ctaHref: 'https://abcloudz.com/company/?page-url=Trusted+Experts+in+Cloud+Transformation#contact-us',
   pending: false,
   secondary: {
     text: 'Want to learn more about ABCloudz first?',
