@@ -347,6 +347,9 @@ const { embedded = false } = Astro.props;
     if (!(shell instanceof HTMLElement)) return;
     shell.classList.add('is-ready');
     demo?.setAttribute('aria-hidden', 'false');
+    if (window.parent !== window) {
+      window.parent.postMessage({ type: 'akaden-demo-ready' }, window.location.origin);
+    }
   }
 
   function openAkaden() {

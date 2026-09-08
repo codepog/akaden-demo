@@ -23,34 +23,40 @@ const playlistUrl = `https://www.youtube.com/embed?listType=playlist&list=${play
     </div>
 
     <div class="hero-actions" aria-label="Explore Akaden">
-      <button class="hero-action-card" type="button" data-hero-trigger="demo" aria-expanded="false" aria-controls="hero-demo-panel">
-        <span class="hero-action-card__media">
+      <div class="hero-action">
+        <div class="hero-action__media">
           <img src={assetPath('hero-demo-preview.png')} alt="Akaden interactive walkthrough showing the workspace and guided upload request step." width="2798" height="1302" />
-        </span>
-        <span class="hero-action-card__label">{hero.actions.demo.label}</span>
-      </button>
+        </div>
+        <button class="hero-action__button" type="button" data-hero-trigger="demo" aria-expanded="false" aria-controls="hero-demo-panel">
+          {hero.actions.demo.label}
+        </button>
+      </div>
 
-      <button class="hero-action-card" type="button" data-hero-trigger="video" aria-expanded="false" aria-controls="hero-video-panel">
-        <span class="hero-action-card__media hero-action-card__media--video">
+      <div class="hero-action">
+        <div class="hero-action__media hero-action__media--video">
           <img src={assetPath('agentic-sdlc.png')} alt="Akaden agentic delivery workflow video preview." width="2646" height="1518" loading="lazy" />
-          <span class="hero-action-card__play" aria-hidden="true">
+          <span class="hero-action__play" aria-hidden="true">
             <svg viewBox="0 0 48 48"><rect x="4" y="4" width="40" height="40" rx="20" /><path d="m20 16 13 8-13 8Z" /></svg>
           </span>
-        </span>
-        <span class="hero-action-card__label">{hero.actions.video.label}</span>
-      </button>
+        </div>
+        <button class="hero-action__button" type="button" data-hero-trigger="video" aria-expanded="false" aria-controls="hero-video-panel">
+          {hero.actions.video.label}
+        </button>
+      </div>
 
-      <a class="hero-action-card" href={hero.actions.contact.href}>
-        <span class="hero-action-card__media hero-action-card__media--logo">
+      <div class="hero-action">
+        <div class="hero-action__media hero-action__media--logo">
           <img src={assetPath('akaden-app-icon-reference.svg')} alt="Akaden" width="512" height="512" loading="lazy" />
-        </span>
-        <span class="hero-action-card__label">{hero.actions.contact.label}</span>
-      </a>
+        </div>
+        <a class="hero-action__button" href={hero.actions.contact.href}>{hero.actions.contact.label}</a>
+      </div>
     </div>
 
     <div class="hero-panels" aria-live="polite">
       <section id="hero-demo-panel" class="hero-panel hero-panel--demo" data-hero-panel="demo" tabindex="-1" aria-label="Interactive Akaden walkthrough" hidden>
-        <button type="button" class="hero-panel__close hero-panel__close--floating" data-hero-close aria-label="Close demo panel">Close</button>
+        <button type="button" class="hero-panel__close hero-panel__close--floating" data-hero-close data-demo-close aria-label="Close demo panel" disabled>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+        </button>
         <div class="hero-panel__body hero-panel__body--demo">
           <iframe data-src={experimentUrl} title="Akaden experiment interactive walkthrough" loading="lazy"></iframe>
         </div>
@@ -84,20 +90,18 @@ const playlistUrl = `https://www.youtube.com/embed?listType=playlist&list=${play
 
 <style>
   .hero-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.35rem;max-width:62rem;margin-top:2.5rem;padding:.35rem 0 1.25rem}
-  .hero-action-card{display:grid;grid-template-rows:auto 3.5rem;min-width:0;overflow:hidden;border:1px solid var(--color-rule-strong);border-radius:8px;background:var(--color-ground);color:var(--color-blue-deep);box-shadow:inset 0 1px 0 rgb(255 255 255 / .9),0 0 0 2px rgb(33 83 196 / .14),0 0 24px 3px rgb(20 106 216 / .34),0 18px 34px -12px rgb(20 106 216 / .58);cursor:pointer;text-decoration:none;transition:border-color 160ms ease-out,box-shadow 160ms ease-out,transform 160ms ease-out}
-  .hero-action-card:hover{border-color:var(--color-blue);box-shadow:inset 0 1px 0 rgb(255 255 255 / .9),0 0 0 3px rgb(33 83 196 / .2),0 0 30px 5px rgb(20 106 216 / .44),0 24px 42px -10px rgb(20 106 216 / .72);transform:translateY(-4px)}
-  .hero-action-card:focus-visible{outline:2px solid var(--color-ink);outline-offset:3px}
-  .hero-action-card[aria-expanded="true"]{border-color:var(--color-blue);box-shadow:0 0 0 3px rgb(33 83 196 / .14),0 14px 30px rgba(0,33,99,.12)}
-  .hero-action-card__media{position:relative;display:grid;aspect-ratio:16/9;overflow:hidden;place-items:center;background:var(--color-paper)}
-  .hero-action-card__media>img{width:100%;height:100%;object-fit:cover}
-  .hero-action-card__media--video>img{filter:saturate(.78) brightness(.75);transform:scale(1.025)}
-  .hero-action-card__media--video::after{position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgb(0 33 99 / .2));content:""}
-  .hero-action-card__play{position:absolute;z-index:1;display:grid;width:3.5rem;height:3.5rem;place-items:center;filter:drop-shadow(0 8px 18px rgb(0 33 99 / .28))}
-  .hero-action-card__play svg{width:100%;height:100%}.hero-action-card__play rect{fill:#fff}.hero-action-card__play path{fill:var(--color-blue)}
-  .hero-action-card__media--logo{background:var(--color-paper)}
-  .hero-action-card__media--logo>img{width:clamp(5rem,8vw,7rem);height:clamp(5rem,8vw,7rem);object-fit:contain;filter:drop-shadow(0 10px 16px rgb(0 33 99 / .14))}
-  .hero-action-card__label{display:grid;place-items:center;border-top:1px solid var(--color-blue);background:var(--color-blue);padding:.7rem 1rem;color:#fff;font-size:1rem;font-weight:700;letter-spacing:-.01em;text-align:center;transition:background-color 160ms ease-out}
-  .hero-action-card:hover .hero-action-card__label,.hero-action-card[aria-expanded="true"] .hero-action-card__label{background:var(--color-blue-bright)}
+  .hero-action{display:grid;min-width:0;justify-items:center;gap:1.15rem}
+  .hero-action__media{position:relative;display:grid;width:100%;aspect-ratio:16/9;overflow:hidden;place-items:center;border:1px solid var(--color-rule-strong);border-radius:12px;background:var(--color-paper);box-shadow:inset 0 1px 0 rgb(255 255 255 / .9),0 0 0 2px rgb(33 83 196 / .14),0 0 24px 3px rgb(20 106 216 / .32),0 18px 34px -12px rgb(20 106 216 / .52)}
+  .hero-action__media>img{width:100%;height:100%;object-fit:cover}
+  .hero-action__media--video>img{filter:saturate(.78) brightness(.75);transform:scale(1.025)}
+  .hero-action__media--video::after{position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgb(0 33 99 / .2));content:""}
+  .hero-action__play{position:absolute;z-index:1;display:grid;width:3.5rem;height:3.5rem;place-items:center;filter:drop-shadow(0 8px 18px rgb(0 33 99 / .28))}
+  .hero-action__play svg{width:100%;height:100%}.hero-action__play rect{fill:#fff}.hero-action__play path{fill:var(--color-blue)}
+  .hero-action__media--logo{background:var(--color-paper)}
+  .hero-action__media--logo>img{width:clamp(5rem,8vw,7rem);height:clamp(5rem,8vw,7rem);object-fit:contain;filter:drop-shadow(0 10px 16px rgb(0 33 99 / .14))}
+  .hero-action__button{display:inline-flex;min-height:3rem;align-items:center;justify-content:center;border:0;border-radius:999px;background:var(--color-blue);padding:.72rem 1.75rem;color:#fff;font:inherit;font-size:1rem;font-weight:700;letter-spacing:-.01em;line-height:1;text-align:center;text-decoration:none;box-shadow:0 10px 22px -9px rgb(20 106 216 / .75);cursor:pointer;transition:background-color 160ms ease-out,box-shadow 160ms ease-out,transform 160ms ease-out}
+  .hero-action__button:hover,.hero-action__button[aria-expanded="true"]{background:var(--color-blue-bright);box-shadow:0 14px 26px -8px rgb(20 106 216 / .85);transform:translateY(-2px)}
+  .hero-action__button:focus-visible{outline:2px solid var(--color-ink);outline-offset:3px}
   .hero-panels{max-width:70rem;margin-top:1.5rem}
   .hero-panel{overflow:hidden;scroll-margin-top:5rem;border:1px solid var(--color-rule-strong);border-radius:12px;background:var(--color-paper);box-shadow:0 18px 42px rgba(0,33,99,.12)}
   .hero-panel:focus{outline:none}
@@ -106,12 +110,15 @@ const playlistUrl = `https://www.youtube.com/embed?listType=playlist&list=${play
   .hero-panel__header{display:flex;align-items:flex-start;justify-content:space-between;gap:2rem;padding:1.5rem 1.5rem 1.25rem;border-bottom:1px solid var(--color-rule);background:var(--color-ground)}
   .hero-panel__header>div{max-width:48rem}.hero-panel__header h2{margin-top:.55rem;color:var(--color-blue-deep);font-size:clamp(1.5rem,2.5vw,2.15rem);font-weight:800;letter-spacing:-.03em;line-height:1.08}.hero-panel__header div>p:last-child{margin-top:.65rem;color:var(--color-ink-soft);font-size:.95rem;line-height:1.5}
   .hero-panel__close{flex:none;border:1px solid var(--color-rule-strong);border-radius:6px;background:#fff;padding:.5rem .8rem;color:var(--color-blue-deep);font-size:.82rem;font-weight:700;cursor:pointer}.hero-panel__close:hover{border-color:var(--color-blue);color:var(--color-blue-bright)}.hero-panel__close:focus-visible{outline:2px solid var(--color-ink);outline-offset:2px}
-  .hero-panel__close--floating{position:absolute;z-index:5;top:1rem;right:1rem;box-shadow:0 4px 14px rgb(0 33 99 / .16)}
+  .hero-panel__close--floating{position:absolute;z-index:5;top:1.1rem;right:1.1rem;display:grid;width:2.5rem;height:2.5rem;place-items:center;border:0;border-radius:50%;background:transparent;padding:0;box-shadow:none;color:var(--color-blue-deep);opacity:0;visibility:hidden;transform:scale(.85);pointer-events:none;transition:opacity 180ms ease,transform 180ms ease,visibility 0s linear 180ms}
+  .hero-panel__close--floating.is-visible{opacity:1;visibility:visible;transform:none;pointer-events:auto;transition-delay:0s}
+  .hero-panel__close--floating:hover{border:0;background:rgb(20 106 216 / .08);color:var(--color-blue-deep)}
+  .hero-panel__close--floating svg{display:block;width:1.35rem;height:1.35rem;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
   .hero-panel__body{display:grid;min-height:clamp(32rem,58vw,44rem);place-items:center;padding:1rem;background:var(--color-paper)}
   .hero-panel__body--demo{padding:0;background:transparent}.hero-panel__body--demo iframe{display:block;width:100%;height:clamp(32rem,58vw,44rem);border:0;background:transparent}
   .hero-video-frame{width:min(100%,62rem);overflow:hidden;border:1px solid var(--color-rule-strong);border-radius:8px;background:#000;box-shadow:0 18px 40px rgba(0,33,99,.16)}.hero-video-frame iframe{display:block;width:100%;aspect-ratio:16/9;border:0}
-  @media(max-width:760px){.hero-actions{grid-template-columns:1fr;max-width:30rem;gap:1.5rem;padding:.35rem 0 1.25rem}.hero-panel__header{display:grid;gap:1rem;padding:1.25rem}.hero-panel__close{justify-self:start}.hero-panel__body,.hero-panel__body--demo iframe{min-height:30rem;height:30rem}.hero-panel__body--video{min-height:20rem;height:auto;padding:.75rem}}
-  @media(prefers-reduced-motion:reduce){.hero-action-card,.hero-action-card__label{transition:none}.hero-action-card:hover{transform:none}}
+  @media(max-width:760px){.hero-actions{grid-template-columns:1fr;max-width:30rem;gap:2rem;padding:.35rem 0 1.25rem}.hero-panel__header{display:grid;gap:1rem;padding:1.25rem}.hero-panel__close{justify-self:start}.hero-panel__body,.hero-panel__body--demo iframe{min-height:30rem;height:30rem}.hero-panel__body--video{min-height:20rem;height:auto;padding:.75rem}}
+  @media(prefers-reduced-motion:reduce){.hero-action__button{transition:none}.hero-action__button:hover{transform:none}}
 </style>
 
 <script>
@@ -120,6 +127,9 @@ const playlistUrl = `https://www.youtube.com/embed?listType=playlist&list=${play
   if (heroExperience) {
     const triggers = Array.from(heroExperience.querySelectorAll<HTMLButtonElement>('[data-hero-trigger]'));
     const panels = Array.from(heroExperience.querySelectorAll<HTMLElement>('[data-hero-panel]'));
+    const demoPanel = heroExperience.querySelector<HTMLElement>('[data-hero-panel="demo"]');
+    const demoFrame = demoPanel?.querySelector<HTMLIFrameElement>('iframe[data-src]');
+    const demoClose = demoPanel?.querySelector<HTMLButtonElement>('[data-demo-close]');
 
     const setPanel = (requestedPanel: string | null) => {
       const openPanel = panels.find((panel) => panel.dataset.heroPanel === requestedPanel);
@@ -143,6 +153,11 @@ const playlistUrl = `https://www.youtube.com/embed?listType=playlist&list=${play
         }
       });
 
+      if (activePanel !== demoPanel && demoClose) {
+        demoClose.classList.remove('is-visible');
+        demoClose.disabled = true;
+      }
+
       if (activePanel) {
         activePanel.focus({ preventScroll: true });
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -158,6 +173,19 @@ const playlistUrl = `https://www.youtube.com/embed?listType=playlist&list=${play
 
     heroExperience.querySelectorAll<HTMLButtonElement>('[data-hero-close]').forEach((closeButton) => {
       closeButton.addEventListener('click', () => setPanel(null));
+    });
+
+    window.addEventListener('message', (event) => {
+      if (
+        event.origin !== window.location.origin ||
+        event.source !== demoFrame?.contentWindow ||
+        event.data?.type !== 'akaden-demo-ready' ||
+        demoPanel?.hidden ||
+        !demoClose
+      ) return;
+
+      demoClose.disabled = false;
+      demoClose.classList.add('is-visible');
     });
   }
 </script>

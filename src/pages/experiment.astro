@@ -1,12 +1,331 @@
 ---
 import Base from '../layouts/Base.astro';
-import AkadenLogoDemo from '../components/AkadenLogoDemo.astro';
 import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { benefits, guardrails, hero, install, proof, whySpec } from '../data/site';
+import { changeRequest, stages } from '../data/walkthrough';
+
+const basePath = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const assetPath = (name: string) => `${basePath}${name}`;
+
+const workflowArt = [
+  'workflow-upload.png',
+  'workflow-spec-agent.png',
+  'workflow-review.png',
+  'workflow-build-agent.png',
+  'workflow-deploy.png',
+];
+
+const overviewCards = [
+  {
+    kicker: 'Define',
+    title: 'Start with the real request',
+    body: 'Bring the business need, institutional context, and constraints into one workspace before anything is generated.',
+    href: '#workflow',
+  },
+  {
+    kicker: 'Review',
+    title: 'Keep decisions with your team',
+    body: 'Read, edit, and approve the specification in language your institution can check before the pipeline is built.',
+    href: '#specification',
+  },
+  {
+    kicker: 'Deliver',
+    title: 'Move from plan to pipeline',
+    body: 'Generate, test, deploy, and validate against the acceptance criteria recorded in the approved specification.',
+    href: '#outcomes',
+  },
+];
 ---
 
-<Base title="Akaden Experiment">
+<Base title="Akaden — Accelerate pipeline development and cloud migration">
   <Nav />
-  <main id="main">
-    <AkadenLogoDemo />
+
+  <main id="main" class="product-test">
+    <section class="test-hero" aria-labelledby="test-hero-title">
+      <div class="test-hero__glow test-hero__glow--one" aria-hidden="true"></div>
+      <div class="test-hero__glow test-hero__glow--two" aria-hidden="true"></div>
+      <div class="test-shell test-hero__grid">
+        <div class="test-hero__copy">
+          <p class="test-eyebrow">{hero.eyebrow}</p>
+          <h1 id="test-hero-title">Accelerate pipeline development and cloud migration.</h1>
+          <p>{hero.lead}</p>
+          <div class="test-actions">
+            <a class="test-button test-button--light" href="#demo">View interactive demo</a>
+            <a class="test-link test-link--light" href="#contact">Book a call <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+
+        <div class="test-hero__visual" aria-label="Akaden interactive workspace preview">
+          <div class="test-hero__visual-bar">
+            <span><i></i><i></i><i></i></span>
+            <b>Akaden workspace</b>
+          </div>
+          <img src={assetPath('hero-demo-preview.png')} alt="Akaden workspace showing a guided integration request." width="2798" height="1302" />
+          <div class="test-hero__badge">
+            <span>01</span>
+            <p><b>Request received</b><small>Ready for specification</small></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="product-nav" aria-label="Product test page sections">
+      <div class="test-shell product-nav__inner">
+        <a class="product-nav__name" href="#main">Akaden</a>
+        <div class="product-nav__links">
+          <a href="#overview">Overview</a>
+          <a href="#workflow">Workflow</a>
+          <a href="#outcomes">Outcomes</a>
+          <a href="#proof">Proof</a>
+        </div>
+        <a class="test-button test-button--small" href="#contact">Book a call</a>
+      </div>
+    </nav>
+
+    <section id="overview" class="test-section test-section--white">
+      <div class="test-shell">
+        <div class="test-section__intro">
+          <p class="test-eyebrow test-eyebrow--blue">Overview</p>
+          <h2>{hero.thesis}</h2>
+          <p>{hero.thesisSub} Akaden keeps the practices, decisions, and delivery work connected from the first request through validation.</p>
+        </div>
+
+        <div class="overview-grid">
+          {overviewCards.map((card) => (
+            <article class="overview-card">
+              <p>{card.kicker}</p>
+              <h3>{card.title}</h3>
+              <p>{card.body}</p>
+              <a href={card.href}>Explore <span aria-hidden="true">→</span></a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="outcomes" class="test-section test-section--tint">
+      <div class="test-shell">
+        <div class="test-section__intro test-section__intro--wide">
+          <p class="test-eyebrow test-eyebrow--blue">{benefits.eyebrow}</p>
+          <h2>{benefits.headline}</h2>
+        </div>
+
+        <div class="solution-grid">
+          {benefits.items.map((item, index) => (
+            <article class:list={['solution-card', index === 0 && 'solution-card--featured']}>
+              <span class="solution-card__number">0{index + 1}</span>
+              <div>
+                <h3>{item.title}</h3>
+                <p>{item.body}</p>
+              </div>
+              {index === 0 && <img src={assetPath('workflow-build-agent.png')} alt="" aria-hidden="true" />}
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="workflow" class="test-section test-section--dark">
+      <div class="test-shell">
+        <div class="test-section__intro test-section__intro--dark">
+          <p class="test-eyebrow test-eyebrow--amber">How it works</p>
+          <h2>A clear path from request to pipeline.</h2>
+          <p>Akaden brings practical guidance to each stage. Your team sets the direction, reviews the decisions, and stays accountable for the result.</p>
+        </div>
+
+        <div class="workflow-tabs" role="tablist" aria-label="Akaden workflow stages">
+          {stages.map((stage, index) => (
+            <button
+              type="button"
+              role="tab"
+              id={`workflow-tab-${stage.id}`}
+              aria-controls={`workflow-panel-${stage.id}`}
+              aria-selected={index === 0 ? 'true' : 'false'}
+              tabindex={index === 0 ? 0 : -1}
+              data-workflow-tab={stage.id}
+            >
+              <span>{stage.n}</span>{stage.title}
+            </button>
+          ))}
+        </div>
+
+        <div class="workflow-stage">
+          {stages.map((stage, index) => (
+            <article
+              id={`workflow-panel-${stage.id}`}
+              class="workflow-panel"
+              role="tabpanel"
+              aria-labelledby={`workflow-tab-${stage.id}`}
+              data-workflow-panel={stage.id}
+              hidden={index !== 0}
+            >
+              <div class="workflow-panel__copy">
+                <p class="test-eyebrow test-eyebrow--blue">Stage {stage.n}</p>
+                <h3>{stage.caption}</h3>
+                <p>{stage.body}</p>
+                {stage.iterate && <aside>{stage.iterate}</aside>}
+              </div>
+              <div class="workflow-panel__art">
+                <img src={assetPath(workflowArt[index])} alt="" aria-hidden="true" />
+                <span>{stage.actor === 'human' ? 'Human decision' : stage.actor === 'agent' ? 'Agent-assisted work' : 'System validation'}</span>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="demo" class="test-section test-section--white">
+      <div class="test-shell demo-feature">
+        <div class="demo-feature__copy">
+          <p class="test-eyebrow test-eyebrow--blue">Product demo</p>
+          <h2>See Akaden turn a request into a working pipeline.</h2>
+          <p>Explore the guided workspace and move through the same review, build, deploy, and validation flow used by the product team.</p>
+          <a class="test-button" href={`${basePath}experiment-embed?intro=always`}>Start the walkthrough</a>
+        </div>
+        <a class="demo-feature__visual" href={`${basePath}experiment-embed?intro=always`} aria-label="Open the Akaden interactive walkthrough">
+          <img src={assetPath('hero-demo-preview.png')} alt="Preview of the Akaden interactive walkthrough." width="2798" height="1302" loading="lazy" />
+          <span aria-hidden="true">▶</span>
+        </a>
+      </div>
+    </section>
+
+    <section id="specification" class="test-section test-section--lavender">
+      <div class="test-shell">
+        <div class="test-section__intro test-section__intro--wide">
+          <p class="test-eyebrow test-eyebrow--blue">{whySpec.eyebrow}</p>
+          <h2>{whySpec.headline}</h2>
+          <p>{whySpec.lead}</p>
+        </div>
+        <div class="spec-grid">
+          {whySpec.points.map((point, index) => (
+            <article>
+              <span>0{index + 1}</span>
+              <h3>{point.title}</h3>
+              <p>{point.body}</p>
+            </article>
+          ))}
+        </div>
+
+        <article class="change-card">
+          <div>
+            <p class="test-eyebrow test-eyebrow--blue">{changeRequest.when}</p>
+            <h3>{changeRequest.ask}</h3>
+          </div>
+          <div class="change-card__comparison">
+            <p><b>Old way</b>{changeRequest.oldWay}</p>
+            <p><b>With Akaden</b>{changeRequest.newWay}</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="test-section test-section--white">
+      <div class="test-shell guardrail-layout">
+        <div>
+          <p class="test-eyebrow test-eyebrow--blue">{guardrails.eyebrow}</p>
+          <h2>{guardrails.headline}</h2>
+          <p>{guardrails.lead}</p>
+        </div>
+        <div class="guardrail-card">
+          <span aria-hidden="true">✓</span>
+          <div>
+            {guardrails.examples.map((example) => <p>{example}</p>)}
+            <small>{guardrails.close}</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="proof" class="test-section test-section--ink">
+      <div class="test-shell">
+        <div class="test-section__intro test-section__intro--dark">
+          <p class="test-eyebrow test-eyebrow--amber">{proof.eyebrow}</p>
+          <h2>{proof.headline}</h2>
+          <p>{proof.lead}</p>
+        </div>
+        <div class="stat-grid">
+          {proof.stats.map((stat) => (
+            <article><strong>{stat.figure}</strong><span>{stat.label}</span></article>
+          ))}
+        </div>
+        <blockquote class="proof-quote">
+          <p>“{proof.partnership.quote}”</p>
+          <footer><b>{proof.partnership.attribution}</b><span>{proof.partnership.role}</span></footer>
+        </blockquote>
+        <p class="proof-note">{proof.badgeNote}</p>
+      </div>
+    </section>
+
+    <section id="contact" class="test-section test-section--white">
+      <div class="test-shell contact-card">
+        <div>
+          <p class="test-eyebrow test-eyebrow--blue">{install.eyebrow}</p>
+          <h2>{install.headline}</h2>
+          <p>{install.lead}</p>
+        </div>
+        <div class="contact-card__actions">
+          <a class="test-button" href={install.ctaHref}>{install.ctaLabel}</a>
+          <a class="test-link" href={install.secondary.href}>{install.secondary.label} <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <Footer />
 </Base>
+
+<style>
+  :global(html){scroll-behavior:smooth}
+  .product-test{--test-blue:#1769e0;--test-indigo:#281489;--test-purple:#5c2dc1;--test-ink:#101828;--test-soft:#4b5872;color:var(--test-ink);background:#fff}
+  .test-shell{width:min(100% - 2rem,1200px);margin-inline:auto}
+  .test-hero{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(120deg,#1d116b 0%,#3d24a8 47%,#126dcc 100%);color:#fff}
+  .test-hero::after{position:absolute;z-index:-1;right:-10%;bottom:-52%;width:55rem;height:55rem;border:1px solid rgb(255 255 255 / .19);border-radius:50%;content:""}
+  .test-hero__glow{position:absolute;z-index:-1;border-radius:50%;filter:blur(16px);opacity:.5}.test-hero__glow--one{top:-16rem;right:20%;width:34rem;height:34rem;background:#5b8cff}.test-hero__glow--two{bottom:-18rem;left:-9rem;width:32rem;height:32rem;background:#8d42d8}
+  .test-hero__grid{display:grid;grid-template-columns:minmax(0,.84fr) minmax(28rem,1.16fr);align-items:center;gap:clamp(3rem,6vw,6.5rem);min-height:39rem;padding-block:clamp(4.5rem,8vw,7.5rem)}
+  .test-hero__copy{max-width:36rem}.test-eyebrow{margin:0;font-family:var(--font-mono);font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase}.test-hero h1{max-width:10ch;margin:.85rem 0 0;font-size:clamp(3rem,5.8vw,5.35rem);font-weight:700;letter-spacing:-.065em;line-height:.95}.test-hero__copy>p:last-of-type{max-width:35rem;margin:1.6rem 0 0;color:rgb(255 255 255 / .82);font-size:clamp(1.05rem,1.7vw,1.3rem);line-height:1.55}
+  .test-actions{display:flex;flex-wrap:wrap;align-items:center;gap:1.4rem;margin-top:2rem}.test-button{display:inline-flex;align-items:center;justify-content:center;border:2px solid var(--test-blue);background:var(--test-blue);padding:.82rem 1.35rem;color:#fff;font-weight:700;line-height:1;text-decoration:none;transition:background .16s ease,border-color .16s ease,transform .16s ease}.test-button:hover{border-color:#0e55bb;background:#0e55bb;transform:translateY(-1px)}.test-button--light{border-color:#fff;background:#fff;color:#1c2380}.test-button--light:hover{border-color:#eef4ff;background:#eef4ff}.test-button--small{padding:.6rem 1rem;font-size:.88rem}.test-link{display:inline-flex;align-items:center;gap:.45rem;color:var(--test-blue);font-weight:700;text-decoration:none}.test-link span{transition:transform .16s ease}.test-link:hover span{transform:translateX(.2rem)}.test-link--light{color:#fff}
+  .test-hero__visual{position:relative;overflow:visible;border:1px solid rgb(255 255 255 / .38);border-radius:1.2rem;background:#f5f8ff;padding:2.8rem .55rem .55rem;box-shadow:0 42px 80px -34px rgb(0 0 0 / .64);transform:perspective(1200px) rotateY(-4deg) rotateX(1deg)}.test-hero__visual>img{display:block;width:100%;aspect-ratio:16/9;border-radius:.75rem;object-fit:cover}.test-hero__visual-bar{position:absolute;top:0;right:0;left:0;display:flex;height:2.8rem;align-items:center;justify-content:space-between;padding:0 1rem;color:#48546b;font-size:.74rem}.test-hero__visual-bar span{display:flex;gap:.34rem}.test-hero__visual-bar i{display:block;width:.52rem;height:.52rem;border-radius:50%;background:#ccd6e6}.test-hero__visual-badge{}.test-hero__badge{position:absolute;right:-1.8rem;bottom:-2.2rem;display:flex;align-items:center;gap:.8rem;width:min(16rem,52%);border-left:4px solid #77a9ff;background:#fff;padding:1rem 1.15rem;color:#172254;box-shadow:0 18px 46px -18px rgb(2 12 62 / .72)}.test-hero__badge>span{display:grid;width:2.3rem;height:2.3rem;flex:none;place-items:center;border-radius:50%;background:#e6efff;color:#185fcf;font-family:var(--font-mono);font-size:.76rem;font-weight:700}.test-hero__badge p{display:grid;margin:0;line-height:1.2}.test-hero__badge small{margin-top:.25rem;color:#667089;font-size:.72rem}
+  .product-nav{position:sticky;z-index:45;top:4rem;border-bottom:1px solid #d7dfeb;background:rgb(255 255 255 / .96);box-shadow:0 7px 18px -16px rgb(13 33 74 / .38);backdrop-filter:blur(12px)}.product-nav__inner{display:flex;min-height:3.8rem;align-items:center;gap:2rem}.product-nav__name{color:#172254;font-size:1.05rem;font-weight:800;text-decoration:none}.product-nav__links{display:flex;align-self:stretch;align-items:center;gap:1.7rem}.product-nav__links a{display:flex;height:100%;align-items:center;border-bottom:3px solid transparent;color:#34405a;font-size:.88rem;font-weight:600;text-decoration:none}.product-nav__links a:hover{border-color:var(--test-blue);color:var(--test-blue)}.product-nav .test-button{margin-left:auto}
+  .test-section{scroll-margin-top:8rem;padding-block:clamp(4.8rem,8vw,7.4rem)}.test-section--white{background:#fff}.test-section--tint{background:#f3f7fd}.test-section--lavender{background:#f2f0fb}.test-section--dark{background:linear-gradient(140deg,#0c1d4c,#142d70 58%,#233d88);color:#fff}.test-section--ink{background:#0a1738;color:#fff}.test-section__intro{max-width:46rem}.test-section__intro--wide{max-width:57rem}.test-eyebrow--blue{color:var(--test-blue)}.test-eyebrow--amber{color:#ffca65}.test-section__intro h2,.guardrail-layout h2,.contact-card h2{margin:.8rem 0 0;color:#15285d;font-size:clamp(2.35rem,4.6vw,4.2rem);font-weight:650;letter-spacing:-.055em;line-height:1}.test-section__intro>p:last-child,.guardrail-layout>div>p:last-child,.contact-card>div>p:last-child{max-width:52rem;margin:1.3rem 0 0;color:var(--test-soft);font-size:1.13rem;line-height:1.65}.test-section__intro--dark h2{color:#fff}.test-section__intro--dark>p:last-child{color:#c7d2ec}
+  .overview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.4rem;margin-top:3.1rem}.overview-card{display:flex;min-height:22rem;flex-direction:column;border:1px solid #dce3ed;background:#fff;padding:2rem;box-shadow:0 12px 34px -27px rgb(18 39 85 / .55);transition:transform .18s ease,box-shadow .18s ease}.overview-card:hover{transform:translateY(-4px);box-shadow:0 24px 44px -28px rgb(18 39 85 / .58)}.overview-card>p:first-child{margin:0;color:var(--test-blue);font-family:var(--font-mono);font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase}.overview-card h3{margin:3.2rem 0 0;color:#15285d;font-size:1.7rem;letter-spacing:-.035em;line-height:1.08}.overview-card h3+p{margin:.9rem 0 0;color:var(--test-soft);line-height:1.6}.overview-card a{margin-top:auto;color:var(--test-blue);font-weight:700;text-decoration:none}
+  .solution-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:1.4rem;margin-top:3.2rem}.solution-card{position:relative;display:flex;min-height:17rem;flex-direction:column;justify-content:space-between;overflow:hidden;background:#fff;padding:2rem;box-shadow:0 15px 38px -30px rgb(10 30 78 / .55)}.solution-card--featured{grid-row:span 2;min-height:35.4rem;background:linear-gradient(145deg,#45219a,#166ddd);color:#fff}.solution-card__number{font-family:var(--font-mono);font-size:.75rem;font-weight:700;letter-spacing:.12em}.solution-card h3{margin:0;color:#15285d;font-size:clamp(1.6rem,2.6vw,2.3rem);letter-spacing:-.04em;line-height:1.06}.solution-card p{margin:.8rem 0 0;color:var(--test-soft);line-height:1.6}.solution-card--featured h3{max-width:13ch;color:#fff}.solution-card--featured p{max-width:30rem;color:#dce8ff}.solution-card--featured img{position:absolute;right:-4%;bottom:-4%;width:min(52%,19rem);filter:drop-shadow(0 18px 30px rgb(4 16 62 / .4))}
+  .workflow-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));margin-top:3rem;border-bottom:1px solid rgb(255 255 255 / .25)}.workflow-tabs button{display:flex;align-items:center;justify-content:center;gap:.55rem;border:0;border-bottom:4px solid transparent;background:transparent;padding:1rem .5rem;color:#c2cee8;font:inherit;font-size:.8rem;font-weight:650;cursor:pointer}.workflow-tabs button span{font-family:var(--font-mono);font-size:.66rem}.workflow-tabs button[aria-selected="true"]{border-color:#6fa5ff;color:#fff}.workflow-stage{margin-top:1.8rem}.workflow-panel{display:grid;grid-template-columns:.9fr 1.1fr;min-height:27rem;overflow:hidden;background:#fff;color:var(--test-ink)}.workflow-panel__copy{align-self:center;padding:clamp(2rem,5vw,4.5rem)}.workflow-panel__copy h3{margin:.8rem 0 0;color:#15285d;font-size:clamp(2rem,3.5vw,3.15rem);letter-spacing:-.045em;line-height:1.02}.workflow-panel__copy>p:not(.test-eyebrow){margin:1.25rem 0 0;color:var(--test-soft);font-size:1.05rem;line-height:1.65}.workflow-panel__copy aside{margin-top:1.3rem;border-left:3px solid #ffbd3c;background:#fff7e5;padding:.85rem 1rem;color:#6d5015;font-size:.9rem}.workflow-panel__art{position:relative;display:grid;min-height:27rem;place-items:center;overflow:hidden;background:linear-gradient(145deg,#e8effd,#cddcff);padding:3rem}.workflow-panel__art::before{position:absolute;width:25rem;height:25rem;border:1px solid rgb(35 82 177 / .18);border-radius:50%;content:""}.workflow-panel__art img{position:relative;z-index:1;width:min(76%,23rem);max-height:20rem;object-fit:contain;filter:drop-shadow(0 20px 26px rgb(9 38 97 / .2))}.workflow-panel__art span{position:absolute;right:1.2rem;bottom:1.2rem;border-radius:999px;background:#fff;padding:.52rem .85rem;color:#2356ac;font-size:.72rem;font-weight:700;box-shadow:0 8px 20px -12px rgb(7 30 77 / .55)}
+  .demo-feature{display:grid;grid-template-columns:.74fr 1.26fr;align-items:center;gap:clamp(2.5rem,6vw,6rem)}.demo-feature__copy h2{margin:.8rem 0 0;color:#15285d;font-size:clamp(2.3rem,4.2vw,3.75rem);letter-spacing:-.05em;line-height:1}.demo-feature__copy>p:not(.test-eyebrow){margin:1.2rem 0 0;color:var(--test-soft);font-size:1.08rem;line-height:1.65}.demo-feature__copy .test-button{margin-top:1.8rem}.demo-feature__visual{position:relative;display:block;overflow:hidden;border:1px solid #becce2;background:#eef4ff;padding:.6rem;box-shadow:0 26px 55px -36px rgb(11 39 94 / .6)}.demo-feature__visual img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}.demo-feature__visual span{position:absolute;top:50%;left:50%;display:grid;width:4.6rem;height:4.6rem;place-items:center;border-radius:50%;background:#fff;color:var(--test-blue);font-size:1.35rem;box-shadow:0 18px 35px -18px rgb(4 21 58 / .7);transform:translate(-50%,-50%)}
+  .spec-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;margin-top:3rem;background:#ccd4e6}.spec-grid article{background:#fff;padding:2rem}.spec-grid span{color:var(--test-blue);font-family:var(--font-mono);font-size:.72rem;font-weight:700}.spec-grid h3{margin:2.3rem 0 0;color:#15285d;font-size:1.5rem;letter-spacing:-.025em}.spec-grid p{margin:.8rem 0 0;color:var(--test-soft);line-height:1.62}.change-card{display:grid;grid-template-columns:.8fr 1.2fr;gap:3rem;margin-top:2rem;background:#15285d;padding:clamp(2rem,4vw,3.4rem);color:#fff}.change-card h3{margin:.8rem 0 0;font-size:clamp(1.7rem,3vw,2.6rem);letter-spacing:-.04em;line-height:1.08}.change-card__comparison{display:grid;gap:1rem}.change-card__comparison p{margin:0;border-left:3px solid #6f98ea;background:rgb(255 255 255 / .09);padding:1rem 1.1rem;color:#dbe4f7;line-height:1.5}.change-card__comparison b{display:block;margin-bottom:.35rem;color:#fff}
+  .guardrail-layout{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:clamp(3rem,7vw,7rem)}.guardrail-card{display:grid;grid-template-columns:auto 1fr;gap:1rem;border:1px solid #ced9e8;background:#f5f8fd;padding:2rem}.guardrail-card>span{display:grid;width:2.5rem;height:2.5rem;place-items:center;border-radius:50%;background:#dff6e9;color:#19734a;font-weight:800}.guardrail-card p{margin:0 0 1rem;color:#15285d;font-size:1.08rem;font-weight:700;line-height:1.4}.guardrail-card small{display:block;border-top:1px solid #d5dfed;padding-top:1rem;color:var(--test-soft);line-height:1.55}
+  .stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin-top:3rem;background:rgb(255 255 255 / .18)}.stat-grid article{display:grid;min-height:12rem;align-content:center;background:#101f47;padding:2rem}.stat-grid strong{color:#8db7ff;font-size:clamp(2.7rem,5vw,4.5rem);letter-spacing:-.06em;line-height:1}.stat-grid span{max-width:14rem;margin-top:.75rem;color:#d1dcf2;line-height:1.4}.proof-quote{display:grid;grid-template-columns:1.4fr .6fr;gap:3rem;margin:3rem 0 0;border-top:1px solid rgb(255 255 255 / .2);padding-top:3rem}.proof-quote>p{margin:0;color:#fff;font-size:clamp(1.45rem,2.8vw,2.35rem);letter-spacing:-.035em;line-height:1.28}.proof-quote footer{display:grid;align-content:start;gap:.3rem;color:#cbd7ef}.proof-quote footer span{font-size:.85rem;line-height:1.45}.proof-note{margin:2rem 0 0;color:#8da3ce;font-size:.82rem}
+  .contact-card{display:grid;grid-template-columns:1.15fr .85fr;align-items:end;gap:4rem;border:1px solid #d6e0ec;background:linear-gradient(135deg,#f7f9fd,#edf3fc);padding:clamp(2rem,5vw,4.2rem)}.contact-card__actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:1.4rem}
+  @media(max-width:900px){.test-hero__grid{grid-template-columns:1fr;min-height:0}.test-hero__copy{max-width:42rem}.test-hero h1{max-width:12ch}.test-hero__visual{transform:none}.product-nav__links{display:none}.overview-grid{grid-template-columns:1fr}.overview-card{min-height:16rem}.solution-grid{grid-template-columns:1fr}.solution-card--featured{grid-row:auto;min-height:29rem}.workflow-tabs{overflow-x:auto;grid-template-columns:repeat(5,minmax(10rem,1fr));justify-content:start}.workflow-panel,.demo-feature,.guardrail-layout,.contact-card{grid-template-columns:1fr}.workflow-panel__art{min-height:22rem}.change-card{grid-template-columns:1fr}.contact-card__actions{justify-content:flex-start}}
+  @media(max-width:620px){.test-shell{width:min(100% - 1.25rem,1200px)}.test-hero__grid{padding-block:3.8rem 5rem}.test-hero h1{font-size:clamp(2.8rem,15vw,4.2rem)}.test-hero__badge{right:.6rem;bottom:-2.5rem}.product-nav__name{font-size:.95rem}.product-nav .test-button{padding:.55rem .72rem}.spec-grid,.stat-grid{grid-template-columns:1fr}.solution-card--featured{min-height:25rem}.solution-card--featured img{width:58%;opacity:.84}.workflow-panel{display:block}.workflow-panel__art{min-height:18rem}.proof-quote{grid-template-columns:1fr}.contact-card{padding:2rem 1.25rem}}
+  @media(prefers-reduced-motion:reduce){:global(html){scroll-behavior:auto}.test-button,.test-link span,.overview-card{transition:none}.test-button:hover,.overview-card:hover{transform:none}}
+</style>
+
+<script>
+  const workflowTabs = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-workflow-tab]'));
+  const workflowPanels = Array.from(document.querySelectorAll<HTMLElement>('[data-workflow-panel]'));
+
+  const selectWorkflowStage = (id: string) => {
+    workflowTabs.forEach((tab) => {
+      const selected = tab.dataset.workflowTab === id;
+      tab.setAttribute('aria-selected', String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+    });
+    workflowPanels.forEach((panel) => { panel.hidden = panel.dataset.workflowPanel !== id; });
+  };
+
+  workflowTabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => selectWorkflowStage(tab.dataset.workflowTab ?? ''));
+    tab.addEventListener('keydown', (event) => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      event.preventDefault();
+      const direction = event.key === 'ArrowRight' ? 1 : -1;
+      const nextTab = workflowTabs[(index + direction + workflowTabs.length) % workflowTabs.length];
+      nextTab?.focus();
+      selectWorkflowStage(nextTab?.dataset.workflowTab ?? '');
+    });
+  });
+</script>
