@@ -38,9 +38,6 @@ export const hero = {
   actions: {
     demo: {
       label: 'View demo',
-      eyebrow: 'Interactive walkthrough',
-      headline: 'See Akaden turn a request into a working pipeline.',
-      body: 'Explore the guided workspace and move through the same review, build, deploy, and validation flow shown in the product demo.',
     },
     video: {
       label: 'Watch video',

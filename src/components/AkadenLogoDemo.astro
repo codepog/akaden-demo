@@ -3,16 +3,20 @@ const basePath = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 const workspaceUrl = import.meta.env.DEV ? `${basePath}workspace` : `${basePath}workspace.html`;
+interface Props { embedded?: boolean }
+const { embedded = false } = Astro.props;
 ---
 
-<section class="akaden-launch" aria-label="Akaden interactive walkthrough" data-akaden-launch>
+<section class:list={['akaden-launch', { 'akaden-launch--embedded': embedded }]} aria-label="Akaden interactive walkthrough" data-akaden-launch>
   <div class="akaden-launch__shell" data-akaden-shell>
     <div class="akaden-launch__atmosphere" aria-hidden="true"></div>
 
-    <div class="akaden-launch__welcome">
-      <h1>Welcome to Akaden</h1>
-      <p>Take this interactive walkthrough to get a feel for how Akaden turns a business request into a pipeline your team can review and run.</p>
-    </div>
+    {!embedded && (
+      <div class="akaden-launch__welcome">
+        <h1>Welcome to Akaden</h1>
+        <p>Take this interactive walkthrough to get a feel for how Akaden turns a business request into a pipeline your team can review and run.</p>
+      </div>
+    )}
 
     <div class="akaden-launch__icon" data-akaden-icon aria-hidden="true">
       <div class="appicon is-splay" data-akaden-mark>
@@ -31,17 +35,7 @@ const workspaceUrl = import.meta.env.DEV ? `${basePath}workspace` : `${basePath}
 
     <section class="akaden-launch__demo" data-akaden-demo aria-label="Interactive Akaden walkthrough" aria-hidden="true">
       <header class="akaden-launch__chrome" data-akaden-chrome>
-        <div class="akaden-launch__brand">
-          <span class="akaden-launch__brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 100 100">
-              <path d="M18.13 77.24 50 21.86 81.87 77.24" />
-              <circle cx="50" cy="77.89" r="10.37" />
-            </svg>
-          </span>
-          <p>Akaden</p>
-          <span>Interactive walkthrough</span>
-        </div>
-        <span class="akaden-launch__status"><i></i> Ready to explore</span>
+        <p class="akaden-launch__description"><em>Interactive demo</em></p>
       </header>
       <div class="akaden-launch__workspace" data-akaden-workspace>
         <iframe src={workspaceUrl} title="Interactive Akaden workspace walkthrough"></iframe>
@@ -78,6 +72,14 @@ const workspaceUrl = import.meta.env.DEV ? `${basePath}workspace` : `${basePath}
     box-shadow: 0 30px 70px -45px rgb(0 37 106 / .32);
     transition: background-color .72s cubic-bezier(.16, 1, .3, 1);
   }
+
+  .akaden-launch--embedded { height: 100vh; padding: 0; }
+  .akaden-launch--embedded .akaden-launch__shell,
+  .akaden-launch--embedded .akaden-launch__shell.is-opening,
+  .akaden-launch--embedded .akaden-launch__shell.is-ready { height: 100%; min-height: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+  .akaden-launch--embedded .akaden-launch__demo { top: 8px; right: 8px; bottom: 8px; left: 8px; width: auto; box-shadow: none; transform: scale(1.035); }
+  .akaden-launch--embedded .akaden-launch__shell.is-opening .akaden-launch__demo { animation-name: ai-demo-through-portal-mobile; }
+  .akaden-launch--embedded .akaden-launch__shell.is-ready .akaden-launch__demo { transform: none; }
 
   .akaden-launch__atmosphere {
     position: absolute;
@@ -182,8 +184,6 @@ const workspaceUrl = import.meta.env.DEV ? `${basePath}workspace` : `${basePath}
   .akaden-launch__chrome {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
     min-height: 4.5rem;
     padding: .8rem 1.25rem;
     border-bottom: 1px solid rgb(9 46 112 / .12);
@@ -192,23 +192,7 @@ const workspaceUrl = import.meta.env.DEV ? `${basePath}workspace` : `${basePath}
     transform: translateY(10px);
     transition: opacity .5s ease .34s, transform .8s cubic-bezier(.16, 1, .3, 1) .34s;
   }
-  .akaden-launch__brand { display: flex; align-items: center; gap: .6rem; min-width: 0; }
-  .akaden-launch__brand-mark {
-    display: grid;
-    flex: none;
-    width: 1.7rem;
-    height: 1.7rem;
-    place-items: center;
-    border-radius: .38rem;
-    background: var(--tile);
-  }
-  .akaden-launch__brand-mark svg { width: 76%; height: 76%; overflow: visible; }
-  .akaden-launch__brand-mark path { fill: none; stroke: #fff; stroke-width: 16; stroke-linecap: round; stroke-linejoin: round; }
-  .akaden-launch__brand-mark circle { fill: #fff; }
-  .akaden-launch__brand p { margin: 0; font-size: 1rem; font-weight: 800; letter-spacing: -.03em; }
-  .akaden-launch__brand span { color: #61708d; font-size: .82rem; white-space: nowrap; }
-  .akaden-launch__status { display: inline-flex; align-items: center; gap: .45rem; flex: none; color: #54709b; font-size: .78rem; font-weight: 700; }
-  .akaden-launch__status i { width: .48rem; height: .48rem; border-radius: 50%; background: #26a56d; box-shadow: 0 0 0 4px rgb(38 165 109 / .12); }
+  .akaden-launch__description { margin: 0; color: #526685; font-size: .86rem; line-height: 1.45; }
   .akaden-launch__workspace {
     min-height: 0;
     overflow: hidden;
@@ -307,8 +291,6 @@ const workspaceUrl = import.meta.env.DEV ? `${basePath}workspace` : `${basePath}
     .akaden-launch__shell.is-opening .akaden-launch__demo { animation-name: ai-demo-through-portal-mobile; }
     .akaden-launch__shell.is-ready .akaden-launch__demo { transform: none; }
     .akaden-launch__chrome { min-height: 4rem; padding-left: 1rem; }
-    .akaden-launch__brand span { display: none; }
-    .akaden-launch__status { font-size: .7rem; }
   }
 
   @keyframes ai-demo-through-portal-mobile {
@@ -334,6 +316,7 @@ const workspaceUrl = import.meta.env.DEV ? `${basePath}workspace` : `${basePath}
   const helper = document.querySelector('[data-akaden-helper]');
   const introStorageKey = 'akaden-experiment-intro-refresh-marker-v1';
   const refreshMarkerKey = 'akaden-site-refresh-marker-v1';
+  const alwaysPlayIntro = new URLSearchParams(window.location.search).get('intro') === 'always';
 
   function refreshMarker() {
     try {
@@ -374,14 +357,18 @@ const workspaceUrl = import.meta.env.DEV ? `${basePath}workspace` : `${basePath}
     shell.classList.add('is-opening');
     demo?.setAttribute('aria-hidden', 'false');
     if (helper instanceof HTMLElement) helper.textContent = 'Opening the guided workspace';
+    window.setTimeout(() => {
+      shell.classList.remove('is-opening');
+      showReadyState();
+    }, 3400);
   }
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (hasSeenIntro() || reducedMotion) {
+  if ((!alwaysPlayIntro && hasSeenIntro()) || reducedMotion) {
     showReadyState();
   } else {
-    rememberIntro();
+    if (!alwaysPlayIntro) rememberIntro();
     window.setTimeout(openAkaden, 850);
   }
 </script>
