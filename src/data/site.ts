@@ -20,7 +20,9 @@ export const nav = {
   tabs: [
     { label: 'Product', href: './', live: true },
     { label: 'Demo', href: './demo', live: true },
-    { label: 'Specs', href: '#', live: false },
+    { label: 'Experiment', href: './experiment', live: true },
+    { label: 'Robot Lab', href: './robot-lab', live: true },
+    { label: 'Reference', href: './reference', live: true },
     { label: 'Archived', href: './archived', live: true },
   ],
   cta: { label: 'Book a call', href: '#book-a-call' },

@@ -1,0 +1,387 @@
+---
+const basePath = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const workspaceUrl = import.meta.env.DEV ? `${basePath}workspace` : `${basePath}workspace.html`;
+---
+
+<section class="akaden-launch" aria-label="Akaden interactive walkthrough" data-akaden-launch>
+  <div class="akaden-launch__shell" data-akaden-shell>
+    <div class="akaden-launch__atmosphere" aria-hidden="true"></div>
+
+    <div class="akaden-launch__welcome">
+      <h1>Welcome to Akaden</h1>
+      <p>Take this interactive walkthrough to get a feel for how Akaden turns a business request into a pipeline your team can review and run.</p>
+    </div>
+
+    <div class="akaden-launch__icon" data-akaden-icon aria-hidden="true">
+      <div class="appicon is-splay" data-akaden-mark>
+        <div class="appicon__tile">
+          <svg class="appicon__mark" viewBox="0 0 100 100" role="img" aria-label="Akaden app icon">
+            <g>
+              <path class="mark-ghost" pathLength="100" d="M18.13 77.24 50 21.86 81.87 77.24" />
+              <path class="mark-right" pathLength="100" d="M50 21.86 81.87 77.24" />
+              <path class="mark-left" pathLength="100" d="M50 21.86 18.13 77.24" />
+            </g>
+            <circle class="mark-dot" cx="50" cy="77.89" r="10.37" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <section class="akaden-launch__demo" data-akaden-demo aria-label="Interactive Akaden walkthrough" aria-hidden="true">
+      <header class="akaden-launch__chrome" data-akaden-chrome>
+        <div class="akaden-launch__brand">
+          <span class="akaden-launch__brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 100 100">
+              <path d="M18.13 77.24 50 21.86 81.87 77.24" />
+              <circle cx="50" cy="77.89" r="10.37" />
+            </svg>
+          </span>
+          <p>Akaden</p>
+          <span>Interactive walkthrough</span>
+        </div>
+        <span class="akaden-launch__status"><i></i> Ready to explore</span>
+      </header>
+      <div class="akaden-launch__workspace" data-akaden-workspace>
+        <iframe src={workspaceUrl} title="Interactive Akaden workspace walkthrough"></iframe>
+      </div>
+    </section>
+    <p class="akaden-launch__helper" data-akaden-helper>Opening the guided workspace</p>
+  </div>
+</section>
+
+<style>
+  @property --akaden-icon-hole {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 0%;
+  }
+
+  .akaden-launch {
+    --tile: #146ad8;
+    --ink: #092e70;
+    --paper: #f8fbff;
+    width: 100%;
+    padding: clamp(1.25rem, 3vw, 2.5rem);
+  }
+
+  .akaden-launch__shell {
+    isolation: isolate;
+    position: relative;
+    /* Leave enough room for the entire embedded workspace, including its lower controls. */
+    min-height: clamp(57rem, 100vh, 62rem);
+    overflow: hidden;
+    border: 1px solid #d7e3f4;
+    border-radius: clamp(22px, 3vw, 34px);
+    background: #fff;
+    box-shadow: 0 30px 70px -45px rgb(0 37 106 / .32);
+    transition: background-color .72s cubic-bezier(.16, 1, .3, 1);
+  }
+
+  .akaden-launch__atmosphere {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background:
+      radial-gradient(circle at 82% 56%, rgb(30 112 223 / .12), transparent 0 11%, transparent 28%),
+      radial-gradient(circle at 100% 0%, rgb(88 156 244 / .13), transparent 0 16%, transparent 36%);
+  }
+
+  .akaden-launch__welcome {
+    position: absolute;
+    z-index: 3;
+    top: clamp(1.5rem, 3.5vw, 3.25rem);
+    left: 50%;
+    width: min(92%, 72rem);
+    color: var(--ink);
+    text-align: center;
+    opacity: 0;
+    transform: translate(-50%, -.7rem);
+  }
+  .akaden-launch__welcome h1 { margin: 0; font-size: clamp(1.75rem, 3vw, 3.05rem); letter-spacing: -.055em; line-height: 1; }
+  .akaden-launch__welcome p { max-width: none; margin: .85rem auto 0; color: #586a87; font-size: clamp(.95rem, 1.3vw, 1.15rem); line-height: 1.45; }
+
+  .appicon {
+    --size: clamp(230px, 29vw, 415px);
+    --radius: 22%;
+    inline-size: var(--size);
+    block-size: var(--size);
+    color: #fff;
+  }
+  .akaden-launch__icon {
+    position: absolute;
+    z-index: 5;
+    pointer-events: none;
+    left: 50%;
+    top: 53%;
+    transform: translate(-50%, -50%);
+    width: var(--size, clamp(230px, 29vw, 415px));
+    height: var(--size, clamp(230px, 29vw, 415px));
+    transition:
+      left .78s cubic-bezier(.16, 1, .3, 1) 1.95s,
+      top .78s cubic-bezier(.16, 1, .3, 1) 1.95s,
+      width .78s cubic-bezier(.16, 1, .3, 1) 1.95s,
+      height .78s cubic-bezier(.16, 1, .3, 1) 1.95s,
+      transform .78s cubic-bezier(.16, 1, .3, 1) 1.95s;
+  }
+  .akaden-launch__icon::after {
+    position: absolute;
+    z-index: -1;
+    inset: -18%;
+    border: 1px solid rgb(20 106 216 / .22);
+    border-radius: 50%;
+    content: '';
+    opacity: 0;
+    transform: scale(.7);
+  }
+  .appicon__tile {
+    --akaden-icon-hole: 0%;
+    inline-size: 100%;
+    block-size: 100%;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--tile);
+    box-shadow:
+      0 .045em .09em -.012em rgb(2 33 95 / .31),
+      0 .15em .35em -.07em rgb(0 23 82 / .3),
+      inset 0 1px rgb(255 255 255 / .18);
+    transform: translateZ(0);
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 0 var(--akaden-icon-hole), #000 calc(var(--akaden-icon-hole) + .4%) 100%);
+    mask-image: radial-gradient(circle at 50% 50%, transparent 0 var(--akaden-icon-hole), #000 calc(var(--akaden-icon-hole) + .4%) 100%);
+    transition: transform .4s cubic-bezier(.2,.72,.28,1), box-shadow .4s ease;
+  }
+  .appicon__mark { display: block; inline-size: 100%; block-size: 100%; }
+  .appicon__mark g { fill: none; stroke: currentColor; stroke-width: 20.76; stroke-linecap: round; stroke-linejoin: round; }
+  .mark-ghost { opacity: .48; }
+  .mark-right { opacity: .48; }
+  .mark-left { opacity: 1; }
+  .mark-ghost, .mark-right, .mark-left { transform-box: view-box; transform-origin: 50% 21.86%; }
+  .mark-dot { fill: currentColor; transform-box: view-box; transform-origin: 50% 77.89%; }
+
+  .akaden-launch__demo {
+    position: absolute;
+    z-index: 2;
+    top: calc(clamp(7.1rem, 8vw, 8.4rem) + .75rem);
+    bottom: clamp(.75rem, 1.35vw, 1.25rem);
+    left: 50%;
+    width: min(88%, 1100px);
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid rgb(6 47 123 / .2);
+    border-radius: 24px;
+    background: var(--paper);
+    box-shadow: -24px 24px 60px -36px rgb(0 47 121 / .38);
+    opacity: 0;
+    transform: translateX(-50%) scale(1.035);
+    pointer-events: none;
+    will-change: opacity, transform;
+  }
+  .akaden-launch__chrome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 4.5rem;
+    padding: .8rem 1.25rem;
+    border-bottom: 1px solid rgb(9 46 112 / .12);
+    color: var(--ink);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity .5s ease .34s, transform .8s cubic-bezier(.16, 1, .3, 1) .34s;
+  }
+  .akaden-launch__brand { display: flex; align-items: center; gap: .6rem; min-width: 0; }
+  .akaden-launch__brand-mark {
+    display: grid;
+    flex: none;
+    width: 1.7rem;
+    height: 1.7rem;
+    place-items: center;
+    border-radius: .38rem;
+    background: var(--tile);
+  }
+  .akaden-launch__brand-mark svg { width: 76%; height: 76%; overflow: visible; }
+  .akaden-launch__brand-mark path { fill: none; stroke: #fff; stroke-width: 16; stroke-linecap: round; stroke-linejoin: round; }
+  .akaden-launch__brand-mark circle { fill: #fff; }
+  .akaden-launch__brand p { margin: 0; font-size: 1rem; font-weight: 800; letter-spacing: -.03em; }
+  .akaden-launch__brand span { color: #61708d; font-size: .82rem; white-space: nowrap; }
+  .akaden-launch__status { display: inline-flex; align-items: center; gap: .45rem; flex: none; color: #54709b; font-size: .78rem; font-weight: 700; }
+  .akaden-launch__status i { width: .48rem; height: .48rem; border-radius: 50%; background: #26a56d; box-shadow: 0 0 0 4px rgb(38 165 109 / .12); }
+  .akaden-launch__workspace {
+    min-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(18px) scale(.988);
+    transition: opacity .58s ease .5s, transform .9s cubic-bezier(.16, 1, .3, 1) .5s;
+  }
+  .akaden-launch__workspace iframe { display: block; width: 100%; height: 100%; border: 0; background: #fff; }
+
+  .akaden-launch__helper {
+    position: absolute;
+    z-index: 4;
+    bottom: clamp(1.25rem, 3vw, 2.25rem);
+    left: clamp(1.25rem, 3vw, 2.25rem);
+    margin: 0;
+    color: #74829a;
+    font-family: var(--font-mono);
+    font-size: .72rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    transition: opacity .3s ease;
+  }
+
+  .akaden-launch__shell.is-opening { background: #f3f8ff; }
+  .akaden-launch__shell.is-ready { background: #f3f8ff; }
+  .akaden-launch__shell.is-opening .akaden-launch__welcome { animation: ai-welcome-in .52s cubic-bezier(.16, 1, .3, 1) 2.58s both; }
+  .akaden-launch__shell.is-opening .akaden-launch__icon {
+    left: 50%;
+    top: 53%;
+    width: var(--size, clamp(230px, 29vw, 415px));
+    height: var(--size, clamp(230px, 29vw, 415px));
+    transform: translate(-50%, -50%);
+    transition: none;
+    animation: ai-icon-into-portal .95s cubic-bezier(.16, 1, .3, 1) 1.62s both;
+  }
+  .akaden-launch__shell.is-opening .appicon { --size: 100%; }
+  .akaden-launch__shell.is-opening .appicon__tile,
+  .appicon.is-splaying .appicon__mark { overflow: visible; }
+  .akaden-launch__shell.is-opening .akaden-launch__icon::after { animation: ai-splay-halo 1.55s cubic-bezier(.16, 1, .3, 1) both; }
+  .akaden-launch__shell.is-opening .appicon__tile { animation: ai-splay-grow 1.6s cubic-bezier(.42,0,.2,1) both, ai-icon-window .95s cubic-bezier(.16, 1, .3, 1) 1.62s both; }
+  .akaden-launch__shell.is-opening .akaden-launch__demo { animation: ai-demo-through-portal .7s cubic-bezier(.16, 1, .3, 1) 1.9s both; pointer-events: auto; }
+  .akaden-launch__shell.is-opening .akaden-launch__chrome,
+  .akaden-launch__shell.is-opening .akaden-launch__workspace { opacity: 1; transform: none; }
+  .akaden-launch__shell.is-opening .akaden-launch__helper { opacity: 0; }
+  .akaden-launch__shell.is-ready .akaden-launch__welcome { opacity: 1; transform: translate(-50%, 0); }
+  .akaden-launch__shell.is-ready .akaden-launch__demo { opacity: 1; transform: translateX(-50%); pointer-events: auto; }
+  .akaden-launch__shell.is-ready .akaden-launch__chrome,
+  .akaden-launch__shell.is-ready .akaden-launch__workspace { opacity: 1; transform: none; }
+  .akaden-launch__shell.is-ready .akaden-launch__icon,
+  .akaden-launch__shell.is-ready .akaden-launch__helper { display: none; }
+
+  .appicon.is-splaying .mark-left,
+  .appicon.is-splaying .mark-right { opacity: 1; }
+  .appicon.is-splaying .mark-left { animation: ai-splay-left 1.6s cubic-bezier(.42,0,.2,1) both; }
+  .appicon.is-splaying .mark-right { animation: ai-splay-right 1.6s cubic-bezier(.42,0,.2,1) both; }
+  .appicon.is-splaying .mark-dot { animation: ai-splay-dot 1.6s cubic-bezier(.42,0,.2,1) both; }
+  .appicon.is-splaying .mark-ghost { opacity: 0; animation: none; }
+  @keyframes ai-splay-grow {
+    0% { transform: scale(1); }
+    48% { transform: scale(1.68); }
+    77% { transform: scale(1.28); }
+    100% { transform: scale(1); }
+  }
+  @keyframes ai-splay-left {
+    0% { transform: rotate(0deg); }
+    48% { transform: rotate(-190deg) translateY(2%); }
+    100% { transform: rotate(-360deg); }
+  }
+  @keyframes ai-splay-right {
+    0% { transform: rotate(0deg); }
+    48% { transform: rotate(190deg) translateY(2%); }
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes ai-splay-dot { 45%, 58% { transform: translateY(9%) scale(.8); } }
+  @keyframes ai-splay-halo { 0% { opacity: 0; transform: scale(.7); } 46% { opacity: 1; transform: scale(1.3); } 100% { opacity: 0; transform: scale(1.72); } }
+  @keyframes ai-icon-into-portal {
+    from { transform: translate(-50%, -50%) scale(1); }
+    to { transform: translate(-50%, -50%) scale(8.6); }
+  }
+  @keyframes ai-icon-window {
+    0%, 12% { --akaden-icon-hole: 0%; }
+    72%, 100% { --akaden-icon-hole: 54%; }
+  }
+  @keyframes ai-demo-through-portal {
+    from { opacity: 0; transform: translateX(-50%) scale(1.035); }
+    to { opacity: 1; transform: translateX(-50%) scale(1); }
+  }
+
+  @media (max-width: 850px) {
+    .akaden-launch { padding-inline: 1rem; }
+    .akaden-launch__shell { min-height: 680px; }
+    .akaden-launch__welcome { top: 2rem; width: min(88%, 31rem); }
+    .akaden-launch__icon { left: 50%; top: 56%; }
+    .akaden-launch__demo { top: 8.3rem; right: .55rem; bottom: .55rem; left: .55rem; width: auto; border-radius: 20px; transform: scale(1.035); }
+    .akaden-launch__shell.is-opening .akaden-launch__icon { left: 50%; top: 56%; }
+    .akaden-launch__shell.is-opening .akaden-launch__demo { animation-name: ai-demo-through-portal-mobile; }
+    .akaden-launch__shell.is-ready .akaden-launch__demo { transform: none; }
+    .akaden-launch__chrome { min-height: 4rem; padding-left: 1rem; }
+    .akaden-launch__brand span { display: none; }
+    .akaden-launch__status { font-size: .7rem; }
+  }
+
+  @keyframes ai-demo-through-portal-mobile {
+    from { opacity: 0; transform: scale(1.035); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes ai-welcome-in {
+    from { opacity: 0; transform: translate(-50%, -.7rem); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .akaden-launch__shell,
+    .akaden-launch__shell *,
+    .appicon * { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; transition-delay: 0ms !important; }
+  }
+</style>
+
+<script is:inline>
+  const shell = document.querySelector('[data-akaden-shell]');
+  const demo = document.querySelector('[data-akaden-demo]');
+  const mark = document.querySelector('[data-akaden-mark]');
+  const helper = document.querySelector('[data-akaden-helper]');
+  const introStorageKey = 'akaden-experiment-intro-refresh-marker-v1';
+  const refreshMarkerKey = 'akaden-site-refresh-marker-v1';
+
+  function refreshMarker() {
+    try {
+      return window.sessionStorage.getItem(refreshMarkerKey) ?? '0';
+    } catch {
+      return null;
+    }
+  }
+
+  function hasSeenIntro() {
+    try {
+      return window.sessionStorage.getItem(introStorageKey) === refreshMarker();
+    } catch {
+      return false;
+    }
+  }
+
+  function rememberIntro() {
+    try {
+      const marker = refreshMarker();
+      if (marker !== null) window.sessionStorage.setItem(introStorageKey, marker);
+    } catch {
+      // The animation can still run when browser storage is unavailable.
+    }
+  }
+
+  function showReadyState() {
+    if (!(shell instanceof HTMLElement)) return;
+    shell.classList.add('is-ready');
+    demo?.setAttribute('aria-hidden', 'false');
+  }
+
+  function openAkaden() {
+    if (!(shell instanceof HTMLElement) || shell.classList.contains('is-opening')) return;
+    mark?.classList.remove('is-splaying');
+    void mark?.getBoundingClientRect();
+    mark?.classList.add('is-splaying');
+    shell.classList.add('is-opening');
+    demo?.setAttribute('aria-hidden', 'false');
+    if (helper instanceof HTMLElement) helper.textContent = 'Opening the guided workspace';
+  }
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (hasSeenIntro() || reducedMotion) {
+    showReadyState();
+  } else {
+    rememberIntro();
+    window.setTimeout(openAkaden, 850);
+  }
+</script>

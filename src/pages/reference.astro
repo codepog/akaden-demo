@@ -1,0 +1,205 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Akaden — design reference">
+  <main id="main" class="monad-reference">
+    <aside class="reference-notice" aria-label="Reference page notice">
+      <span>DESIGN REFERENCE</span>
+      <span>This is a local composition study for Akaden.</span>
+      <a href="./">Return to product <span aria-hidden="true">→</span></a>
+    </aside>
+
+    <header class="reference-nav">
+      <a href="./" class="reference-brand" aria-label="Akaden product page">
+        <span class="reference-brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 100 100">
+            <path d="M18.13 77.24 50 21.86 81.87 77.24" />
+            <circle cx="50" cy="77.89" r="10.37" />
+          </svg>
+        </span>
+        <span>AKADEN</span>
+      </a>
+      <nav aria-label="Reference page navigation">
+        <a href="#approach">Approach</a>
+        <a href="#patterns">Patterns</a>
+        <a href="#questions">Questions</a>
+      </nav>
+      <a class="reference-nav__action" href="#patterns">Explore the system <span aria-hidden="true">→</span></a>
+    </header>
+
+    <section class="reference-hero" aria-labelledby="reference-heading">
+      <p class="reference-eyebrow">A quieter product surface</p>
+      <h1 id="reference-heading">Systems can feel<br />considered.</h1>
+      <p>
+        An editorial reference for communicating complex delivery work with clarity, calm, and a little personality.
+      </p>
+      <div class="reference-hero__actions">
+        <a class="reference-button reference-button--primary" href="#patterns">Explore the patterns <span aria-hidden="true">↗</span></a>
+        <a class="reference-button reference-button--ghost" href="#approach">Read the approach</a>
+      </div>
+    </section>
+
+    <section id="approach" class="reference-statement" aria-labelledby="approach-heading">
+      <p class="reference-eyebrow">The idea</p>
+      <h2 id="approach-heading">A technical workspace, written like a field guide.</h2>
+      <p>
+        Warm surfaces, purposeful type, and durable visual rules make an involved workflow feel easier to enter. The interface stays direct; the personality comes from the rhythm around it.
+      </p>
+    </section>
+
+    <section id="patterns" class="reference-patterns" aria-labelledby="patterns-heading">
+      <div class="reference-section-heading">
+        <p class="reference-eyebrow">Pattern library</p>
+        <h2 id="patterns-heading">Built from a small, repeatable vocabulary.</h2>
+      </div>
+
+      <div class="reference-grid">
+        <article class="reference-card reference-card--feature">
+          <p class="reference-card__index">01 / WORKFLOW</p>
+          <h3>Direction before automation.</h3>
+          <p>Make each important decision readable before work moves downstream.</p>
+          <div class="reference-flow" aria-label="A request becomes a reviewed pipeline">
+            <span>Request</span><i aria-hidden="true"></i><span>Specification</span><i aria-hidden="true"></i><span>Pipeline</span>
+          </div>
+        </article>
+
+        <article class="reference-card">
+          <p class="reference-card__index">02 / LANGUAGE</p>
+          <h3>Editorial, not ornamental.</h3>
+          <p>Serif headings carry the story. Mono type marks the elements people use, inspect, and trust.</p>
+          <a href="#questions">See why it works <span aria-hidden="true">→</span></a>
+        </article>
+
+        <article class="reference-card">
+          <p class="reference-card__index">03 / RHYTHM</p>
+          <h3>Space creates confidence.</h3>
+          <p>Soft cards, hairline borders, and one strong action help a complex system feel legible at a glance.</p>
+          <div class="reference-dots" aria-hidden="true"><b></b><b></b><b></b></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="questions" class="reference-questions" aria-labelledby="questions-heading">
+      <div class="reference-section-heading">
+        <p class="reference-eyebrow">Questions</p>
+        <h2 id="questions-heading">The details are part of the design.</h2>
+      </div>
+      <details open>
+        <summary>Why use a warm background instead of white?<span aria-hidden="true">↓</span></summary>
+        <p>It makes the page feel more like an intentional working document than a generic software template, while preserving strong contrast for the product interface.</p>
+      </details>
+      <details>
+        <summary>What should remain consistent across a new page?<span aria-hidden="true">↓</span></summary>
+        <p>The clear hierarchy, mono functional language, pill controls, gentle borders, and a restrained use of color are the principles worth carrying forward.</p>
+      </details>
+      <details>
+        <summary>What should change for Akaden?<span aria-hidden="true">↓</span></summary>
+        <p>The content and product identity stay distinctly Akaden. This page is for studying the composition, type pairing, cadence, and component behavior before choosing what to adopt.</p>
+      </details>
+    </section>
+  </main>
+</Base>
+
+<style>
+  .monad-reference {
+    --parchment: #f6f3f1;
+    --blue: #2b59d1;
+    --periwinkle: #cfdaf5;
+    --off-black: #242424;
+    --graphite: #4e4d4d;
+    --smoke: #797776;
+    --ash: #cecac8;
+    min-height: 100vh;
+    overflow: hidden;
+    background: var(--parchment);
+    color: var(--off-black);
+    font-family: var(--font-mono), ui-monospace, monospace;
+  }
+  .reference-notice {
+    display: flex;
+    min-height: 2.65rem;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    padding: .5rem 1.25rem;
+    background: #000;
+    color: var(--parchment);
+    font-size: .68rem;
+    letter-spacing: .02em;
+  }
+  .reference-notice > span:first-child { font-weight: 700; }
+  .reference-notice a { color: inherit; text-decoration: none; border-bottom: 1px solid rgb(246 243 241 / .45); }
+  .reference-nav {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 2rem;
+    width: min(100% - 3rem, 89.5rem);
+    min-height: 5.25rem;
+    margin: 0 auto;
+  }
+  .reference-brand { display: inline-flex; align-items: center; justify-self: start; gap: .7rem; color: var(--off-black); font-size: .9rem; font-weight: 700; letter-spacing: -.04em; text-decoration: none; }
+  .reference-brand__mark { display: grid; width: 1.8rem; height: 1.8rem; place-items: center; border-radius: 50%; background: var(--off-black); }
+  .reference-brand__mark svg { width: 72%; height: 72%; overflow: visible; }
+  .reference-brand__mark path { fill: none; stroke: var(--parchment); stroke-width: 16; stroke-linecap: round; stroke-linejoin: round; }
+  .reference-brand__mark circle { fill: var(--parchment); }
+  .reference-nav nav { display: flex; align-items: center; gap: 1.55rem; }
+  .reference-nav nav a, .reference-nav__action { color: var(--off-black); font-size: .72rem; letter-spacing: -.02em; text-decoration: none; }
+  .reference-nav__action { justify-self: end; display: inline-flex; gap: .75rem; align-items: center; padding: .72rem 1.05rem; border: 1px solid var(--off-black); border-radius: 999px; }
+  .reference-hero { width: min(100% - 3rem, 67rem); margin: 0 auto; padding: clamp(6rem, 12vw, 10.8rem) 0 clamp(6rem, 11vw, 9rem); text-align: center; }
+  .reference-eyebrow, .reference-card__index { margin: 0; color: var(--smoke); font-size: .67rem; font-weight: 500; letter-spacing: -.02em; text-transform: uppercase; }
+  .reference-hero h1, .reference-statement h2, .reference-section-heading h2, .reference-card h3, .reference-questions summary { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; letter-spacing: -.04em; }
+  .reference-hero h1 { margin: 1rem 0 1.5rem; font-size: clamp(3.6rem, 8.2vw, 7.5rem); line-height: .94; }
+  .reference-hero > p:not(.reference-eyebrow) { max-width: 42rem; margin: 0 auto; color: var(--graphite); font-size: clamp(1rem, 1.65vw, 1.25rem); line-height: 1.43; letter-spacing: -.035em; }
+  .reference-hero__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; margin-top: 2.1rem; }
+  .reference-button { display: inline-flex; align-items: center; gap: .8rem; padding: .88rem 1.5rem; border-radius: 999px; font-size: .72rem; letter-spacing: -.025em; text-decoration: none; }
+  .reference-button--primary { background: var(--blue); color: #fff; }
+  .reference-button--ghost { border: 1px solid var(--off-black); color: var(--off-black); }
+  .reference-statement, .reference-patterns, .reference-questions { width: min(100% - 3rem, 89.5rem); margin: 0 auto; border-top: 1px solid var(--ash); }
+  .reference-statement { display: grid; grid-template-columns: .62fr 1.4fr 1fr; gap: 3.5rem; padding: clamp(4rem, 7vw, 6.3rem) 0; }
+  .reference-statement h2, .reference-section-heading h2 { margin: 0; font-size: clamp(2rem, 3.3vw, 3.3rem); line-height: 1.04; }
+  .reference-statement > p:last-child { margin: 0; color: var(--graphite); font-size: 1rem; line-height: 1.5; letter-spacing: -.03em; }
+  .reference-patterns { padding: clamp(4rem, 7vw, 6.3rem) 0; }
+  .reference-section-heading { max-width: 52rem; }
+  .reference-section-heading h2 { margin-top: 1rem; }
+  .reference-grid { display: grid; grid-template-columns: 1.35fr 1fr 1fr; gap: 1rem; margin-top: 3rem; }
+  .reference-card { position: relative; min-height: 22rem; display: flex; flex-direction: column; padding: 2.5rem; border: 1px solid var(--ash); border-radius: 2.5rem; }
+  .reference-card--feature { background: var(--periwinkle); border-color: transparent; }
+  .reference-card h3 { max-width: 18rem; margin: 2rem 0 1rem; font-size: clamp(1.8rem, 2.4vw, 2.5rem); line-height: 1.02; }
+  .reference-card > p:not(.reference-card__index) { margin: 0; color: var(--graphite); font-size: .92rem; line-height: 1.52; letter-spacing: -.03em; }
+  .reference-card > a { margin-top: auto; padding-top: 2rem; color: var(--off-black); font-size: .75rem; text-decoration: none; }
+  .reference-flow { display: flex; align-items: center; gap: .5rem; margin-top: auto; padding-top: 2.6rem; color: var(--off-black); font-size: .63rem; text-transform: uppercase; }
+  .reference-flow span { padding: .55rem .68rem; border: 1px solid rgb(36 36 36 / .35); border-radius: 999px; }
+  .reference-flow i { display: block; flex: 1; height: 1px; background: rgb(36 36 36 / .5); }
+  .reference-dots { display: flex; gap: .55rem; margin-top: auto; padding-top: 2rem; }
+  .reference-dots b { display: block; width: 1.35rem; height: 1.35rem; border: 1px solid var(--off-black); border-radius: 50%; }
+  .reference-dots b:nth-child(2) { background: var(--blue); border-color: var(--blue); }
+  .reference-questions { padding: clamp(4rem, 7vw, 6.3rem) 0 clamp(5rem, 8vw, 8rem); }
+  .reference-questions > .reference-section-heading { margin-bottom: 2.8rem; }
+  .reference-questions details { border-bottom: 1px solid var(--ash); }
+  .reference-questions summary { display: flex; cursor: pointer; align-items: center; justify-content: space-between; gap: 2rem; padding: 1.8rem 0; font-size: clamp(1.25rem, 2vw, 1.75rem); list-style: none; }
+  .reference-questions summary::-webkit-details-marker { display: none; }
+  .reference-questions summary span { font-family: var(--font-mono), monospace; font-size: 1rem; }
+  .reference-questions details[open] summary span { transform: rotate(180deg); }
+  .reference-questions details p { max-width: 52rem; margin: 0; padding: 0 0 1.8rem; color: var(--graphite); font-size: .95rem; line-height: 1.55; letter-spacing: -.03em; }
+
+  @media (max-width: 860px) {
+    .reference-nav { grid-template-columns: 1fr auto; min-height: 4.5rem; }
+    .reference-nav nav { display: none; }
+    .reference-notice { align-items: flex-start; flex-direction: column; gap: .2rem; }
+    .reference-statement { grid-template-columns: 1fr; gap: 1.4rem; }
+    .reference-grid { grid-template-columns: 1fr; }
+    .reference-card { min-height: 17rem; }
+  }
+  @media (max-width: 520px) {
+    .reference-nav, .reference-hero, .reference-statement, .reference-patterns, .reference-questions { width: min(100% - 2rem, 89.5rem); }
+    .reference-nav__action { font-size: .61rem; padding: .65rem .8rem; }
+    .reference-brand { font-size: .77rem; }
+    .reference-brand__mark { width: 1.5rem; height: 1.5rem; }
+    .reference-hero { padding-block: 5rem; }
+    .reference-card { padding: 2rem; border-radius: 2rem; }
+    .reference-flow { gap: .25rem; font-size: .52rem; }
+    .reference-flow span { padding: .45rem; }
+  }
+</style>

@@ -37,6 +37,20 @@ const ogImage = new URL(`${basePath}og-image.png`, siteUrl).toString();
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,600;0,700;0,800;1,900&family=JetBrains+Mono:wght@400;500;700&display=swap"
     />
+    <script is:inline>
+      (() => {
+        const refreshMarkerKey = 'akaden-site-refresh-marker-v1';
+        const navigationEntry = window.performance.getEntriesByType('navigation')[0];
+        const isRefresh = Reflect.get(navigationEntry ?? {}, 'type') === 'reload';
+
+        try {
+          const currentMarker = Number(window.sessionStorage.getItem(refreshMarkerKey) ?? '0');
+          window.sessionStorage.setItem(refreshMarkerKey, String(isRefresh ? currentMarker + 1 : currentMarker));
+        } catch {
+          // The site still works when browser storage is unavailable.
+        }
+      })();
+    </script>
   </head>
   <body>
     <a class="u-skip" href="#main">Skip to content</a>

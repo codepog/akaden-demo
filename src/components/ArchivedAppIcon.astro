@@ -1,0 +1,21 @@
+---
+const basePath = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+---
+<section class="border-b border-rule bg-paper">
+  <div class="mx-auto grid max-w-[1200px] items-center gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1fr_auto] lg:py-16">
+    <div class="max-w-2xl">
+      <p class="u-label text-blue">Icon reference</p>
+      <h2 class="u-h2 mt-4 text-blue-deep">Akaden app icon</h2>
+      <p class="u-lead mt-5">A high-resolution vector copy of the logo experiment, kept here as a visual reference.</p>
+    </div>
+    <div class="grid place-items-center rounded-[28px] border border-rule bg-ground p-7 shadow-[0_12px_30px_-24px_rgba(0,33,99,.32)] sm:p-10">
+      <img
+        src={`${basePath}akaden-app-icon-reference.svg`}
+        alt="Akaden app icon"
+        class="h-auto w-56 max-w-full sm:w-72"
+      />
+    </div>
+  </div>
+</section>
