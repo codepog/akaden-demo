@@ -1,4 +1,6 @@
 ---
+import SystemsFlow from './SystemsFlow.astro';
+
 const assetPath = (name: string) => `${import.meta.env.BASE_URL.replace(/\/?$/, '/')}${name}`;
 ---
 
@@ -26,6 +28,8 @@ const assetPath = (name: string) => `${import.meta.env.BASE_URL.replace(/\/?$/, 
         </div>
       </figure>
     </div>
+
+    <SystemsFlow />
   </div>
 </section>
 

@@ -30,12 +30,26 @@ export const nav = {
 
 export const hero = {
   eyebrow: 'For Ellucian Banner and Ethos',
-  headline: 'From request\nto reliable pipeline.',
+  headline: 'Accelerate Pipeline Development\nand Cloud Migration',
   lead:
     'Akaden turns a written request into a reviewed, deployable Ellucian data pipeline, with the right delivery practices ready when the work needs them.',
   thesis: 'You stop maintaining pipelines. You start maintaining specifications.',
   thesisSub: 'The pipeline is the output. The spec is the asset.',
-  install: { label: 'Book a call', href: '#book-a-call' },
+  actions: {
+    demo: {
+      label: 'View demo',
+      eyebrow: 'Interactive walkthrough',
+      headline: 'See Akaden turn a request into a working pipeline.',
+      body: 'Explore the guided workspace and move through the same review, build, deploy, and validation flow shown in the product demo.',
+    },
+    video: {
+      label: 'Watch video',
+      eyebrow: 'Video playlist',
+      headline: 'Watch the Akaden story.',
+      body: 'Use the embedded player to watch the current playlist without leaving the product page.',
+    },
+    contact: { label: 'Book a call', href: '#book-a-call' },
+  },
 };
 
 /** Honesty label on the walkthrough. Presets are pre-recorded; the page says so (spec §7.2). */

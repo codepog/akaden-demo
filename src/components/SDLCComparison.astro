@@ -1,6 +1,4 @@
 ---
-import SystemsFlow from './SystemsFlow.astro';
-
 const assetPath = (name: string) => `${import.meta.env.BASE_URL.replace(/\/?$/, '/')}${name}`;
 ---
 
@@ -34,7 +32,6 @@ const assetPath = (name: string) => `${import.meta.env.BASE_URL.replace(/\/?$/, 
       <img class="manual-base-diagram" data-transparent-diagram src={assetPath('manual-sdlc-no-engineer.png')} alt="Manual SDLC diagram showing the systems and pipelines an engineer is responsible for." />
     </figure>
 
-    <SystemsFlow />
   </div>
 </section>
 

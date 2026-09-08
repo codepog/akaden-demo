@@ -1,19 +1,155 @@
 ---
 import { hero } from '../data/site';
 const [line1, line2] = hero.headline.split('\n');
+const basePath = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const assetPath = (name: string) => `${basePath}${name}`;
+const experimentUrl = import.meta.env.DEV ? `${basePath}experiment` : `${basePath}experiment.html`;
+const playlistId = 'PLZHQObOWTQDM4E-dwvbnQTiyKDO-y9T2t';
+const playlistUrl = `https://www.youtube.com/embed?listType=playlist&list=${playlistId}&autoplay=1`;
 ---
-<section class="border-b border-rule bg-ground">
+<section class="hero-experience border-b border-rule bg-ground" data-hero-experience>
   <div class="mx-auto max-w-[1200px] px-4 py-16 sm:px-6 sm:py-24">
-   <div class="max-w-[50rem]">
-    <p class="u-label text-blue">{hero.eyebrow}</p>
+    <div class="max-w-[66rem]">
+      <p class="u-label text-blue">{hero.eyebrow}</p>
 
-    <h1 class="u-display mt-5 text-blue-deep">
-      {line1}<br /><span class="text-blue">{line2}</span>
-    </h1>
+      <h1 class="u-display mt-5 text-blue-deep">
+        {line1}<br /><span class="text-blue">{line2}</span>
+      </h1>
 
-    <p class="u-lead u-measure mt-7">{hero.lead}</p>
+      <p class="u-lead u-measure mt-7">{hero.lead}</p>
+    </div>
 
-    <a href={hero.install.href} class="u-btn u-btn-primary mt-8 !px-6 !py-3">{hero.install.label}</a>
-   </div>
+    <div class="hero-actions" aria-label="Explore Akaden">
+      <button class="hero-action-card" type="button" data-hero-trigger="demo" aria-expanded="false" aria-controls="hero-demo-panel">
+        <span class="hero-action-card__media">
+          <img src={assetPath('hero-demo-preview.png')} alt="Akaden interactive walkthrough showing the workspace and guided upload request step." width="2798" height="1302" />
+        </span>
+        <span class="hero-action-card__label">{hero.actions.demo.label}</span>
+      </button>
+
+      <button class="hero-action-card" type="button" data-hero-trigger="video" aria-expanded="false" aria-controls="hero-video-panel">
+        <span class="hero-action-card__media hero-action-card__media--video">
+          <img src={assetPath('agentic-sdlc.png')} alt="Akaden agentic delivery workflow video preview." width="2646" height="1518" loading="lazy" />
+          <span class="hero-action-card__play" aria-hidden="true">
+            <svg viewBox="0 0 48 48"><rect x="4" y="4" width="40" height="40" rx="20" /><path d="m20 16 13 8-13 8Z" /></svg>
+          </span>
+        </span>
+        <span class="hero-action-card__label">{hero.actions.video.label}</span>
+      </button>
+
+      <a class="hero-action-card" href={hero.actions.contact.href}>
+        <span class="hero-action-card__media hero-action-card__media--logo">
+          <img src={assetPath('akaden-app-icon-reference.svg')} alt="Akaden" width="512" height="512" loading="lazy" />
+        </span>
+        <span class="hero-action-card__label">{hero.actions.contact.label}</span>
+      </a>
+    </div>
+
+    <div class="hero-panels" aria-live="polite">
+      <section id="hero-demo-panel" class="hero-panel" data-hero-panel="demo" tabindex="-1" hidden>
+        <header class="hero-panel__header">
+          <div>
+            <p class="u-label text-blue">{hero.actions.demo.eyebrow}</p>
+            <h2>{hero.actions.demo.headline}</h2>
+            <p>{hero.actions.demo.body}</p>
+          </div>
+          <button type="button" class="hero-panel__close" data-hero-close aria-label="Close demo panel">Close</button>
+        </header>
+        <div class="hero-panel__body hero-panel__body--demo">
+          <iframe data-src={experimentUrl} title="Akaden experiment interactive walkthrough" loading="lazy"></iframe>
+        </div>
+      </section>
+
+      <section id="hero-video-panel" class="hero-panel" data-hero-panel="video" tabindex="-1" hidden>
+        <header class="hero-panel__header">
+          <div>
+            <p class="u-label text-blue">{hero.actions.video.eyebrow}</p>
+            <h2>{hero.actions.video.headline}</h2>
+            <p>{hero.actions.video.body}</p>
+          </div>
+          <button type="button" class="hero-panel__close" data-hero-close aria-label="Close video panel">Close</button>
+        </header>
+        <div class="hero-panel__body hero-panel__body--video">
+          <div class="hero-video-frame">
+            <iframe
+              data-src={playlistUrl}
+              title="Akaden video playlist"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
 </section>
+
+<style>
+  .hero-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;max-width:62rem;margin-top:2.5rem}
+  .hero-action-card{display:grid;grid-template-rows:auto 3.5rem;min-width:0;overflow:hidden;border:1px solid var(--color-rule-strong);border-radius:8px;background:var(--color-ground);color:var(--color-blue-deep);box-shadow:0 1px 2px rgba(0,33,99,.06),0 8px 24px rgba(0,33,99,.08);cursor:pointer;text-decoration:none;transition:border-color 160ms ease-out,box-shadow 160ms ease-out,transform 160ms ease-out}
+  .hero-action-card:hover{border-color:var(--color-blue);box-shadow:0 2px 4px rgba(0,33,99,.08),0 14px 30px rgba(0,33,99,.13);transform:translateY(-2px)}
+  .hero-action-card:focus-visible{outline:2px solid var(--color-ink);outline-offset:3px}
+  .hero-action-card[aria-expanded="true"]{border-color:var(--color-blue);box-shadow:0 0 0 3px rgb(33 83 196 / .14),0 14px 30px rgba(0,33,99,.12)}
+  .hero-action-card__media{position:relative;display:grid;aspect-ratio:16/9;overflow:hidden;place-items:center;background:var(--color-paper)}
+  .hero-action-card__media>img{width:100%;height:100%;object-fit:cover}
+  .hero-action-card__media--video>img{filter:saturate(.78) brightness(.75);transform:scale(1.025)}
+  .hero-action-card__media--video::after{position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgb(0 33 99 / .2));content:""}
+  .hero-action-card__play{position:absolute;z-index:1;display:grid;width:3.5rem;height:3.5rem;place-items:center;filter:drop-shadow(0 8px 18px rgb(0 33 99 / .28))}
+  .hero-action-card__play svg{width:100%;height:100%}.hero-action-card__play rect{fill:#fff}.hero-action-card__play path{fill:var(--color-blue)}
+  .hero-action-card__media--logo{background:var(--color-paper)}
+  .hero-action-card__media--logo>img{width:clamp(5rem,8vw,7rem);height:clamp(5rem,8vw,7rem);object-fit:contain;filter:drop-shadow(0 10px 16px rgb(0 33 99 / .14))}
+  .hero-action-card__label{display:grid;place-items:center;border-top:1px solid var(--color-blue);background:var(--color-blue);padding:.7rem 1rem;color:#fff;font-size:1rem;font-weight:700;letter-spacing:-.01em;text-align:center;transition:background-color 160ms ease-out}
+  .hero-action-card:hover .hero-action-card__label,.hero-action-card[aria-expanded="true"] .hero-action-card__label{background:var(--color-blue-bright)}
+  .hero-panels{max-width:70rem;margin-top:1.5rem}
+  .hero-panel{overflow:hidden;border:1px solid var(--color-rule-strong);border-radius:12px;background:var(--color-paper);box-shadow:0 18px 42px rgba(0,33,99,.12)}
+  .hero-panel[hidden]{display:none}
+  .hero-panel__header{display:flex;align-items:flex-start;justify-content:space-between;gap:2rem;padding:1.5rem 1.5rem 1.25rem;border-bottom:1px solid var(--color-rule);background:var(--color-ground)}
+  .hero-panel__header>div{max-width:48rem}.hero-panel__header h2{margin-top:.55rem;color:var(--color-blue-deep);font-size:clamp(1.5rem,2.5vw,2.15rem);font-weight:800;letter-spacing:-.03em;line-height:1.08}.hero-panel__header div>p:last-child{margin-top:.65rem;color:var(--color-ink-soft);font-size:.95rem;line-height:1.5}
+  .hero-panel__close{flex:none;border:1px solid var(--color-rule-strong);border-radius:6px;background:#fff;padding:.5rem .8rem;color:var(--color-blue-deep);font-size:.82rem;font-weight:700;cursor:pointer}.hero-panel__close:hover{border-color:var(--color-blue);color:var(--color-blue-bright)}.hero-panel__close:focus-visible{outline:2px solid var(--color-ink);outline-offset:2px}
+  .hero-panel__body{display:grid;min-height:clamp(32rem,58vw,44rem);place-items:center;padding:1rem;background:var(--color-paper)}
+  .hero-panel__body--demo{padding:0}.hero-panel__body--demo iframe{display:block;width:100%;height:clamp(32rem,58vw,44rem);border:0;background:#fff}
+  .hero-video-frame{width:min(100%,62rem);overflow:hidden;border:1px solid var(--color-rule-strong);border-radius:8px;background:#000;box-shadow:0 18px 40px rgba(0,33,99,.16)}.hero-video-frame iframe{display:block;width:100%;aspect-ratio:16/9;border:0}
+  @media(max-width:760px){.hero-actions{grid-template-columns:1fr;max-width:30rem}.hero-panel__header{display:grid;gap:1rem;padding:1.25rem}.hero-panel__close{justify-self:start}.hero-panel__body,.hero-panel__body--demo iframe{min-height:30rem;height:30rem}.hero-panel__body--video{min-height:20rem;height:auto;padding:.75rem}}
+  @media(prefers-reduced-motion:reduce){.hero-action-card,.hero-action-card__label{transition:none}.hero-action-card:hover{transform:none}}
+</style>
+
+<script>
+  const heroExperience = document.querySelector<HTMLElement>('[data-hero-experience]');
+
+  if (heroExperience) {
+    const triggers = Array.from(heroExperience.querySelectorAll<HTMLButtonElement>('[data-hero-trigger]'));
+    const panels = Array.from(heroExperience.querySelectorAll<HTMLElement>('[data-hero-panel]'));
+
+    const setPanel = (requestedPanel: string | null) => {
+      const openPanel = panels.find((panel) => panel.dataset.heroPanel === requestedPanel);
+      const isClosing = openPanel ? !openPanel.hidden : true;
+      const activePanel = isClosing ? null : openPanel;
+
+      triggers.forEach((trigger) => {
+        trigger.setAttribute('aria-expanded', String(activePanel?.dataset.heroPanel === trigger.dataset.heroTrigger));
+      });
+
+      panels.forEach((panel) => {
+        const shouldOpen = panel === activePanel;
+        panel.hidden = !shouldOpen;
+        const frame = panel.querySelector<HTMLIFrameElement>('iframe[data-src]');
+        if (shouldOpen && frame && !frame.getAttribute('src')) frame.src = frame.dataset.src ?? '';
+        if (!shouldOpen && panel.dataset.heroPanel === 'video' && frame) frame.removeAttribute('src');
+      });
+
+      if (activePanel) activePanel.focus({ preventScroll: true });
+    };
+
+    triggers.forEach((trigger) => {
+      trigger.addEventListener('click', () => setPanel(trigger.dataset.heroTrigger ?? null));
+    });
+
+    heroExperience.querySelectorAll<HTMLButtonElement>('[data-hero-close]').forEach((closeButton) => {
+      closeButton.addEventListener('click', () => setPanel(null));
+    });
+  }
+</script>
