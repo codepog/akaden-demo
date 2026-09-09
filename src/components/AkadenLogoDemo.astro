@@ -3,11 +3,11 @@ const basePath = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 const workspaceUrl = import.meta.env.DEV ? `${basePath}workspace` : `${basePath}workspace.html`;
-interface Props { embedded?: boolean }
-const { embedded = false } = Astro.props;
+interface Props { embedded?: boolean; hideChrome?: boolean; fast?: boolean }
+const { embedded = false, hideChrome = false, fast = false } = Astro.props;
 ---
 
-<section class:list={['akaden-launch', { 'akaden-launch--embedded': embedded }]} aria-label="Akaden interactive walkthrough" data-akaden-launch>
+<section class:list={['akaden-launch', { 'akaden-launch--embedded': embedded, 'akaden-launch--chromeless': hideChrome }]} aria-label="Akaden interactive walkthrough" data-akaden-launch>
   <div class="akaden-launch__shell" data-akaden-shell>
     <div class="akaden-launch__atmosphere" aria-hidden="true"></div>
 
@@ -34,9 +34,11 @@ const { embedded = false } = Astro.props;
     </div>
 
     <section class="akaden-launch__demo" data-akaden-demo aria-label="Interactive Akaden walkthrough" aria-hidden="true">
-      <header class="akaden-launch__chrome" data-akaden-chrome>
-        <p class="akaden-launch__description"><em>Interactive demo</em></p>
-      </header>
+      {!hideChrome && (
+        <header class="akaden-launch__chrome" data-akaden-chrome>
+          <p class="akaden-launch__description"><em>Interactive demo</em></p>
+        </header>
+      )}
       <div class="akaden-launch__workspace" data-akaden-workspace>
         <iframe src={workspaceUrl} title="Interactive Akaden workspace walkthrough"></iframe>
       </div>
@@ -80,6 +82,8 @@ const { embedded = false } = Astro.props;
   .akaden-launch--embedded .akaden-launch__demo { top: 8px; right: 8px; bottom: 8px; left: 8px; width: auto; box-shadow: none; transform: scale(1.035); }
   .akaden-launch--embedded .akaden-launch__shell.is-opening .akaden-launch__demo { animation-name: ai-demo-through-portal-mobile; }
   .akaden-launch--embedded .akaden-launch__shell.is-ready .akaden-launch__demo { transform: none; }
+  .akaden-launch.akaden-launch--chromeless .akaden-launch__demo { display: block; }
+  .akaden-launch.akaden-launch--chromeless .akaden-launch__workspace { height: 100%; }
 
   .akaden-launch__atmosphere {
     position: absolute;
@@ -309,7 +313,7 @@ const { embedded = false } = Astro.props;
   }
 </style>
 
-<script is:inline>
+<script is:inline define:vars={{ fast }}>
   const shell = document.querySelector('[data-akaden-shell]');
   const demo = document.querySelector('[data-akaden-demo]');
   const mark = document.querySelector('[data-akaden-mark]');
@@ -363,7 +367,7 @@ const { embedded = false } = Astro.props;
     window.setTimeout(() => {
       shell.classList.remove('is-opening');
       showReadyState();
-    }, 3400);
+    }, fast ? 2600 : 3400);
   }
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -372,6 +376,6 @@ const { embedded = false } = Astro.props;
     showReadyState();
   } else {
     if (!alwaysPlayIntro) rememberIntro();
-    window.setTimeout(openAkaden, 850);
+    window.setTimeout(openAkaden, fast ? 500 : 850);
   }
 </script>

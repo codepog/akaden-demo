@@ -9,6 +9,10 @@ const basePath = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 const assetPath = (name: string) => `${basePath}${name}`;
+const experimentPage = import.meta.env.DEV ? `${basePath}overview-demo-embed` : `${basePath}overview-demo-embed.html`;
+const experimentUrl = `${experimentPage}?intro=always`;
+const playlistId = 'PLZHQObOWTQDM4E-dwvbnQTiyKDO-y9T2t';
+const playlistUrl = `https://www.youtube.com/embed?listType=playlist&list=${playlistId}&autoplay=1`;
 
 const workflowArt = [
   'workflow-upload.png',
@@ -24,18 +28,33 @@ const overviewCards = [
     title: 'Start with the real request',
     body: 'Bring the business need, institutional context, and constraints into one workspace before anything is generated.',
     href: '#workflow',
+    action: 'demo',
+    linkLabel: 'Try a demo',
+    image: 'hero-demo-preview.png',
+    imageAlt: 'Akaden interactive walkthrough showing a guided integration request.',
+    imageKind: 'demo',
   },
   {
     kicker: 'Review',
     title: 'Keep decisions with your team',
     body: 'Read, edit, and approve the specification in language your institution can check before the pipeline is built.',
     href: '#specification',
+    action: 'video',
+    linkLabel: 'Watch a video',
+    image: 'agentic-sdlc.png',
+    imageAlt: 'Akaden agentic delivery workflow video preview.',
+    imageKind: 'video',
   },
   {
     kicker: 'Deliver',
     title: 'Move from plan to pipeline',
     body: 'Generate, test, deploy, and validate against the acceptance criteria recorded in the approved specification.',
-    href: '#outcomes',
+    href: '#book-a-call',
+    action: null,
+    linkLabel: 'Contact us',
+    image: 'akaden-app-icon-reference.svg',
+    imageAlt: 'Akaden app icon.',
+    imageKind: 'brand',
   },
 ];
 ---
@@ -54,7 +73,7 @@ const overviewCards = [
           <p>{hero.lead}</p>
           <div class="test-actions">
             <a class="test-button test-button--light" href="#demo">View interactive demo</a>
-            <a class="test-link test-link--light" href="#contact">Book a call <span aria-hidden="true">→</span></a>
+            <a class="test-link test-link--light" href="#book-a-call">Book a call <span aria-hidden="true">→</span></a>
           </div>
         </div>
 
@@ -72,36 +91,94 @@ const overviewCards = [
       </div>
     </section>
 
-    <nav class="product-nav" aria-label="Product test page sections">
-      <div class="test-shell product-nav__inner">
-        <a class="product-nav__name" href="#main">Akaden</a>
-        <div class="product-nav__links">
-          <a href="#overview">Overview</a>
-          <a href="#workflow">Workflow</a>
-          <a href="#outcomes">Outcomes</a>
-          <a href="#proof">Proof</a>
-        </div>
-        <a class="test-button test-button--small" href="#contact">Book a call</a>
-      </div>
-    </nav>
-
     <section id="overview" class="test-section test-section--white">
       <div class="test-shell">
         <div class="test-section__intro">
           <p class="test-eyebrow test-eyebrow--blue">Overview</p>
           <h2>{hero.thesis}</h2>
-          <p>{hero.thesisSub} Akaden keeps the practices, decisions, and delivery work connected from the first request through validation.</p>
+          <p>{hero.thesisSub}</p>
         </div>
 
         <div class="overview-grid">
           {overviewCards.map((card) => (
             <article class="overview-card">
-              <p>{card.kicker}</p>
-              <h3>{card.title}</h3>
-              <p>{card.body}</p>
-              <a href={card.href}>Explore <span aria-hidden="true">→</span></a>
+              <div class:list={['overview-card__media', `overview-card__media--${card.imageKind}`]}>
+                <img src={assetPath(card.image)} alt={card.imageAlt} loading="lazy" />
+                {card.imageKind === 'video' && (
+                  <span class="overview-card__play" aria-hidden="true">
+                    <svg viewBox="0 0 48 48"><rect x="4" y="4" width="40" height="40" rx="20" /><path d="m20 16 13 8-13 8Z" /></svg>
+                  </span>
+                )}
+              </div>
+              <div class="overview-card__content">
+                {card.action ? (
+                  <button
+                    class="overview-card__action"
+                    type="button"
+                    data-overview-trigger={card.action}
+                    aria-expanded="false"
+                    aria-controls={`overview-${card.action}-panel`}
+                  >
+                    {card.linkLabel} <span aria-hidden="true">→</span>
+                  </button>
+                ) : (
+                  <a class="overview-card__action" href={card.href}>{card.linkLabel} <span aria-hidden="true">→</span></a>
+                )}
+              </div>
             </article>
           ))}
+        </div>
+
+        <div class="overview-panels" aria-live="polite">
+          <section
+            id="overview-demo-panel"
+            class="overview-panel"
+            data-overview-panel="demo"
+            tabindex="-1"
+            aria-label="Interactive Akaden walkthrough"
+            hidden
+          >
+            <header class="overview-panel__header">
+              <div>
+                <p class="test-eyebrow test-eyebrow--blue">Interactive demo</p>
+                <h3>Try Akaden for yourself.</h3>
+                <p>Follow the guided workspace to see how Akaden turns a real business request into a reviewed, deployable pipeline.</p>
+              </div>
+              <button type="button" class="overview-panel__close" data-overview-close aria-label="Close demo panel">Close</button>
+            </header>
+            <div class="overview-panel__body overview-panel__body--demo">
+              <iframe data-src={experimentUrl} title="Akaden interactive walkthrough" loading="lazy"></iframe>
+            </div>
+          </section>
+
+          <section
+            id="overview-video-panel"
+            class="overview-panel"
+            data-overview-panel="video"
+            tabindex="-1"
+            hidden
+          >
+            <header class="overview-panel__header">
+              <div>
+                <p class="test-eyebrow test-eyebrow--blue">{hero.actions.video.eyebrow}</p>
+                <h3>{hero.actions.video.headline}</h3>
+                <p>{hero.actions.video.body}</p>
+              </div>
+              <button type="button" class="overview-panel__close" data-overview-close aria-label="Close video panel">Close</button>
+            </header>
+            <div class="overview-panel__body overview-panel__body--video">
+              <div class="overview-video-frame">
+                <iframe
+                  data-src={playlistUrl}
+                  title="Akaden video playlist"
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerpolicy="strict-origin-when-cross-origin"
+                  allowfullscreen
+                ></iframe>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
     </section>
@@ -260,7 +337,7 @@ const overviewCards = [
       </div>
     </section>
 
-    <section id="contact" class="test-section test-section--white">
+    <section id="book-a-call" class="test-section test-section--white">
       <div class="test-shell contact-card">
         <div>
           <p class="test-eyebrow test-eyebrow--blue">{install.eyebrow}</p>
@@ -289,9 +366,8 @@ const overviewCards = [
   .test-hero__copy{max-width:36rem}.test-eyebrow{margin:0;font-family:var(--font-mono);font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase}.test-hero h1{max-width:10ch;margin:.85rem 0 0;font-size:clamp(3rem,5.8vw,5.35rem);font-weight:700;letter-spacing:-.065em;line-height:.95}.test-hero__copy>p:last-of-type{max-width:35rem;margin:1.6rem 0 0;color:rgb(255 255 255 / .82);font-size:clamp(1.05rem,1.7vw,1.3rem);line-height:1.55}
   .test-actions{display:flex;flex-wrap:wrap;align-items:center;gap:1.4rem;margin-top:2rem}.test-button{display:inline-flex;align-items:center;justify-content:center;border:2px solid var(--test-blue);background:var(--test-blue);padding:.82rem 1.35rem;color:#fff;font-weight:700;line-height:1;text-decoration:none;transition:background .16s ease,border-color .16s ease,transform .16s ease}.test-button:hover{border-color:#0e55bb;background:#0e55bb;transform:translateY(-1px)}.test-button--light{border-color:#fff;background:#fff;color:#1c2380}.test-button--light:hover{border-color:#eef4ff;background:#eef4ff}.test-button--small{padding:.6rem 1rem;font-size:.88rem}.test-link{display:inline-flex;align-items:center;gap:.45rem;color:var(--test-blue);font-weight:700;text-decoration:none}.test-link span{transition:transform .16s ease}.test-link:hover span{transform:translateX(.2rem)}.test-link--light{color:#fff}
   .test-hero__visual{position:relative;overflow:visible;border:1px solid rgb(255 255 255 / .38);border-radius:1.2rem;background:#f5f8ff;padding:2.8rem .55rem .55rem;box-shadow:0 42px 80px -34px rgb(0 0 0 / .64);transform:perspective(1200px) rotateY(-4deg) rotateX(1deg)}.test-hero__visual>img{display:block;width:100%;aspect-ratio:16/9;border-radius:.75rem;object-fit:cover}.test-hero__visual-bar{position:absolute;top:0;right:0;left:0;display:flex;height:2.8rem;align-items:center;justify-content:space-between;padding:0 1rem;color:#48546b;font-size:.74rem}.test-hero__visual-bar span{display:flex;gap:.34rem}.test-hero__visual-bar i{display:block;width:.52rem;height:.52rem;border-radius:50%;background:#ccd6e6}.test-hero__visual-badge{}.test-hero__badge{position:absolute;right:-1.8rem;bottom:-2.2rem;display:flex;align-items:center;gap:.8rem;width:min(16rem,52%);border-left:4px solid #77a9ff;background:#fff;padding:1rem 1.15rem;color:#172254;box-shadow:0 18px 46px -18px rgb(2 12 62 / .72)}.test-hero__badge>span{display:grid;width:2.3rem;height:2.3rem;flex:none;place-items:center;border-radius:50%;background:#e6efff;color:#185fcf;font-family:var(--font-mono);font-size:.76rem;font-weight:700}.test-hero__badge p{display:grid;margin:0;line-height:1.2}.test-hero__badge small{margin-top:.25rem;color:#667089;font-size:.72rem}
-  .product-nav{position:sticky;z-index:45;top:4rem;border-bottom:1px solid #d7dfeb;background:rgb(255 255 255 / .96);box-shadow:0 7px 18px -16px rgb(13 33 74 / .38);backdrop-filter:blur(12px)}.product-nav__inner{display:flex;min-height:3.8rem;align-items:center;gap:2rem}.product-nav__name{color:#172254;font-size:1.05rem;font-weight:800;text-decoration:none}.product-nav__links{display:flex;align-self:stretch;align-items:center;gap:1.7rem}.product-nav__links a{display:flex;height:100%;align-items:center;border-bottom:3px solid transparent;color:#34405a;font-size:.88rem;font-weight:600;text-decoration:none}.product-nav__links a:hover{border-color:var(--test-blue);color:var(--test-blue)}.product-nav .test-button{margin-left:auto}
-  .test-section{scroll-margin-top:8rem;padding-block:clamp(4.8rem,8vw,7.4rem)}.test-section--white{background:#fff}.test-section--tint{background:#f3f7fd}.test-section--lavender{background:#f2f0fb}.test-section--dark{background:linear-gradient(140deg,#0c1d4c,#142d70 58%,#233d88);color:#fff}.test-section--ink{background:#0a1738;color:#fff}.test-section__intro{max-width:46rem}.test-section__intro--wide{max-width:57rem}.test-eyebrow--blue{color:var(--test-blue)}.test-eyebrow--amber{color:#ffca65}.test-section__intro h2,.guardrail-layout h2,.contact-card h2{margin:.8rem 0 0;color:#15285d;font-size:clamp(2.35rem,4.6vw,4.2rem);font-weight:650;letter-spacing:-.055em;line-height:1}.test-section__intro>p:last-child,.guardrail-layout>div>p:last-child,.contact-card>div>p:last-child{max-width:52rem;margin:1.3rem 0 0;color:var(--test-soft);font-size:1.13rem;line-height:1.65}.test-section__intro--dark h2{color:#fff}.test-section__intro--dark>p:last-child{color:#c7d2ec}
-  .overview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.4rem;margin-top:3.1rem}.overview-card{display:flex;min-height:22rem;flex-direction:column;border:1px solid #dce3ed;background:#fff;padding:2rem;box-shadow:0 12px 34px -27px rgb(18 39 85 / .55);transition:transform .18s ease,box-shadow .18s ease}.overview-card:hover{transform:translateY(-4px);box-shadow:0 24px 44px -28px rgb(18 39 85 / .58)}.overview-card>p:first-child{margin:0;color:var(--test-blue);font-family:var(--font-mono);font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase}.overview-card h3{margin:3.2rem 0 0;color:#15285d;font-size:1.7rem;letter-spacing:-.035em;line-height:1.08}.overview-card h3+p{margin:.9rem 0 0;color:var(--test-soft);line-height:1.6}.overview-card a{margin-top:auto;color:var(--test-blue);font-weight:700;text-decoration:none}
+  .test-section{scroll-margin-top:5rem;padding-block:clamp(4.8rem,8vw,7.4rem)}.test-section--white{background:#fff}.test-section--tint{background:#f3f7fd}.test-section--lavender{background:#f2f0fb}.test-section--dark{background:linear-gradient(140deg,#0c1d4c,#142d70 58%,#233d88);color:#fff}.test-section--ink{background:#0a1738;color:#fff}.test-section__intro{max-width:46rem}.test-section__intro--wide{max-width:57rem}.test-eyebrow--blue{color:var(--test-blue)}.test-eyebrow--amber{color:#ffca65}.test-section__intro h2,.guardrail-layout h2,.contact-card h2{margin:.8rem 0 0;color:#15285d;font-size:clamp(2.35rem,4.6vw,4.2rem);font-weight:650;letter-spacing:-.055em;line-height:1}.test-section__intro>p:last-child,.guardrail-layout>div>p:last-child,.contact-card>div>p:last-child{max-width:52rem;margin:1.3rem 0 0;color:var(--test-soft);font-size:1.13rem;line-height:1.65}.test-section__intro--dark h2{color:#fff}.test-section__intro--dark>p:last-child{color:#c7d2ec}
+  .overview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.4rem;margin-top:3.1rem}.overview-card{display:flex;overflow:hidden;flex-direction:column;border:1px solid #dce3ed;background:#fff;box-shadow:0 12px 34px -27px rgb(18 39 85 / .55);transition:transform .18s ease,box-shadow .18s ease}.overview-card:hover{transform:translateY(-4px);box-shadow:0 24px 44px -28px rgb(18 39 85 / .58)}.overview-card__media{position:relative;display:grid;aspect-ratio:16/9;overflow:hidden;flex:none;place-items:center;border-bottom:1px solid #dce3ed;background:#eef4ff}.overview-card__media img{display:block;width:100%;height:100%;object-fit:cover}.overview-card__media--video img{filter:saturate(.78) brightness(.75);transform:scale(1.025)}.overview-card__media--video::after{position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgb(0 33 99 / .2));content:""}.overview-card__media--brand{background:linear-gradient(145deg,#f4f7fc,#dbe9ff)}.overview-card__media--brand img{width:31%;height:52%;object-fit:contain;filter:drop-shadow(0 10px 16px rgb(0 33 99 / .15))}.overview-card__play{position:absolute;z-index:1;display:grid;width:3.6rem;height:3.6rem;place-items:center;filter:drop-shadow(0 8px 18px rgb(0 33 99 / .28))}.overview-card__play svg{width:100%;height:100%}.overview-card__play rect{fill:#fff}.overview-card__play path{fill:var(--test-blue)}.overview-card__content{display:flex;min-height:4.75rem;align-items:center;padding:1.35rem 1.5rem}.overview-card__action{display:inline-flex;align-items:center;gap:.45rem;border:0;background:transparent;padding:0;color:var(--test-blue);font:inherit;font-weight:700;text-decoration:none;cursor:pointer}.overview-card__action span{transition:transform .16s ease}.overview-card__action:hover span{transform:translateX(.2rem)}.overview-panels{margin-top:1.5rem}.overview-panel{overflow:hidden;scroll-margin-top:5rem;border:1px solid #becce2;background:#f3f7fd;box-shadow:0 22px 48px -34px rgb(11 39 94 / .6)}.overview-panel:focus{outline:none}.overview-panel[hidden]{display:none}.overview-panel--demo{position:relative;overflow:visible;border:0;background:transparent;box-shadow:none}.overview-panel__header{display:flex;align-items:flex-start;justify-content:space-between;gap:2rem;border-bottom:1px solid #dce3ed;background:#fff;padding:1.5rem}.overview-panel__header>div{max-width:48rem}.overview-panel__header h3{margin:.55rem 0 0;color:#15285d;font-size:clamp(1.5rem,2.5vw,2.15rem);font-weight:800;letter-spacing:-.03em;line-height:1.08}.overview-panel__header div>p:last-child{margin:.65rem 0 0;color:var(--test-soft);font-size:.95rem;line-height:1.5}.overview-panel__close{flex:none;border:1px solid #7188a8;border-radius:6px;background:#fff;padding:.5rem .8rem;color:#15285d;font:inherit;font-size:.82rem;font-weight:700;cursor:pointer}.overview-panel__close:hover{border-color:var(--test-blue);color:var(--test-blue)}.overview-panel__close--floating{position:absolute;z-index:5;top:1.1rem;right:1.1rem;display:grid;width:2.5rem;height:2.5rem;place-items:center;border:0;border-radius:50%;background:transparent;padding:0;box-shadow:none;opacity:0;visibility:hidden;transform:scale(.85);pointer-events:none;transition:opacity .18s ease,transform .18s ease,visibility 0s linear .18s}.overview-panel__close--floating.is-visible{opacity:1;visibility:visible;transform:none;pointer-events:auto;transition-delay:0s}.overview-panel__close--floating:hover{border:0;background:rgb(20 106 216 / .08);color:#15285d}.overview-panel__close--floating svg{display:block;width:1.35rem;height:1.35rem;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}.overview-panel__body{display:grid;min-height:clamp(32rem,58vw,44rem);place-items:center;padding:1rem;background:#f4f7fc}.overview-panel__body--demo{padding:0;background:transparent}.overview-panel__body--demo iframe{display:block;width:100%;height:clamp(32rem,58vw,44rem);border:0;background:transparent}.overview-video-frame{width:min(100%,62rem);overflow:hidden;border:1px solid #7188a8;border-radius:8px;background:#000;box-shadow:0 18px 40px rgb(0 33 99 / .16)}.overview-video-frame iframe{display:block;width:100%;aspect-ratio:16/9;border:0}
   .solution-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:1.4rem;margin-top:3.2rem}.solution-card{position:relative;display:flex;min-height:17rem;flex-direction:column;justify-content:space-between;overflow:hidden;background:#fff;padding:2rem;box-shadow:0 15px 38px -30px rgb(10 30 78 / .55)}.solution-card--featured{grid-row:span 2;min-height:35.4rem;background:linear-gradient(145deg,#45219a,#166ddd);color:#fff}.solution-card__number{font-family:var(--font-mono);font-size:.75rem;font-weight:700;letter-spacing:.12em}.solution-card h3{margin:0;color:#15285d;font-size:clamp(1.6rem,2.6vw,2.3rem);letter-spacing:-.04em;line-height:1.06}.solution-card p{margin:.8rem 0 0;color:var(--test-soft);line-height:1.6}.solution-card--featured h3{max-width:13ch;color:#fff}.solution-card--featured p{max-width:30rem;color:#dce8ff}.solution-card--featured img{position:absolute;right:-4%;bottom:-4%;width:min(52%,19rem);filter:drop-shadow(0 18px 30px rgb(4 16 62 / .4))}
   .workflow-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));margin-top:3rem;border-bottom:1px solid rgb(255 255 255 / .25)}.workflow-tabs button{display:flex;align-items:center;justify-content:center;gap:.55rem;border:0;border-bottom:4px solid transparent;background:transparent;padding:1rem .5rem;color:#c2cee8;font:inherit;font-size:.8rem;font-weight:650;cursor:pointer}.workflow-tabs button span{font-family:var(--font-mono);font-size:.66rem}.workflow-tabs button[aria-selected="true"]{border-color:#6fa5ff;color:#fff}.workflow-stage{margin-top:1.8rem}.workflow-panel{display:grid;grid-template-columns:.9fr 1.1fr;min-height:27rem;overflow:hidden;background:#fff;color:var(--test-ink)}.workflow-panel__copy{align-self:center;padding:clamp(2rem,5vw,4.5rem)}.workflow-panel__copy h3{margin:.8rem 0 0;color:#15285d;font-size:clamp(2rem,3.5vw,3.15rem);letter-spacing:-.045em;line-height:1.02}.workflow-panel__copy>p:not(.test-eyebrow){margin:1.25rem 0 0;color:var(--test-soft);font-size:1.05rem;line-height:1.65}.workflow-panel__copy aside{margin-top:1.3rem;border-left:3px solid #ffbd3c;background:#fff7e5;padding:.85rem 1rem;color:#6d5015;font-size:.9rem}.workflow-panel__art{position:relative;display:grid;min-height:27rem;place-items:center;overflow:hidden;background:linear-gradient(145deg,#e8effd,#cddcff);padding:3rem}.workflow-panel__art::before{position:absolute;width:25rem;height:25rem;border:1px solid rgb(35 82 177 / .18);border-radius:50%;content:""}.workflow-panel__art img{position:relative;z-index:1;width:min(76%,23rem);max-height:20rem;object-fit:contain;filter:drop-shadow(0 20px 26px rgb(9 38 97 / .2))}.workflow-panel__art span{position:absolute;right:1.2rem;bottom:1.2rem;border-radius:999px;background:#fff;padding:.52rem .85rem;color:#2356ac;font-size:.72rem;font-weight:700;box-shadow:0 8px 20px -12px rgb(7 30 77 / .55)}
   .demo-feature{display:grid;grid-template-columns:.74fr 1.26fr;align-items:center;gap:clamp(2.5rem,6vw,6rem)}.demo-feature__copy h2{margin:.8rem 0 0;color:#15285d;font-size:clamp(2.3rem,4.2vw,3.75rem);letter-spacing:-.05em;line-height:1}.demo-feature__copy>p:not(.test-eyebrow){margin:1.2rem 0 0;color:var(--test-soft);font-size:1.08rem;line-height:1.65}.demo-feature__copy .test-button{margin-top:1.8rem}.demo-feature__visual{position:relative;display:block;overflow:hidden;border:1px solid #becce2;background:#eef4ff;padding:.6rem;box-shadow:0 26px 55px -36px rgb(11 39 94 / .6)}.demo-feature__visual img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}.demo-feature__visual span{position:absolute;top:50%;left:50%;display:grid;width:4.6rem;height:4.6rem;place-items:center;border-radius:50%;background:#fff;color:var(--test-blue);font-size:1.35rem;box-shadow:0 18px 35px -18px rgb(4 21 58 / .7);transform:translate(-50%,-50%)}
@@ -299,12 +375,54 @@ const overviewCards = [
   .guardrail-layout{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:clamp(3rem,7vw,7rem)}.guardrail-card{display:grid;grid-template-columns:auto 1fr;gap:1rem;border:1px solid #ced9e8;background:#f5f8fd;padding:2rem}.guardrail-card>span{display:grid;width:2.5rem;height:2.5rem;place-items:center;border-radius:50%;background:#dff6e9;color:#19734a;font-weight:800}.guardrail-card p{margin:0 0 1rem;color:#15285d;font-size:1.08rem;font-weight:700;line-height:1.4}.guardrail-card small{display:block;border-top:1px solid #d5dfed;padding-top:1rem;color:var(--test-soft);line-height:1.55}
   .stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin-top:3rem;background:rgb(255 255 255 / .18)}.stat-grid article{display:grid;min-height:12rem;align-content:center;background:#101f47;padding:2rem}.stat-grid strong{color:#8db7ff;font-size:clamp(2.7rem,5vw,4.5rem);letter-spacing:-.06em;line-height:1}.stat-grid span{max-width:14rem;margin-top:.75rem;color:#d1dcf2;line-height:1.4}.proof-quote{display:grid;grid-template-columns:1.4fr .6fr;gap:3rem;margin:3rem 0 0;border-top:1px solid rgb(255 255 255 / .2);padding-top:3rem}.proof-quote>p{margin:0;color:#fff;font-size:clamp(1.45rem,2.8vw,2.35rem);letter-spacing:-.035em;line-height:1.28}.proof-quote footer{display:grid;align-content:start;gap:.3rem;color:#cbd7ef}.proof-quote footer span{font-size:.85rem;line-height:1.45}.proof-note{margin:2rem 0 0;color:#8da3ce;font-size:.82rem}
   .contact-card{display:grid;grid-template-columns:1.15fr .85fr;align-items:end;gap:4rem;border:1px solid #d6e0ec;background:linear-gradient(135deg,#f7f9fd,#edf3fc);padding:clamp(2rem,5vw,4.2rem)}.contact-card__actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:1.4rem}
-  @media(max-width:900px){.test-hero__grid{grid-template-columns:1fr;min-height:0}.test-hero__copy{max-width:42rem}.test-hero h1{max-width:12ch}.test-hero__visual{transform:none}.product-nav__links{display:none}.overview-grid{grid-template-columns:1fr}.overview-card{min-height:16rem}.solution-grid{grid-template-columns:1fr}.solution-card--featured{grid-row:auto;min-height:29rem}.workflow-tabs{overflow-x:auto;grid-template-columns:repeat(5,minmax(10rem,1fr));justify-content:start}.workflow-panel,.demo-feature,.guardrail-layout,.contact-card{grid-template-columns:1fr}.workflow-panel__art{min-height:22rem}.change-card{grid-template-columns:1fr}.contact-card__actions{justify-content:flex-start}}
-  @media(max-width:620px){.test-shell{width:min(100% - 1.25rem,1200px)}.test-hero__grid{padding-block:3.8rem 5rem}.test-hero h1{font-size:clamp(2.8rem,15vw,4.2rem)}.test-hero__badge{right:.6rem;bottom:-2.5rem}.product-nav__name{font-size:.95rem}.product-nav .test-button{padding:.55rem .72rem}.spec-grid,.stat-grid{grid-template-columns:1fr}.solution-card--featured{min-height:25rem}.solution-card--featured img{width:58%;opacity:.84}.workflow-panel{display:block}.workflow-panel__art{min-height:18rem}.proof-quote{grid-template-columns:1fr}.contact-card{padding:2rem 1.25rem}}
-  @media(prefers-reduced-motion:reduce){:global(html){scroll-behavior:auto}.test-button,.test-link span,.overview-card{transition:none}.test-button:hover,.overview-card:hover{transform:none}}
+  @media(max-width:900px){.test-hero__grid{grid-template-columns:1fr;min-height:0}.test-hero__copy{max-width:42rem}.test-hero h1{max-width:12ch}.test-hero__visual{transform:none}.overview-grid{grid-template-columns:1fr}.solution-grid{grid-template-columns:1fr}.solution-card--featured{grid-row:auto;min-height:29rem}.workflow-tabs{overflow-x:auto;grid-template-columns:repeat(5,minmax(10rem,1fr));justify-content:start}.workflow-panel,.demo-feature,.guardrail-layout,.contact-card{grid-template-columns:1fr}.workflow-panel__art{min-height:22rem}.change-card{grid-template-columns:1fr}.contact-card__actions{justify-content:flex-start}}
+  @media(max-width:620px){.test-shell{width:min(100% - 1.25rem,1200px)}.test-hero__grid{padding-block:3.8rem 5rem}.test-hero h1{font-size:clamp(2.8rem,15vw,4.2rem)}.test-hero__badge{right:.6rem;bottom:-2.5rem}.overview-panel__header{display:grid;gap:1rem;padding:1.25rem}.overview-panel__close{justify-self:start}.overview-panel__body,.overview-panel__body--demo iframe{min-height:30rem;height:30rem}.overview-panel__body--video{min-height:20rem;height:auto;padding:.75rem}.spec-grid,.stat-grid{grid-template-columns:1fr}.solution-card--featured{min-height:25rem}.solution-card--featured img{width:58%;opacity:.84}.workflow-panel{display:block}.workflow-panel__art{min-height:18rem}.proof-quote{grid-template-columns:1fr}.contact-card{padding:2rem 1.25rem}}
+  @media(prefers-reduced-motion:reduce){:global(html){scroll-behavior:auto}.test-button,.test-link span,.overview-card,.overview-card__action span{transition:none}.test-button:hover,.overview-card:hover{transform:none}}
 </style>
 
 <script>
+  const overviewTriggers = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-overview-trigger]'));
+  const overviewPanels = Array.from(document.querySelectorAll<HTMLElement>('[data-overview-panel]'));
+
+  const setOverviewPanel = (requestedPanel: string | null) => {
+    const openPanel = overviewPanels.find((panel) => panel.dataset.overviewPanel === requestedPanel);
+    const activePanel = openPanel && openPanel.hidden ? openPanel : null;
+
+    overviewTriggers.forEach((trigger) => {
+      trigger.setAttribute('aria-expanded', String(activePanel?.dataset.overviewPanel === trigger.dataset.overviewTrigger));
+    });
+
+    overviewPanels.forEach((panel) => {
+      const shouldOpen = panel === activePanel;
+      panel.hidden = !shouldOpen;
+      const frame = panel.querySelector<HTMLIFrameElement>('iframe[data-src]');
+      const currentSource = frame?.getAttribute('src');
+
+      if (shouldOpen && frame && (!currentSource || currentSource === 'about:blank')) {
+        frame.src = frame.dataset.src ?? '';
+      }
+      if (!shouldOpen && frame && currentSource && currentSource !== 'about:blank') {
+        frame.src = 'about:blank';
+      }
+    });
+
+    if (activePanel) {
+      activePanel.focus({ preventScroll: true });
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.requestAnimationFrame(() => {
+        activePanel.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
+      });
+    }
+  };
+
+  overviewTriggers.forEach((trigger) => {
+    trigger.addEventListener('click', () => setOverviewPanel(trigger.dataset.overviewTrigger ?? null));
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('[data-overview-close]').forEach((closeButton) => {
+    closeButton.addEventListener('click', () => setOverviewPanel(null));
+  });
+
   const workflowTabs = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-workflow-tab]'));
   const workflowPanels = Array.from(document.querySelectorAll<HTMLElement>('[data-workflow-panel]'));
 

@@ -20,9 +20,7 @@ export const nav = {
   tabs: [
     { label: 'Product', href: './', live: true },
     { label: 'Demo', href: './demo', live: true },
-    { label: 'Experiment', href: './experiment', live: true },
     { label: 'Robot Lab', href: './robot-lab', live: true },
-    { label: 'Reference', href: './reference', live: true },
     { label: 'Archived', href: './archived', live: true },
   ],
   cta: { label: 'Book a call', href: '#book-a-call' },
@@ -33,8 +31,8 @@ export const hero = {
   headline: 'Accelerate Pipeline Development\nand Cloud Migration',
   lead:
     'Akaden turns a written request into a reviewed, deployable Ellucian data pipeline, with the right delivery practices ready when the work needs them.',
-  thesis: 'You stop maintaining pipelines. You start maintaining specifications.',
-  thesisSub: 'The pipeline is the output. The spec is the asset.',
+  thesis: 'Get to Know Akaden',
+  thesisSub: 'See how Akaden turns a real request into a reviewed, deployable pipeline—then try the demo, watch the story, or talk with our team.',
   actions: {
     demo: {
       label: 'View demo',
