@@ -19,9 +19,6 @@ export const site = {
 export const nav = {
   tabs: [
     { label: 'Product', href: './', live: true },
-    { label: 'Demo', href: './demo', live: true },
-    { label: 'Robot Lab', href: './robot-lab', live: true },
-    { label: 'Archived', href: './archived', live: true },
   ],
   cta: { label: 'Book a call', href: '#book-a-call' },
 };
@@ -154,16 +151,20 @@ export const benefits = {
   headline: 'Your engineers lead the work. Specialized agents move it forward.',
   items: [
     {
-      title: 'Simplify systems and operations',
-      body: 'Make complex integrations easier to understand, govern, and evolve—so your team can move faster with less operational friction.',
+      title: 'Reduce integration complexity',
+      body: 'Standardize how integrations are built and managed so teams move faster, reduce operational effort, and make critical systems easier to support.',
     },
     {
-      title: 'Take advantage of modern development workflows',
-      body: 'Keep intent, implementation, testing, and change connected in one specification-led flow, with proven practices built into every stage.',
+      title: 'Modernize the development lifecycle',
+      body: 'Bring requirements, implementation, testing, and change management into one structured workflow designed around how developers work.',
     },
     {
-      title: 'Deliver with pipeline expertise built in',
-      body: 'Put 50+ pipeline-specific skills and tools behind every project to surface edge cases, protect audit-ready decisions, and keep delivery practices current.',
+      title: 'Make the specification the source of truth',
+      body: 'Preserve intent, improve consistency, and give every engineer a maintainable starting point from initial delivery through every future change.',
+    },
+    {
+      title: 'Apply pipeline expertise by default',
+      body: 'Build proven engineering practices, audit controls, and hard-won edge-case guidance into every delivery without asking each team to recreate them.',
     },
   ],
 };
