@@ -5,27 +5,11 @@ import { site } from '../data/site';
 interface Props { title: string; description?: string }
 const { title, description = site.description } = Astro.props;
 const siteUrl = Astro.site ?? Astro.url;
+const canonical = new URL(Astro.url.pathname, siteUrl).toString();
 const basePath = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
-const canonicalPath = Astro.url.pathname.endsWith('/index.html')
-  ? basePath
-  : Astro.url.pathname;
-const canonical = new URL(canonicalPath, siteUrl).toString();
-const ogImage = new URL(`${basePath}hero-demo-preview.png`, siteUrl).toString();
-const favicon = `${basePath}akaden-app-icon-reference.svg`;
-const structuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
-  name: site.name,
-  description,
-  applicationCategory: 'DeveloperApplication',
-  creator: {
-    '@type': 'Organization',
-    name: site.owner,
-    url: site.ownerUrl,
-  },
-};
+const ogImage = new URL(`${basePath}og-image.png`, siteUrl).toString();
 ---
 <!doctype html>
 <html lang="en">
@@ -34,10 +18,10 @@ const structuredData = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#271587" />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" type="image/svg+xml" href={favicon} />
 
+    <!-- The URL gets pasted into webinar chat and Slack, so the card is the first
+         impression for most visitors. og-image.png is still a NEEDS-ASSET slot. -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -46,8 +30,6 @@ const structuredData = {
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImage} />
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

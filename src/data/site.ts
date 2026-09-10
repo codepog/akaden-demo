@@ -1,13 +1,17 @@
 /**
- * Public-facing product copy. Keep claims narrow until ABCloudz can support
- * them with product, security, or customer evidence.
+ * All page copy. Nothing is hardcoded in components (spec §12), so wording can be
+ * edited without touching markup.
+ *
+ * NEEDS-SOURCE marks a claim that has not been confirmed by ABCloudz yet. Anything
+ * still marked when the review happens does not ship (spec §15).
  */
 
 export const site = {
   name: 'Akaden',
-  tagline: 'The AI-assisted IDE for Ellucian pipeline development',
+  tagline: 'Technology modernization through Agentic AI',
   description:
-    'Akaden helps Ellucian development teams turn existing knowledge into reviewed specifications, tested pipelines, and monitored deployments.',
+    'Akaden turns a written specification into a reviewed, deployable Ellucian data pipeline. ' +
+    'It guides teams through the delivery work with practices built for integrations, while people keep the decisions.',
   owner: 'ABCloudz',
   ownerUrl: 'https://abcloudz.com/',
 };
@@ -15,213 +19,187 @@ export const site = {
 export const nav = {
   tabs: [
     { label: 'Overview', href: '#overview', live: true },
+    { label: 'What changes', href: '#outcomes', live: true },
     { label: 'Workflow', href: '#workflow', live: true },
-    { label: 'Control', href: '#control', live: true },
-    { label: 'FAQ', href: '#faq', live: true },
+    { label: 'Proof', href: '#proof', live: true },
   ],
-  cta: { label: 'Explore demo', href: '#product-demo' },
-};
-
-export const announcement = {
-  text: 'See Akaden at EDUCAUSE Demo Day',
-  detail: 'September 14, 2026',
-  href: '#product-demo',
+  cta: { label: 'Book a call', href: '#book-a-call' },
 };
 
 export const hero = {
-  eyebrow: 'AI-assisted IDE for Ellucian pipeline development',
-  headline: 'Build Ellucian pipelines from a specification.',
+  eyebrow: 'For Ellucian Banner and Ethos',
+  headline: 'Accelerate Pipeline Development\nand Cloud Migration',
   lead:
-    'Bring meeting notes, legacy documentation, and existing pipelines into one workspace. Turn that context into a reviewed specification, tested implementation, and monitored deployment—while your team stays in control.',
-  primaryAction: 'Explore the interactive demo',
-  secondaryAction: 'See the workflow',
-  previewLabel: 'Akaden product tour',
-  previewStatus: 'Interactive walkthrough',
-  thesis: 'A development environment built around the whole pipeline lifecycle',
-  thesisSub:
-    'Akaden adds an AI-assisted, specification-driven workflow on top of Ellucian pipeline solutions. Developers keep the judgment, the ability to edit manually, and every approval that matters.',
+    'Akaden turns a written request into a reviewed, deployable Ellucian data pipeline, with the right delivery practices ready when the work needs them.',
+  thesis: 'Get to Know Akaden',
+  thesisSub: 'See how Akaden turns a real request into a reviewed, deployable pipeline—then try the walkthrough, follow the workflow, or talk with our team.',
   actions: {
-    demo: { label: 'Explore demo' },
-    video: {
-      label: 'Watch demo',
-      eyebrow: 'Product walkthrough',
-      headline: 'See the complete Akaden workflow.',
-      body: 'A recorded walkthrough will be added after the final product capture is ready.',
+    demo: {
+      label: 'View demo',
     },
-    contact: { label: 'Explore demo', href: '#product-demo' },
+    video: {
+      label: 'Watch video',
+      eyebrow: 'Video playlist',
+      headline: 'Watch the Akaden story.',
+      body: 'Use the embedded player to watch the current playlist without leaving the product page.',
+    },
+    contact: { label: 'Book a call', href: '#book-a-call' },
   },
 };
 
-export const overview = [
-  {
-    number: '01',
-    title: 'Start with the work you already have',
-    body: 'Use meeting notes, existing documentation, prior pipelines, and institutional conventions as context instead of starting from a blank prompt.',
-  },
-  {
-    number: '02',
-    title: 'Agree on the specification first',
-    body: 'Iterate with AI, resolve missing decisions, and approve a human-readable specification before pipeline generation begins.',
-  },
-  {
-    number: '03',
-    title: 'Build, test, deploy, and monitor',
-    body: 'Generate the pipeline and its tests, revise with AI or by hand, approve deployment, and monitor the result from the same workflow.',
-  },
-];
-
-export const lifecycle = [
-  {
-    number: '01', actor: 'Team', kind: 'human', title: 'Bring in the context',
-    body: 'Load meeting notes, legacy documentation, existing pipelines, and the conventions your institution already follows.',
-  },
-  {
-    number: '02', actor: 'AI-assisted', kind: 'agent', title: 'Develop the specification',
-    body: 'Work with Akaden to resolve requirements, mappings, constraints, and acceptance criteria in a document your team can review.',
-  },
-  {
-    number: '03', actor: 'Human approval', kind: 'human', title: 'Approve the plan',
-    body: 'Edit the specification directly or continue the conversation. Generation starts only after your team approves the intended behavior.',
-  },
-  {
-    number: '04', actor: 'AI-assisted', kind: 'agent', title: 'Generate the pipeline',
-    body: 'Build pipeline artifacts from the approved specification, with the source intent still visible beside the implementation.',
-  },
-  {
-    number: '05', actor: 'AI-assisted', kind: 'agent', title: 'Create the test cases',
-    body: 'Turn the agreed acceptance criteria into tests that can verify the pipeline before deployment.',
-  },
-  {
-    number: '06', actor: 'Developer', kind: 'human', title: 'Review and revise',
-    body: 'Inspect the result, revise through AI, or edit manually. Akaden preserves the developer controls teams already depend on.',
-  },
-  {
-    number: '07', actor: 'Human approval', kind: 'human', title: 'Approve deployment',
-    body: 'Confirm functionality, set runtime parameters, and choose when the pipeline is ready to connect to the Ellucian tenant.',
-  },
-  {
-    number: '08', actor: 'System', kind: 'system', title: 'Monitor what shipped',
-    body: 'Follow deployed pipelines from the monitoring dashboard and retain a reviewable record of the specification and delivery decisions.',
-  },
-];
-
-export const controls = {
-  eyebrow: 'Developer control',
-  headline: 'AI moves the work forward. Your team decides what ships.',
-  lead:
-    'Akaden is designed to support developers, not route around them. The specification, implementation, and deployment remain inspectable and editable throughout the lifecycle.',
-  items: [
-    { title: 'Human approval gates', body: 'Your team confirms the inputs, specification, functionality, and deployment.' },
-    { title: 'Manual editing stays available', body: 'Developers can inspect and revise generated artifacts directly whenever the work calls for it.' },
-    { title: 'You own the output', body: 'The specifications and generated pipeline artifacts remain your team’s work product.' },
-    { title: 'Operations stay visible', body: 'A monitoring dashboard keeps deployed pipelines and their operating history in view.' },
-  ],
-};
-
-export const maintenance = {
-  eyebrow: 'Six months later',
-  headline: 'A small change should not require an archaeology project.',
-  request: 'The communications team needs a country column in the contact export.',
-  oldWay: [
-    'Find the original pipeline and reconstruct why it works the way it does.',
-    'Patch the mapping by hand and hope the documentation and tests still match.',
-    'Leave the next developer to repeat the same investigation.',
-  ],
-  akadenWay: [
-    'Add the new requirement to the specification.',
-    'Regenerate or revise manually, then run the acceptance tests.',
-    'Keep the specification and delivered pipeline aligned for the next change.',
-  ],
-};
-
-export const evidence = {
-  eyebrow: 'Built from delivery work',
-  headline: 'Created for the pipeline problems ABCloudz engineers see firsthand.',
-  lead:
-    'Akaden is an internal production tool developed from ABCloudz’s Ellucian integration work. It is currently used on internal projects while the external product offering is prepared.',
-  points: [
-    { title: 'Purpose-built for Ellucian', body: 'The workflow is designed around Ellucian pipeline development rather than a generic code-generation experience.' },
-    { title: 'Specification-driven', body: 'The reviewed description of intent stays beside the pipeline through generation, revision, testing, and maintenance.' },
-    { title: 'Web and desktop access', body: 'Akaden is being developed for both browser-based and desktop development workflows.' },
-  ],
-  note: 'The current evidence is internal product use; external customer outcomes will be added only after they are measured.',
-};
-
-export const faq = [
-  {
-    question: 'What is Akaden?',
-    answer: 'Akaden is an AI-assisted IDE built on top of Ellucian pipeline solutions. It gives development teams a specification-driven workspace for planning, building, testing, deploying, and monitoring pipelines.',
-  },
-  {
-    question: 'Who is it for?',
-    answer: 'Akaden is designed for teams that build and maintain Ellucian pipelines. Development leaders gain a clearer, repeatable delivery process, while developers retain the technical controls they use today.',
-  },
-  {
-    question: 'What can a team start with?',
-    answer: 'A workspace can begin with meeting notes, old documentation, existing pipelines, business requirements, and institution-specific technical conventions.',
-  },
-  {
-    question: 'Does Akaden replace developers?',
-    answer: 'No. Developers review the specification, inspect the generated work, revise it through AI or manually, confirm functionality, and approve deployment.',
-  },
-  {
-    question: 'Does it work outside Ellucian environments?',
-    answer: 'Akaden is currently purpose-built for Ellucian pipeline environments.',
-  },
-  {
-    question: 'Which AI model does Akaden use?',
-    answer: 'Current product builds use Anthropic’s Claude Sonnet. Detailed information about model inputs, retention, and deployment boundaries will be documented before the external offering is finalized.',
-  },
-];
-
-/** Content retained for archived/reference components. */
-export const walkthroughNote = 'Recorded from a product run. This is not a live sandbox and does not connect to a real tenant.';
+/** Honesty label on the walkthrough. Presets are pre-recorded; the page says so (spec §7.2). */
+export const walkthroughNote =
+  'Recorded from a production run. This is not a live sandbox — nothing here connects to a real tenant.';
 
 export const whySpec = {
   eyebrow: 'Why the specification',
   headline: 'The specification is the thing worth keeping',
-  lead: 'A specification records what the pipeline is supposed to do in language the team can review.',
-  points: overview.map((item) => ({ title: item.title, body: item.body })),
+  lead:
+    'A pipeline tells you what it does if you can read it. A specification tells you what it is ' +
+    'supposed to do, in language anyone on the team can check.',
+  points: [
+    {
+      title: 'Documentation that cannot go stale',
+      body:
+        'The document is not written about the pipeline after the fact. It is what builds the ' +
+        'pipeline. If the two ever disagree, the pipeline is the one that gets regenerated.',
+    },
+    {
+      title: 'Integrations live in git',
+      body:
+        'Specifications are text. They are reviewed, versioned, and diffable, and a change to an ' +
+        'integration shows up as a change to a document a person approved.',
+    },
+    {
+      title: 'A human-readable audit trail',
+      body:
+        'When someone asks why the export picks preferred name over legal name, the answer is a ' +
+        'line in a document with a name and a date against it — not an inference from a mapping table.',
+    },
+    {
+      title: 'Knowledge survives staff turnover',
+      body:
+        'The engineer who understood the Banner conventions writes them into specifications the ' +
+        'agents read. When they leave, that understanding stays in the repository.',
+    },
+  ],
 };
 
 export const guardrails = {
   eyebrow: 'Guardrails',
-  headline: 'People approve the consequential decisions',
-  lead: controls.lead,
-  examples: ['Review the specification before generation.', 'Confirm functionality before deployment.'],
-  close: 'Developers can revise generated artifacts through AI or by hand.',
+  headline: 'The constraints are written down before anything is built',
+  lead:
+    'The first question every institution asks is whether an AI system is going to write to the ' +
+    'student information system. The answer is not a promise made by a vendor after the fact. It ' +
+    'is a set of constraints written into the specification and approved by a person before a ' +
+    'single line of pipeline is generated.',
+  examples: [
+    'The integration must not update Banner data.',
+    'It must not rely on direct database access or direct Banner table reads.',
+  ],
+  close:
+    'You read those lines at the review step. You approve them, or you change them. Generation ' +
+    'does not start until you do.',
+  /**
+   * NEEDS-SOURCE — the enforcement paragraph (review finding 02).
+   * A constraint in a spec is an instruction to a generator. An ERP director will ask what
+   * happens if the generated pipeline does it anyway. Needed from ABCloudz:
+   *   1. Is the Banner/Ethos credential read-only?
+   *   2. Is the generated pipeline reviewed by a human before deploy, or only the spec?
+   *   3. What does "Validate" at stage 05 actually check?
+   * If the answer includes "the service account has no write scope", that sentence leads
+   * this section and everything above becomes supporting detail.
+   */
   enforcementPending: true,
 };
 
 export const proof = {
-  eyebrow: evidence.eyebrow,
-  headline: evidence.headline,
-  lead: evidence.lead,
-  stats: [] as Array<{ figure: string; label: string; sourced: boolean }>,
-  partnership: { label: 'About ABCloudz', quote: '', attribution: '', role: '', pendingPermission: true },
+  eyebrow: 'Proof',
+  headline: 'Built for our own delivery team first',
+  lead:
+    'ABCloudz builds and migrates data integrations for institutions running Ellucian Banner. ' +
+    'Akaden was built because that work was being done by hand, and it went into production on ' +
+    'our own team before it went anywhere else.',
+  stats: [
+    { figure: '15', label: 'Engineers using it in production', sourced: true },
+    { figure: '2', label: 'US-based solutions architects', sourced: true },
+    { figure: '5–50×', label: 'Times a pipeline entry was configured by hand, per integration', sourced: true },
+  ],
+  /**
+   * NEEDS-SOURCE — the number that would matter most is not here (review finding 14).
+   * "A pipeline used to take weeks, now it takes ___." Needs: pipelines built, before and
+   * after, over what period, measured how. No percentage ships without its denominator.
+   */
+  partnership: {
+    label: 'On the ABCloudz–Ellucian partnership',
+    quote:
+      'Our partnership with ABCloudz brings proven expertise and powerful tools like ' +
+      'Modernization Studio into the fold, ensuring customers can confidently embrace digital ' +
+      'transformation and drive meaningful outcomes with Ellucian SaaS solutions.',
+    attribution: 'Jeff Dinski',
+    role: 'Chief Strategy and Corporate Development Officer, Ellucian',
+    /**
+     * Framed as partnership evidence, NOT as an Akaden endorsement — the quote names
+     * Modernization Studio, a different product (review finding 11). Do not move this
+     * under a heading that implies Ellucian endorses Akaden.
+     * NEEDS-SOURCE: permission to reuse, scoped to this page and this product.
+     */
+    pendingPermission: true,
+  },
   badgeNote: 'ABCloudz is a member of the Ellucian Partner Network.',
 };
 
-export const benefits = { eyebrow: 'What changes', headline: controls.headline, items: controls.items };
-export const wholePicture = { eyebrow: 'The whole picture', headline: 'One development workflow, supervised by your team.', lead: hero.thesisSub };
+export const benefits = {
+  eyebrow: 'What changes',
+  headline: 'Your engineers lead the work. Specialized agents move it forward.',
+  items: [
+    {
+      title: 'Reduce integration complexity',
+      body: 'Standardize how integrations are built and managed so teams move faster, reduce operational effort, and make critical systems easier to support.',
+    },
+    {
+      title: 'Modernize the development lifecycle',
+      body: 'Bring requirements, implementation, testing, and change management into one structured workflow designed around how developers work.',
+    },
+    {
+      title: 'Make the specification the source of truth',
+      body: 'Preserve intent, improve consistency, and give every engineer a maintainable starting point from initial delivery through every future change.',
+    },
+    {
+      title: 'Apply pipeline expertise by default',
+      body: 'Build proven engineering practices, audit controls, and hard-won edge-case guidance into every delivery without asking each team to recreate them.',
+    },
+  ],
+};
+
+export const wholePicture = {
+  eyebrow: 'The whole picture',
+  headline: 'One engineer, supervising.',
+  lead:
+    'Every integration used to run through a person configuring it by hand. The systems have not changed. Akaden helps the engineer carry the repeatable work with familiar delivery practices close at hand.',
+};
 
 export const install = {
-  eyebrow: 'Explore Akaden',
-  headline: 'Follow one pipeline from request to monitored deployment.',
-  lead: 'Use the guided product experience to see how the specification, approvals, generation, testing, and deployment fit together.',
-  ctaLabel: 'Open interactive demo',
-  ctaHref: '#product-demo',
-  pending: true,
-  secondary: { text: 'Learn more about the team behind Akaden.', label: 'Visit ABCloudz', href: 'https://abcloudz.com/' },
+  eyebrow: 'Bring your roadmap',
+  headline: 'See Akaden in your workflow',
+  lead:
+    'Book a working session with an ABCloudz specialist. We will talk through the systems you need to connect, the delivery work in front of your team, and where Akaden can help you move from request to tested pipeline faster.',
+  ctaLabel: 'Contact us',
+  ctaHref: 'https://abcloudz.com/company/?page-url=Trusted+Experts+in+Cloud+Transformation#contact-us',
+  pending: false,
+  secondary: {
+    text: 'Want to learn more about ABCloudz first?',
+    label: 'Visit ABCloudz',
+    href: 'https://abcloudz.com/',
+  },
 };
 
 export const footer = {
-  note: 'Akaden is built by ABCloudz for Ellucian pipeline teams.',
-  event: '',
+  note: 'Akaden is built by ABCloudz.',
+  event: 'EDUCAUSE Demo Day — 14 September 2026',
   links: [
-    { label: 'Overview', href: '#overview' },
-    { label: 'Workflow', href: '#workflow' },
-    { label: 'Interactive demo', href: '#product-demo' },
     { label: 'ABCloudz', href: 'https://abcloudz.com/' },
+    { label: 'Accessibility', href: '#accessibility' },
+    { label: 'Book a call', href: '#book-a-call' },
   ],
 };

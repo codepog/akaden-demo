@@ -2,317 +2,551 @@
 import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
-import {
-  announcement,
-  controls,
-  evidence,
-  faq,
-  hero,
-  lifecycle,
-  maintenance,
-  overview,
-} from '../data/site';
+import EngineerAgentDiagram from '../components/EngineerAgentDiagram.astro';
+import { benefits, hero, install, proof } from '../data/site';
+import { changeRequest, stages } from '../data/walkthrough';
 
 const basePath = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 const assetPath = (name: string) => `${basePath}${name}`;
-const demoPage = import.meta.env.DEV
-  ? `${basePath}overview-demo-embed`
-  : `${basePath}overview-demo-embed.html`;
-const demoUrl = `${demoPage}?intro=always`;
+const experimentPage = import.meta.env.DEV ? `${basePath}overview-demo-embed` : `${basePath}overview-demo-embed.html`;
+const experimentUrl = `${experimentPage}?intro=always`;
+
+const workflowArt = [
+  'workflow-upload.png',
+  'workflow-spec-agent.png',
+  'workflow-review.png',
+  'workflow-build-agent.png',
+  'workflow-deploy.png',
+];
+
+const changeComparison = {
+  oldWay: [
+    changeRequest.oldWay,
+    'Documentation can drift from the pipeline, while the reason behind the mapping lives in code or institutional memory.',
+    'The next engineer has to reconstruct the original intent before they can make a safe change.',
+  ],
+  newWay: [
+    changeRequest.newWay,
+    'The reviewed Git diff records the requested change, the decision, and the approval in language the team can check.',
+    'Because the specification builds the pipeline, documentation stays current and knowledge remains usable when the team changes.',
+  ],
+};
+
+const overviewCards = [
+  {
+    kicker: 'Define',
+    title: 'Start with the real request',
+    body: 'Bring the business need, institutional context, and constraints into one workspace before anything is generated.',
+    href: '#workflow',
+    action: 'demo',
+    linkLabel: 'Try a demo',
+    image: 'hero-demo-preview.png',
+    imageAlt: 'Akaden interactive walkthrough showing a guided integration request.',
+    imageKind: 'demo',
+  },
+  {
+    kicker: 'Review',
+    title: 'Keep decisions with your team',
+    body: 'Read, edit, and approve the specification in language your institution can check before the pipeline is built.',
+    href: '#specification',
+    action: null,
+    linkLabel: 'See the workflow',
+    image: 'agentic-sdlc.png',
+    imageAlt: 'Akaden agentic delivery workflow.',
+    imageKind: 'workflow',
+  },
+  {
+    kicker: 'Deliver',
+    title: 'Move from plan to pipeline',
+    body: 'Generate, test, deploy, and validate against the acceptance criteria recorded in the approved specification.',
+    href: '#book-a-call',
+    action: 'contact',
+    linkLabel: 'Contact us',
+    image: 'akaden-app-icon-reference.svg',
+    imageAlt: 'Akaden app icon.',
+    imageKind: 'brand',
+  },
+];
 ---
 
-<Base title="Akaden — AI-assisted IDE for Ellucian pipeline development">
-  <a class="announcement" href={announcement.href}>
-    <span>{announcement.text}</span>
-    <strong>{announcement.detail}</strong>
-    <span aria-hidden="true">→</span>
-  </a>
+<Base title="Akaden — Accelerate pipeline development and cloud migration">
   <Nav />
 
-  <main id="main" class="product-page">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero__shape hero__shape--one" aria-hidden="true"></div>
-      <div class="hero__shape hero__shape--two" aria-hidden="true"></div>
-      <div class="shell hero__grid">
-        <div class="hero__copy">
-          <p class="eyebrow">{hero.eyebrow}</p>
-          <h1 id="hero-title">{hero.headline}</h1>
-          <p class="hero__lead">{hero.lead}</p>
-          <div class="actions">
-            <button class="button button--light" type="button" data-demo-open>
-              {hero.primaryAction}
+  <main id="main" class="product-test">
+    <section class="test-hero" aria-labelledby="test-hero-title">
+      <div class="test-hero__glow test-hero__glow--one" aria-hidden="true"></div>
+      <div class="test-hero__glow test-hero__glow--two" aria-hidden="true"></div>
+      <div class="test-shell test-hero__grid">
+        <div class="test-hero__copy">
+          <h1 id="test-hero-title">Accelerate pipeline development and cloud migration.</h1>
+          <p>{hero.lead}</p>
+          <div class="test-actions">
+            <button
+              class="test-button test-button--light"
+              type="button"
+              data-overview-trigger="demo"
+              aria-expanded="false"
+              aria-controls="overview-demo-panel"
+            >
+              View interactive demo
             </button>
-            <a class="text-link text-link--light" href="#workflow">
-              {hero.secondaryAction}<span aria-hidden="true">→</span>
-            </a>
+            <a class="test-link test-link--light" href="#book-a-call">Book a call <span aria-hidden="true">→</span></a>
           </div>
         </div>
 
-        <button class="hero-preview" type="button" data-demo-open aria-label="Open the Akaden interactive product walkthrough">
-          <span class="hero-preview__bar">
-            <span aria-hidden="true"><i></i><i></i><i></i></span>
-            <b>{hero.previewLabel}</b>
-          </span>
-          <img
-            src={assetPath('hero-demo-preview.png')}
-            alt="Akaden workspace showing a guided pipeline requirement."
-            width="2798"
-            height="1302"
-          />
-          <span class="hero-preview__play" aria-hidden="true">
-            <svg viewBox="0 0 48 48"><path d="m20 15 14 9-14 9Z" /></svg>
-          </span>
-          <span class="hero-preview__caption">
-            <small>Product tour</small>
-            <strong>{hero.previewStatus}</strong>
-          </span>
-        </button>
+        <div class="test-hero__visual" aria-label="Akaden interactive workspace preview">
+          <div class="test-hero__visual-bar">
+            <span><i></i><i></i><i></i></span>
+            <b>Akaden workspace</b>
+          </div>
+          <img src={assetPath('hero-demo-preview.png')} alt="Akaden workspace showing a guided integration request." width="2798" height="1302" />
+          <button
+            class="test-hero__play"
+            type="button"
+            data-overview-trigger="demo"
+            aria-expanded="false"
+            aria-controls="overview-demo-panel"
+            aria-label="Play the Akaden interactive product walkthrough"
+          >
+            <span class="test-hero__play-icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" /><path d="m20 15 14 9-14 9Z" /></svg>
+            </span>
+            <span>Play product walkthrough</span>
+          </button>
+          <div class="test-hero__badge">
+            <span>01</span>
+            <p><b>Request received</b><small>Ready for specification</small></p>
+          </div>
+        </div>
       </div>
     </section>
 
-    <nav class="section-nav" aria-label="On this page">
-      <div class="shell section-nav__inner">
-        <a href="#overview">Overview</a>
-        <a href="#workflow">Workflow</a>
-        <a href="#control">Developer control</a>
-        <a href="#proof">Evidence</a>
-        <a href="#faq">FAQ</a>
-        <button type="button" data-demo-open>Explore demo</button>
+    <section id="overview" class="test-section test-section--white">
+      <div class="overview-backdrop" aria-hidden="true">
+        <span class="overview-backdrop__arc"></span>
+        <span class="overview-backdrop__tiles"></span>
       </div>
-    </nav>
-
-    <section id="overview" class="section section--paper">
-      <div class="shell">
-        <div class="section-heading section-heading--center">
-          <p class="eyebrow eyebrow--blue">Overview</p>
+      <div class="test-shell">
+        <div class="test-section__intro">
+          <p class="test-eyebrow test-eyebrow--blue">Overview</p>
           <h2>{hero.thesis}</h2>
           <p>{hero.thesisSub}</p>
         </div>
 
         <div class="overview-grid">
-          {overview.map((item) => (
+          {overviewCards.map((card) => (
             <article class="overview-card">
-              <span class="overview-card__number">{item.number}</span>
-              <h3>{item.title}</h3>
-              <p>{item.body}</p>
+              {card.action ? (
+                <button
+                  class:list={['overview-card__media', `overview-card__media--${card.imageKind}`]}
+                  type="button"
+                  data-overview-trigger={card.action}
+                  aria-expanded="false"
+                  aria-controls={`overview-${card.action}-panel`}
+                  aria-label={card.linkLabel}
+                >
+                  <img src={assetPath(card.image)} alt={card.imageAlt} loading="lazy" />
+                </button>
+              ) : (
+                <a
+                  class:list={['overview-card__media', `overview-card__media--${card.imageKind}`]}
+                  href={card.href}
+                  aria-label={card.linkLabel}
+                >
+                  <img src={assetPath(card.image)} alt={card.imageAlt} loading="lazy" />
+                </a>
+              )}
+              <div class="overview-card__content">
+                {card.action ? (
+                  <button
+                    class="overview-card__action"
+                    type="button"
+                    data-overview-trigger={card.action}
+                    aria-expanded="false"
+                    aria-controls={`overview-${card.action}-panel`}
+                  >
+                    {card.linkLabel} <span aria-hidden="true">→</span>
+                  </button>
+                ) : (
+                  <a class="overview-card__action" href={card.href}>{card.linkLabel} <span aria-hidden="true">→</span></a>
+                )}
+              </div>
             </article>
           ))}
         </div>
+
       </div>
     </section>
 
-    <section id="product-demo" class="section section--white">
-      <div class="shell demo-feature">
-        <div class="demo-feature__copy">
-          <p class="eyebrow eyebrow--blue">Guided product experience</p>
-          <h2>Follow a real request through the Akaden workspace.</h2>
-          <p>See how context becomes a specification, where your team reviews the work, and how the pipeline moves toward deployment.</p>
-          <button class="button button--primary" type="button" data-demo-open>Open interactive demo</button>
-          <p class="demo-feature__note">Guided product walkthrough · Does not connect to a live tenant</p>
+    <div id="overview-modal-layer" class="overview-panels" aria-live="polite" hidden>
+      <section
+        id="overview-demo-panel"
+        class="overview-panel overview-panel--demo"
+        data-overview-panel="demo"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="overview-demo-title"
+        tabindex="-1"
+        hidden
+      >
+        <header class="overview-panel__header">
+          <div>
+            <p class="test-eyebrow test-eyebrow--blue">Interactive demo</p>
+            <h3 id="overview-demo-title">Try Akaden for yourself.</h3>
+            <p>Follow the guided workspace to see how Akaden turns a real business request into a reviewed, deployable pipeline.</p>
+          </div>
+          <button type="button" class="overview-panel__close" data-overview-close aria-label="Close demo">Close</button>
+        </header>
+        <div class="overview-panel__body overview-panel__body--demo">
+          <iframe data-src={experimentUrl} title="Akaden interactive walkthrough" loading="lazy"></iframe>
         </div>
-        <button class="product-frame" type="button" data-demo-open aria-label="Open the interactive Akaden product demo">
-          <span class="product-frame__bar"><i></i><i></i><i></i><b>Akaden workspace</b></span>
-          <img src={assetPath('hero-demo-preview.png')} alt="Preview of the Akaden interactive product walkthrough." loading="lazy" width="2798" height="1302" />
-          <span class="product-frame__action">Explore the workspace <span aria-hidden="true">→</span></span>
-        </button>
-      </div>
-    </section>
+      </section>
 
-    <section id="workflow" class="section section--navy">
-      <div class="shell">
-        <div class="section-heading section-heading--light">
-          <p class="eyebrow eyebrow--amber">How it works</p>
-          <h2>One reviewable path from source material to monitored pipeline.</h2>
-          <p>The workflow now reflects the full product direction, including test generation and monitoring.</p>
-        </div>
-
-        <ol class="lifecycle" aria-label="Akaden pipeline development lifecycle">
-          {lifecycle.map((step) => (
-            <li class:list={['lifecycle-card', `lifecycle-card--${step.kind}`]}>
-              <div class="lifecycle-card__meta">
-                <span>{step.number}</span>
-                <small>{step.actor}</small>
-              </div>
-              <h3>{step.title}</h3>
-              <p>{step.body}</p>
-            </li>
-          ))}
-        </ol>
-
-        <div class="workflow-legend" aria-label="Workflow legend">
-          <span><i class="legend-human"></i>Team decision or system step</span>
-          <span><i class="legend-agent"></i>AI-assisted work</span>
-        </div>
-      </div>
-    </section>
-
-    <section id="control" class="section section--control">
-      <div class="shell control-grid">
-        <div class="control-copy">
-          <p class="eyebrow eyebrow--blue">{controls.eyebrow}</p>
-          <h2>{controls.headline}</h2>
-          <p>{controls.lead}</p>
-          <div class="approval-line" aria-label="Human approval points">
-            <span>Inputs</span><i>→</i><span>Specification</span><i>→</i><span>Functionality</span><i>→</i><span>Deployment</span>
+      <section
+        id="overview-contact-panel"
+        class="overview-panel overview-panel--contact"
+        data-overview-panel="contact"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="overview-contact-title"
+        tabindex="-1"
+        hidden
+      >
+        <header class="overview-panel__header">
+          <div>
+            <p class="test-eyebrow test-eyebrow--blue">Contact Akaden</p>
+            <h3 id="overview-contact-title">Plan your next pipeline with us.</h3>
+            <p>{install.lead}</p>
+          </div>
+          <button type="button" class="overview-panel__close" data-overview-close aria-label="Close contact panel">Close</button>
+        </header>
+        <div class="overview-panel__body overview-panel__body--contact">
+          <div class="overview-contact-actions">
+            <a class="test-button" href={install.ctaHref}>{install.ctaLabel}</a>
+            <a class="test-link" href={install.secondary.href}>{install.secondary.label} <span aria-hidden="true">→</span></a>
           </div>
         </div>
+      </section>
+    </div>
 
-        <div class="control-list">
-          {controls.items.map((item, index) => (
-            <article>
-              <span>0{index + 1}</span>
-              <div><h3>{item.title}</h3><p>{item.body}</p></div>
+    <section id="outcomes" class="test-section test-section--tint">
+      <div class="test-shell">
+        <div class="test-section__intro test-section__intro--wide">
+          <p class="test-eyebrow test-eyebrow--blue">{benefits.eyebrow}</p>
+          <h2>Your engineers lead the way. <span class="benefits-headline__agents">Specialized agents move it forward.</span></h2>
+        </div>
+
+        <div class="changes-layout">
+          <div class="changes-list">
+            {benefits.items.map((item, index) => (
+              <details class="change-point" name="what-changes" open={index === 0}>
+                <summary>
+                  <span class="change-point__number">0{index + 1}</span>
+                  <h3>{item.title}</h3>
+                  <span class="change-point__toggle" aria-hidden="true"></span>
+                </summary>
+                <div class="change-point__body">
+                  <p>{item.body}</p>
+                </div>
+              </details>
+            ))}
+          </div>
+          <EngineerAgentDiagram />
+        </div>
+      </div>
+    </section>
+
+    <section id="workflow" class="test-section test-section--dark">
+      <div class="test-shell">
+        <div class="test-section__intro test-section__intro--dark">
+          <p class="test-eyebrow test-eyebrow--blue">How it works</p>
+          <h2>A clear path from request to pipeline.</h2>
+          <p>Akaden brings practical guidance to each stage. Your team sets the direction, reviews the decisions, and stays accountable for the result.</p>
+        </div>
+
+        <div class="workflow-tabs" role="tablist" aria-label="Akaden workflow stages">
+          {stages.map((stage, index) => (
+            <button
+              type="button"
+              role="tab"
+              id={`workflow-tab-${stage.id}`}
+              aria-controls={`workflow-panel-${stage.id}`}
+              aria-selected={index === 0 ? 'true' : 'false'}
+              tabindex={index === 0 ? 0 : -1}
+              data-workflow-tab={stage.id}
+            >
+              <span>{stage.n}</span>{stage.title}
+            </button>
+          ))}
+        </div>
+
+        <div class="workflow-stage">
+          {stages.map((stage, index) => (
+            <article
+              id={`workflow-panel-${stage.id}`}
+              class="workflow-panel"
+              role="tabpanel"
+              aria-labelledby={`workflow-tab-${stage.id}`}
+              data-workflow-panel={stage.id}
+              hidden={index !== 0}
+            >
+              <div class="workflow-panel__copy">
+                <p class="test-eyebrow test-eyebrow--blue">Stage {stage.n}</p>
+                <h3>{stage.caption}</h3>
+                <p>{stage.body}</p>
+                {stage.iterate && <aside>{stage.iterate}</aside>}
+              </div>
+              <div class="workflow-panel__art">
+                <img src={assetPath(workflowArt[index])} alt="" aria-hidden="true" />
+                <span>{stage.actor === 'human' ? 'Human decision' : stage.actor === 'agent' ? 'Agent-assisted work' : 'System validation'}</span>
+              </div>
             </article>
           ))}
         </div>
       </div>
     </section>
 
-    <section class="section section--maintenance" aria-labelledby="maintenance-title">
-      <div class="shell maintenance-card">
-        <div class="maintenance-card__heading">
-          <p class="eyebrow eyebrow--blue">{maintenance.eyebrow}</p>
-          <h2 id="maintenance-title">{maintenance.headline}</h2>
-          <blockquote>“{maintenance.request}”</blockquote>
-        </div>
-        <div class="comparison">
-          <article>
-            <p class="comparison__label">Without a living specification</p>
-            <ol>{maintenance.oldWay.map((point) => <li>{point}</li>)}</ol>
-          </article>
-          <article class="comparison__akaden">
-            <p class="comparison__label">With Akaden</p>
-            <ol>{maintenance.akadenWay.map((point) => <li>{point}</li>)}</ol>
-          </article>
-        </div>
+    <section id="specification" class="test-section test-section--lavender">
+      <div class="test-shell">
+        <article class="change-card">
+          <div class="change-card__intro">
+            <p class="test-eyebrow test-eyebrow--blue">{changeRequest.when}</p>
+            <h3>{changeRequest.ask}</h3>
+            <p>One routine request reveals the difference between maintaining a pipeline and maintaining a clear, durable specification.</p>
+          </div>
+          <div class="change-card__comparison">
+            <section>
+              <h4>Old way</h4>
+              <ul>
+                {changeComparison.oldWay.map((point) => <li>{point}</li>)}
+              </ul>
+            </section>
+            <section class="change-card__new-way">
+              <h4>With Akaden</h4>
+              <ul>
+                {changeComparison.newWay.map((point) => <li>{point}</li>)}
+              </ul>
+            </section>
+          </div>
+        </article>
       </div>
     </section>
 
-    <section id="proof" class="section section--white">
-      <div class="shell">
-        <div class="section-heading">
-          <p class="eyebrow eyebrow--blue">{evidence.eyebrow}</p>
-          <h2>{evidence.headline}</h2>
-          <p>{evidence.lead}</p>
+    <section id="proof" class="test-section test-section--ink">
+      <div class="test-shell">
+        <div class="test-section__intro test-section__intro--dark">
+          <p class="test-eyebrow test-eyebrow--amber">{proof.eyebrow}</p>
+          <h2>{proof.headline}</h2>
+          <p>{proof.lead}</p>
         </div>
-        <div class="evidence-grid">
-          {evidence.points.map((point, index) => (
-            <article>
-              <span>0{index + 1}</span>
-              <h3>{point.title}</h3>
-              <p>{point.body}</p>
-            </article>
+        <div class="stat-grid">
+          {proof.stats.map((stat) => (
+            <article><strong>{stat.figure}</strong><span>{stat.label}</span></article>
           ))}
         </div>
+        <blockquote class="proof-quote">
+          <p>“{proof.partnership.quote}”</p>
+          <footer><b>{proof.partnership.attribution}</b><span>{proof.partnership.role}</span></footer>
+        </blockquote>
+        <p class="proof-note">{proof.badgeNote}</p>
       </div>
     </section>
 
-    <section id="faq" class="section section--paper">
-      <div class="shell faq-grid">
-        <div class="section-heading">
-          <p class="eyebrow eyebrow--blue">Product questions</p>
-          <h2>What evaluators should understand first.</h2>
-          <p>Clear answers now, with security and deployment documentation to follow as the external offering is finalized.</p>
-        </div>
-        <div class="faq-list">
-          {faq.map((item, index) => (
-            <details open={index === 0}>
-              <summary><span>{item.question}</span><i aria-hidden="true"></i></summary>
-              <p>{item.answer}</p>
-            </details>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section class="final-cta" aria-labelledby="final-cta-title">
-      <div class="final-cta__shape" aria-hidden="true"></div>
-      <div class="shell final-cta__inner">
+    <section id="book-a-call" class="test-section test-section--white">
+      <div class="test-shell contact-card">
         <div>
-          <p class="eyebrow">Explore Akaden</p>
-          <h2 id="final-cta-title">See the specification-driven workflow in context.</h2>
+          <p class="test-eyebrow test-eyebrow--blue">{install.eyebrow}</p>
+          <h2>{install.headline}</h2>
+          <p>{install.lead}</p>
         </div>
-        <button class="button button--light" type="button" data-demo-open>Open interactive demo</button>
+        <div class="contact-card__actions">
+          <a class="test-button" href={install.ctaHref}>{install.ctaLabel}</a>
+          <a class="test-link" href={install.secondary.href}>{install.secondary.label} <span aria-hidden="true">→</span></a>
+        </div>
       </div>
     </section>
   </main>
 
   <Footer />
-
-  <dialog class="demo-dialog" data-demo-dialog aria-labelledby="demo-dialog-title">
-    <div class="demo-dialog__header">
-      <div>
-        <p class="eyebrow eyebrow--blue">Interactive demo</p>
-        <h2 id="demo-dialog-title">Follow one request through Akaden.</h2>
-      </div>
-      <button type="button" class="demo-dialog__close" data-demo-close aria-label="Close interactive demo">Close</button>
-    </div>
-    <div class="demo-dialog__body">
-      <iframe data-src={demoUrl} title="Akaden interactive product walkthrough"></iframe>
-    </div>
-  </dialog>
 </Base>
 
 <style>
-  .product-page{--brand-blue:#1769e0;--brand-navy:#112a55;--brand-purple:#3e259f;--brand-ink:#111827;--brand-soft:#4b5568;--brand-paper:#f4f6f9;color:var(--brand-ink);background:#fff}
-  .shell{width:min(100% - 2rem,75rem);margin-inline:auto}
-  .announcement{display:flex;min-height:2.9rem;align-items:center;justify-content:center;gap:.65rem;background:#1e355d;padding:.55rem 1rem;color:#fff;font-size:.9rem;text-align:center;text-decoration:none}.announcement strong{font-weight:700}.announcement:hover{text-decoration:underline;text-underline-offset:.2rem}
-  .eyebrow{margin:0;font-family:var(--font-mono);font-size:.73rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase}.eyebrow--blue{color:#1558bd}.eyebrow--amber{color:#ffcc55}
-  .hero{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(112deg,#75d7f2 0%,#aeb9ff 56%,#ceb1f3 100%)}
-  .hero__shape{position:absolute;z-index:-1;border-radius:50%}.hero__shape--one{right:-11rem;bottom:-16rem;width:44rem;height:44rem;background:rgb(22 105 224/.76)}.hero__shape--two{right:-3rem;top:-7rem;width:18rem;height:18rem;background:#efd33c}
-  .hero__grid{display:grid;grid-template-columns:minmax(0,.92fr) minmax(28rem,1.08fr);align-items:center;gap:clamp(2.5rem,5vw,5rem);min-height:38rem;padding-block:clamp(4.5rem,8vw,7rem)}
-  .hero__copy{max-width:37rem}.hero h1{max-width:13ch;margin:1.15rem 0 0;font-size:clamp(3rem,5.4vw,5rem);font-weight:600;letter-spacing:-.055em;line-height:.99;text-wrap:balance}.hero__lead{max-width:36rem;margin:1.7rem 0 0;color:#25324a;font-size:clamp(1.05rem,1.5vw,1.22rem);line-height:1.58}.actions{display:flex;flex-wrap:wrap;align-items:center;gap:1.35rem;margin-top:2rem}
-  .button{display:inline-flex;min-height:3.1rem;align-items:center;justify-content:center;border:2px solid transparent;border-radius:0;padding:.72rem 1.35rem;font:inherit;font-size:.98rem;font-weight:700;line-height:1.15;cursor:pointer;transition:background-color .16s ease,color .16s ease,transform .16s ease}.button:hover{transform:translateY(-1px)}.button--primary{background:#18365f;color:#fff}.button--primary:hover{background:#0e2549}.button--light{background:#fff;color:#17233e}.button--light:hover{background:#eef3fb}
-  .text-link{display:inline-flex;min-height:2.75rem;align-items:center;gap:.45rem;font-weight:700;text-decoration:none}.text-link span{transition:transform .16s ease}.text-link:hover span{transform:translateX(.22rem)}.text-link--light{color:#17233e}
-  .hero-preview{position:relative;display:block;overflow:hidden;border:1px solid rgb(255 255 255/.78);border-radius:1.2rem;background:rgb(255 255 255/.55);padding:2.65rem .55rem .55rem;box-shadow:0 2rem 4.5rem -2.5rem rgb(26 35 82/.62);text-align:left;cursor:pointer}.hero-preview>img{display:block;width:100%;aspect-ratio:16/9;border-radius:.75rem;object-fit:cover}.hero-preview__bar{position:absolute;top:0;right:0;left:0;display:flex;height:2.65rem;align-items:center;justify-content:space-between;padding:0 .9rem;color:#3f4a60;font-size:.72rem}.hero-preview__bar>span{display:flex;gap:.3rem}.hero-preview__bar i{display:block;width:.48rem;height:.48rem;border-radius:50%;background:#aeb8c9}.hero-preview__play{position:absolute;top:50%;left:50%;display:grid;width:4.4rem;height:4.4rem;place-items:center;border-radius:50%;background:#1c335c;color:#fff;box-shadow:0 .8rem 2rem rgb(16 29 63/.32);transform:translate(-50%,-42%)}.hero-preview__play svg{width:2rem;height:2rem;fill:currentColor}.hero-preview__caption{position:absolute;right:1.2rem;bottom:1.2rem;display:grid;min-width:12.5rem;border-left:4px solid #1769e0;background:#fff;padding:.85rem 1rem;box-shadow:0 .7rem 1.8rem rgb(16 29 63/.2)}.hero-preview__caption small{color:#667085;font-size:.68rem;text-transform:uppercase}.hero-preview__caption strong{margin-top:.15rem;color:#15213a;font-size:.9rem}
-  .section-nav{position:sticky;top:4.25rem;z-index:30;border-bottom:1px solid #d9dee8;background:rgb(255 255 255/.96);box-shadow:0 .5rem 1.5rem rgb(17 42 85/.06);backdrop-filter:blur(12px)}.section-nav__inner{display:flex;min-height:3.8rem;align-items:center;gap:1.7rem;overflow-x:auto}.section-nav a{flex:none;color:#273044;font-size:.86rem;font-weight:650;text-decoration:none}.section-nav a:hover{text-decoration:underline;text-underline-offset:.25rem}.section-nav button{min-height:2.6rem;margin-left:auto;border:0;background:#1e355d;padding:.55rem 1rem;color:#fff;font:inherit;font-size:.86rem;font-weight:700;white-space:nowrap;cursor:pointer}
-  .section{scroll-margin-top:8rem;padding-block:clamp(5.5rem,9vw,8rem)}.section--paper{background:var(--brand-paper)}.section--white{background:#fff}.section--navy{background:#0d2349;color:#fff}.section--control{background:linear-gradient(122deg,#e8f5fb 0%,#eef0ff 54%,#f5ebfb 100%)}.section--maintenance{background:#dcecff}
-  .section-heading{max-width:48rem}.section-heading--center{margin-inline:auto;text-align:center}.section-heading h2,.control-copy h2,.maintenance-card h2,.final-cta h2{margin:.85rem 0 0;font-size:clamp(2.25rem,4.5vw,3.8rem);font-weight:600;letter-spacing:-.047em;line-height:1.04;text-wrap:balance}.section-heading>p:last-child,.control-copy>p:last-of-type{max-width:45rem;margin:1.35rem 0 0;color:var(--brand-soft);font-size:1.08rem;line-height:1.65}.section-heading--center>p:last-child{margin-inline:auto}.section-heading--light h2{max-width:52rem}.section-heading--light>p:last-child{color:#c6d4eb}
-  .overview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:3.5rem}.overview-card{min-height:21rem;border:1px solid #d6dbe4;border-radius:1.1rem;background:#fff;padding:2rem;box-shadow:0 .6rem 1.6rem rgb(17 42 85/.07)}.overview-card__number{display:grid;width:2.6rem;height:2.6rem;place-items:center;background:#e4efff;color:#1558bd;font-family:var(--font-mono);font-size:.76rem;font-weight:700}.overview-card h3{margin:4.5rem 0 0;font-size:1.55rem;letter-spacing:-.025em;line-height:1.15}.overview-card p{margin:1rem 0 0;color:var(--brand-soft);line-height:1.6}
-  .demo-feature{display:grid;grid-template-columns:minmax(18rem,.72fr) minmax(30rem,1.28fr);align-items:center;gap:clamp(2.5rem,6vw,6rem)}.demo-feature__copy h2{margin:.85rem 0 0;font-size:clamp(2.2rem,4.2vw,3.65rem);font-weight:600;letter-spacing:-.045em;line-height:1.05}.demo-feature__copy>p:not(.eyebrow):not(.demo-feature__note){margin:1.35rem 0 0;color:var(--brand-soft);font-size:1.08rem;line-height:1.65}.demo-feature__copy .button{margin-top:1.75rem}.demo-feature__note{margin:1rem 0 0;color:#6b7280;font-size:.78rem}.product-frame{position:relative;overflow:hidden;border:1px solid #8998ad;border-radius:1rem;background:#eff4fb;padding:2.55rem .6rem .6rem;box-shadow:0 2rem 3.5rem -2.7rem rgb(17 42 85/.56);cursor:pointer}.product-frame>img{display:block;width:100%;aspect-ratio:16/9;border-radius:.55rem;object-fit:cover}.product-frame__bar{position:absolute;top:0;right:0;left:0;display:flex;height:2.55rem;align-items:center;gap:.28rem;padding:0 .85rem}.product-frame__bar i{width:.47rem;height:.47rem;border-radius:50%;background:#b5becb}.product-frame__bar b{margin-left:auto;color:#536077;font-size:.7rem}.product-frame__action{position:absolute;right:1.15rem;bottom:1.15rem;background:#16355f;padding:.7rem .9rem;color:#fff;font-size:.82rem;font-weight:700}
-  .lifecycle{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem;margin:3.5rem 0 0;padding:0;list-style:none}.lifecycle-card{position:relative;min-height:20rem;border-top:4px solid #72a8ff;background:#fff;padding:1.45rem 1.35rem;color:#111827}.lifecycle-card--agent{border-top-color:#ffbf2e}.lifecycle-card__meta{display:flex;align-items:center;justify-content:space-between;gap:.75rem}.lifecycle-card__meta>span{font-family:var(--font-mono);font-size:.75rem;font-weight:700}.lifecycle-card__meta small{border:1px solid #c8d1df;padding:.25rem .45rem;color:#48566b;font-size:.63rem;font-weight:700;text-transform:uppercase}.lifecycle-card--agent .lifecycle-card__meta small{border-color:#d7a11c;background:#fff3cb;color:#594000}.lifecycle-card h3{margin:4.3rem 0 0;font-size:1.32rem;line-height:1.17}.lifecycle-card p{margin:.9rem 0 0;color:#4b5568;font-size:.91rem;line-height:1.55}.workflow-legend{display:flex;flex-wrap:wrap;gap:1.3rem;margin-top:1.4rem;color:#c6d4eb;font-size:.78rem}.workflow-legend span{display:inline-flex;align-items:center;gap:.45rem}.workflow-legend i{display:block;width:1.8rem;height:.2rem;background:#72a8ff}.workflow-legend .legend-agent{background:#ffbf2e}
-  .control-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(28rem,1.1fr);gap:clamp(3rem,8vw,8rem)}.control-copy{align-self:start}.control-copy>p:last-of-type{max-width:35rem}.approval-line{display:flex;flex-wrap:wrap;align-items:center;gap:.45rem;margin-top:2rem}.approval-line span{border:1px solid #7892b7;background:rgb(255 255 255/.74);padding:.48rem .66rem;color:#18345b;font-family:var(--font-mono);font-size:.69rem;font-weight:700;text-transform:uppercase}.approval-line i{font-style:normal;color:#365d92}.control-list{border-top:1px solid #a7b7cc}.control-list article{display:grid;grid-template-columns:3rem 1fr;gap:1.1rem;border-bottom:1px solid #a7b7cc;padding:1.5rem .25rem}.control-list article>span{color:#1769e0;font-family:var(--font-mono);font-size:.72rem;font-weight:700}.control-list h3{margin:0;font-size:1.2rem}.control-list p{margin:.55rem 0 0;color:#47566d;line-height:1.55}
-  .maintenance-card{display:grid;grid-template-columns:minmax(17rem,.72fr) minmax(30rem,1.28fr);gap:clamp(3rem,7vw,7rem)}.maintenance-card__heading blockquote{margin:2rem 0 0;border-left:4px solid #1769e0;background:#fff;padding:1.2rem 1.35rem;color:#18345b;font-size:1.12rem;font-weight:650;line-height:1.5}.comparison{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.comparison article{border-top:4px solid #8190a4;background:#fff;padding:1.65rem}.comparison .comparison__akaden{border-top-color:#1769e0}.comparison__label{margin:0;color:#34435a;font-weight:750}.comparison ol{display:grid;gap:1.15rem;margin:1.5rem 0 0;padding:0;counter-reset:item;list-style:none}.comparison li{position:relative;padding-left:2.15rem;color:#4b5568;line-height:1.55}.comparison li::before{position:absolute;top:0;left:0;display:grid;width:1.45rem;height:1.45rem;place-items:center;border:1px solid #9ba9ba;border-radius:50%;content:counter(item);counter-increment:item;font-family:var(--font-mono);font-size:.62rem}.comparison__akaden li::before{border-color:#1769e0;color:#1558bd}
-  .evidence-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin-top:3.5rem;background:#cbd2dc}.evidence-grid article{min-height:18rem;background:#f7f9fc;padding:1.8rem}.evidence-grid span{font-family:var(--font-mono);font-size:.72rem;font-weight:700;color:#1558bd}.evidence-grid h3{margin:4.2rem 0 0;font-size:1.35rem}.evidence-grid p{margin:.9rem 0 0;color:var(--brand-soft);line-height:1.58}.evidence-note{margin:1.2rem 0 0;color:#657083;font-size:.78rem;line-height:1.55}
-  .faq-grid{display:grid;grid-template-columns:minmax(18rem,.72fr) minmax(30rem,1.28fr);gap:clamp(3rem,8vw,8rem)}.faq-list{border-top:1px solid #b7c0cd}.faq-list details{border-bottom:1px solid #b7c0cd}.faq-list summary{display:flex;min-height:4.8rem;align-items:center;justify-content:space-between;gap:1.5rem;padding:1rem 0;font-size:1.12rem;font-weight:700;cursor:pointer;list-style:none}.faq-list summary::-webkit-details-marker{display:none}.faq-list summary i{position:relative;width:1.2rem;height:1.2rem;flex:none}.faq-list summary i::before,.faq-list summary i::after{position:absolute;top:50%;left:0;width:100%;height:2px;background:#18345b;content:""}.faq-list summary i::after{transform:rotate(90deg);transition:transform .16s ease}.faq-list details[open] summary i::after{transform:rotate(0)}.faq-list details p{max-width:44rem;margin:0;padding:0 2rem 1.5rem 0;color:var(--brand-soft);line-height:1.65}
-  .final-cta{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(110deg,#271587 0%,#3349bd 54%,#1380d1 100%);padding-block:clamp(4.5rem,8vw,7rem);color:#fff}.final-cta__shape{position:absolute;z-index:-1;right:-9rem;bottom:-15rem;width:34rem;height:34rem;border:6rem solid rgb(255 255 255/.12);border-radius:50%}.final-cta__inner{display:flex;align-items:end;justify-content:space-between;gap:3rem}.final-cta h2{max-width:47rem}.final-cta .button{flex:none}
-  .demo-dialog{width:min(calc(100% - 2rem),76rem);height:min(calc(100dvh - 2rem),50rem);max-width:none;max-height:none;border:0;padding:0;background:#fff;box-shadow:0 2rem 6rem rgb(3 14 36/.42)}.demo-dialog::backdrop{background:rgb(3 14 36/.72);backdrop-filter:blur(6px)}.demo-dialog__header{display:flex;align-items:start;justify-content:space-between;gap:2rem;border-bottom:1px solid #d8dee8;padding:1.1rem 1.25rem}.demo-dialog__header h2{margin:.3rem 0 0;font-size:1.35rem;letter-spacing:-.02em}.demo-dialog__close{min-width:3.5rem;min-height:2.7rem;border:1px solid #7a879a;background:#fff;color:#1f2937;font:inherit;font-size:.85rem;font-weight:700;cursor:pointer}.demo-dialog__body{height:calc(100% - 5.4rem);background:#eef3fa;padding:.65rem}.demo-dialog iframe{display:block;width:100%;height:100%;border:0;background:#fff}
-  .announcement:focus-visible,.section--navy :focus-visible,.final-cta :focus-visible{outline-color:#fff}
-  @media(max-width:980px){.hero__grid,.demo-feature,.control-grid,.maintenance-card,.faq-grid{grid-template-columns:1fr}.hero__copy{max-width:43rem}.hero-preview{max-width:48rem}.lifecycle{grid-template-columns:repeat(2,minmax(0,1fr))}.overview-grid{grid-template-columns:1fr}.overview-card{min-height:0}.overview-card h3{margin-top:2.5rem}.demo-feature__copy{max-width:45rem}.product-frame{max-width:50rem}.control-list{max-width:48rem}.comparison{max-width:50rem}.evidence-grid{grid-template-columns:1fr}.evidence-grid article{min-height:0}.evidence-grid h3{margin-top:2rem}.faq-list{max-width:50rem}.final-cta__inner{align-items:flex-start;flex-direction:column}}
-  @media(max-width:720px){.shell{width:min(100% - 1.25rem,75rem)}.announcement{font-size:.78rem}.announcement strong{display:none}.hero__grid{min-height:0;padding-block:4.2rem 5rem}.hero h1{font-size:clamp(2.75rem,14vw,4rem)}.hero__lead{font-size:1rem}.hero__shape--one{right:-20rem}.hero__shape--two{right:-6rem}.hero-preview__caption{right:.8rem;bottom:.8rem;min-width:0}.section-nav{top:3.85rem}.section-nav__inner{gap:1.2rem}.section-nav button{margin-left:0}.section{scroll-margin-top:7.7rem;padding-block:4.8rem}.section-heading h2,.control-copy h2,.maintenance-card h2,.final-cta h2{font-size:clamp(2.2rem,11vw,3.3rem)}.lifecycle{grid-template-columns:1fr;gap:.75rem}.lifecycle-card{min-height:0}.lifecycle-card h3{margin-top:2.4rem}.comparison{grid-template-columns:1fr}.approval-line i{display:none}.demo-dialog{width:calc(100% - .75rem);height:calc(100dvh - .75rem)}.demo-dialog__header{gap:.75rem;padding:.85rem}.demo-dialog__header h2{font-size:1rem}.demo-dialog__body{height:calc(100% - 4.8rem);padding:.3rem}}
-  @media(prefers-reduced-motion:reduce){.button,.text-link span,.faq-list summary i::after{transition:none}.button:hover{transform:none}}
+  :global(html){scroll-behavior:smooth}
+  .product-test{--test-blue:#1769e0;--test-indigo:#281489;--test-purple:#5c2dc1;--test-ink:#101828;--test-soft:#4b5872;--test-canvas:#eef5ff;color:var(--test-ink);background:var(--test-canvas)}
+  .test-shell{width:min(100% - 2rem,1200px);margin-inline:auto}
+  .test-hero{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(120deg,#1d116b 0%,#3d24a8 47%,#126dcc 100%);color:#fff}
+  .test-hero::after{position:absolute;z-index:-1;right:-10%;bottom:-52%;width:55rem;height:55rem;border:1px solid rgb(255 255 255 / .19);border-radius:50%;content:""}
+  .test-hero__glow{position:absolute;z-index:-1;border-radius:50%;filter:blur(16px);opacity:.5}.test-hero__glow--one{top:-16rem;right:20%;width:34rem;height:34rem;background:#5b8cff}.test-hero__glow--two{bottom:-18rem;left:-9rem;width:32rem;height:32rem;background:#8d42d8}
+  .test-hero__grid{display:grid;grid-template-columns:minmax(0,1.06fr) minmax(26rem,.94fr);align-items:center;gap:clamp(2.5rem,4vw,4rem);min-height:32rem;padding-block:clamp(2.75rem,4.8vw,4.2rem)}
+  .test-hero__copy{max-width:39rem}.test-eyebrow{margin:0;font-family:var(--font-mono);font-size:.84rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}.test-hero h1{max-width:17ch;margin:1rem 0 0;font-size:clamp(2.75rem,4.7vw,4.4rem);font-weight:600;letter-spacing:-.045em;line-height:1.01}.test-hero__copy>p:last-of-type{max-width:34rem;margin:1.75rem 0 0;color:rgb(255 255 255 / .82);font-size:clamp(1rem,1.35vw,1.16rem);line-height:1.65}
+  .test-actions{display:flex;flex-wrap:wrap;align-items:center;gap:1.4rem;margin-top:2rem}.test-button{display:inline-flex;align-items:center;justify-content:center;border:2px solid var(--test-blue);background:var(--test-blue);padding:.82rem 1.35rem;color:#fff;font:inherit;font-weight:700;line-height:1;text-decoration:none;cursor:pointer;transition:background .16s ease,border-color .16s ease,transform .16s ease}.test-button:hover{border-color:#0e55bb;background:#0e55bb;transform:translateY(-1px)}.test-button--light{border-color:#fff;background:#fff;color:#1c2380}.test-button--light:hover{border-color:#eef4ff;background:#eef4ff}.test-button--small{padding:.6rem 1rem;font-size:.88rem}.test-link{display:inline-flex;align-items:center;gap:.45rem;color:var(--test-blue);font-weight:700;text-decoration:none}.test-link span{transition:transform .16s ease}.test-link:hover span{transform:translateX(.2rem)}.test-link--light{color:#fff}
+  .test-hero__visual{position:relative;overflow:visible;border:1px solid rgb(255 255 255 / .38);border-radius:1.2rem;background:#f5f8ff;padding:2.8rem .55rem .55rem;box-shadow:0 42px 80px -34px rgb(0 0 0 / .64);transform:perspective(1200px) rotateY(-4deg) rotateX(1deg)}.test-hero__visual>img{display:block;width:100%;aspect-ratio:16/9;border-radius:.75rem;object-fit:cover;filter:brightness(.84)}.test-hero__visual-bar{position:absolute;top:0;right:0;left:0;display:flex;height:2.8rem;align-items:center;justify-content:space-between;padding:0 1rem;color:#48546b;font-size:.74rem}.test-hero__visual-bar span{display:flex;gap:.34rem}.test-hero__visual-bar i{display:block;width:.52rem;height:.52rem;border-radius:50%;background:#ccd6e6}.test-hero__play{position:absolute;z-index:2;top:calc(50% + 1.4rem);left:50%;display:grid;justify-items:center;gap:.65rem;border:0;background:transparent;padding:1rem;color:#fff;font:inherit;font-size:.82rem;font-weight:750;letter-spacing:.01em;cursor:pointer;transform:translate(-50%,-50%);text-shadow:0 2px 8px rgb(1 12 42 / .7)}.test-hero__play-icon{display:grid;width:4.5rem;height:4.5rem;place-items:center;filter:drop-shadow(0 12px 24px rgb(0 16 58 / .45));transition:transform .18s ease}.test-hero__play:hover .test-hero__play-icon{transform:scale(1.06)}.test-hero__play:focus-visible{outline:3px solid #fff;outline-offset:3px}.test-hero__play svg{display:block;width:100%;height:100%}.test-hero__play circle{fill:#fff}.test-hero__play path{fill:#1c2380}.test-hero__visual-badge{}.test-hero__badge{position:absolute;z-index:3;right:-1.8rem;bottom:-2.2rem;display:flex;align-items:center;gap:.8rem;width:min(16rem,52%);border-left:4px solid #77a9ff;background:#fff;padding:1rem 1.15rem;color:#172254;box-shadow:0 18px 46px -18px rgb(2 12 62 / .72)}.test-hero__badge>span{display:grid;width:2.3rem;height:2.3rem;flex:none;place-items:center;border-radius:50%;background:#e6efff;color:#185fcf;font-family:var(--font-mono);font-size:.76rem;font-weight:700}.test-hero__badge p{display:grid;margin:0;line-height:1.2}.test-hero__badge small{margin-top:.25rem;color:#667089;font-size:.72rem}
+  .test-section{scroll-margin-top:5rem;padding-block:clamp(4.8rem,8vw,7.4rem)}#overview{position:relative;isolation:isolate;overflow:hidden;padding-top:clamp(2rem,3vw,2.5rem);background:var(--test-canvas)}#overview>.test-shell{position:relative;z-index:1}.overview-backdrop{position:absolute;z-index:0;inset:0;overflow:hidden;pointer-events:none}.overview-backdrop__arc{position:absolute;top:3.5rem;right:-21rem;width:39rem;height:39rem;border:5.5rem solid rgb(105 201 245 / .18);border-radius:50%;box-shadow:0 0 0 1px rgb(23 105 224 / .05)}.overview-backdrop__tiles{position:absolute;top:10.5rem;left:-8rem;width:22rem;height:14rem;background:linear-gradient(90deg,rgb(92 45 193 / .09) 0 46%,transparent 46% 51%,rgb(23 105 224 / .08) 51% 100%),linear-gradient(180deg,transparent 0 55%,rgb(157 214 255 / .12) 55% 100%);transform:rotate(-7deg)}.test-section--white,.test-section--tint,.test-section--lavender,.test-section--dark,.test-section--ink{background:var(--test-canvas);color:var(--test-ink)}.test-section__intro{max-width:46rem}.test-section__intro--wide{max-width:57rem}.test-eyebrow--blue{color:var(--test-blue)}.test-eyebrow--amber{color:#8a5900}.test-section__intro h2,.contact-card h2{margin:.8rem 0 0;color:#15285d;font-size:clamp(2.35rem,4.6vw,4.2rem);font-weight:650;letter-spacing:-.055em;line-height:1}.test-section__intro>p:last-child,.contact-card>div>p:last-child{max-width:52rem;margin:1.3rem 0 0;color:var(--test-soft);font-size:1.13rem;line-height:1.65}.test-section__intro--dark h2{color:#15285d}.test-section__intro--dark>p:last-child{color:var(--test-soft)}#overview .test-section__intro{margin-inline:auto;text-align:center}#overview .test-section__intro>p:last-child{margin-right:auto;margin-left:auto}
+  .test-section{position:relative;isolation:isolate;overflow:hidden}.test-section>.test-shell{position:relative;z-index:1}.overview-backdrop__arc{top:auto;right:-19rem;bottom:0;width:38rem;height:38rem;border-color:rgb(66 175 232 / .25);box-shadow:0 0 0 2.25rem rgb(95 61 196 / .035)}.overview-backdrop__tiles{top:12rem;background:linear-gradient(90deg,rgb(92 45 193 / .12) 0 46%,transparent 46% 51%,rgb(23 105 224 / .11) 51% 100%),linear-gradient(180deg,transparent 0 55%,rgb(93 197 240 / .17) 55% 100%)}
+  #outcomes::before{position:absolute;z-index:0;top:4rem;left:-13rem;width:28rem;height:28rem;border:3.25rem solid rgb(23 105 224 / .075);border-radius:50%;content:"";pointer-events:none}#outcomes::after{position:absolute;z-index:0;right:-5rem;bottom:4rem;width:17rem;height:12rem;background:linear-gradient(90deg,rgb(92 45 193 / .09) 0 58%,transparent 58% 64%,rgb(255 190 58 / .16) 64% 100%),linear-gradient(180deg,transparent 0 52%,rgb(74 183 232 / .13) 52% 100%);content:"";transform:rotate(7deg);pointer-events:none}
+  #workflow::before{position:absolute;z-index:0;top:2rem;right:-12rem;width:27rem;height:27rem;border:4.5rem solid rgb(92 45 193 / .075);border-radius:50%;content:"";pointer-events:none}
+  #specification::before{position:absolute;z-index:0;top:1.5rem;right:-14rem;width:29rem;height:29rem;border:4rem solid rgb(74 183 232 / .11);border-radius:50%;content:"";pointer-events:none}#specification::after{position:absolute;z-index:0;bottom:5rem;left:-2rem;width:11rem;height:.7rem;background:linear-gradient(90deg,#1769e0 0 52%,#5c2dc1 52% 82%,#ffd466 82% 100%);content:"";opacity:.38;pointer-events:none}
+  #proof::before{position:absolute;z-index:0;top:5rem;right:-9rem;width:21rem;height:21rem;border:2.25rem solid rgb(92 45 193 / .07);content:"";transform:rotate(12deg);pointer-events:none}#proof::after{position:absolute;z-index:0;top:5rem;left:0;width:7rem;height:.65rem;background:linear-gradient(90deg,#1769e0 0 43%,#4ab7e8 43% 72%,#ffd466 72% 100%);content:"";opacity:.45;pointer-events:none}
+  #book-a-call::before{position:absolute;z-index:0;bottom:-12rem;left:-10rem;width:26rem;height:26rem;border:3.5rem solid rgb(74 183 232 / .1);border-radius:50%;content:"";pointer-events:none}#book-a-call::after{position:absolute;z-index:0;top:3.5rem;right:-4rem;width:13rem;height:8rem;background:linear-gradient(90deg,rgb(92 45 193 / .09) 0 62%,transparent 62% 68%,rgb(255 190 58 / .17) 68% 100%);content:"";transform:rotate(-8deg);pointer-events:none}
+  #overview{padding-bottom:clamp(1.8rem,3vw,2.8rem)}#outcomes{padding-top:clamp(1.8rem,3vw,2.8rem)}#outcomes>.test-shell{width:min(100% - 2rem,1320px)}
+  .overview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.4rem;margin-top:3.1rem}.overview-card{display:flex;min-width:0;overflow:hidden;flex-direction:column;border:1px solid #cfd8e6;border-radius:1.25rem;background:#fff;padding:.55rem;box-shadow:0 12px 28px -20px rgb(18 39 85 / .38);transition:transform .18s ease,box-shadow .18s ease}.overview-card:hover{transform:translateY(-4px);box-shadow:0 24px 44px -28px rgb(18 39 85 / .58)}.overview-card__media{position:relative;display:grid;aspect-ratio:16/9;overflow:hidden;flex:none;place-items:center;border-radius:.9rem;background:#eef4ff}.overview-card__media img{display:block;width:100%;height:100%;object-fit:cover}.overview-card__media--video img{filter:saturate(.78) brightness(.75);transform:scale(1.025)}.overview-card__media--video::after{position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgb(0 33 99 / .2));content:""}.overview-card__media--brand{background:linear-gradient(145deg,#f4f7fc,#dbe9ff)}.overview-card__media--brand img{width:31%;height:52%;object-fit:contain;filter:drop-shadow(0 10px 16px rgb(0 33 99 / .15))}.overview-card__play{position:absolute;z-index:1;display:grid;width:3.6rem;height:3.6rem;place-items:center;filter:drop-shadow(0 8px 18px rgb(0 33 99 / .28))}.overview-card__play svg{width:100%;height:100%}.overview-card__play rect{fill:#fff}.overview-card__play path{fill:var(--test-blue)}.overview-card__content{display:flex;min-height:4.75rem;align-items:center;padding:1.35rem .95rem .95rem}.overview-card__action{display:inline-flex;align-items:center;gap:.45rem;border:0;background:transparent;padding:0;color:var(--test-blue);font:inherit;font-weight:700;text-decoration:none;cursor:pointer}.overview-card__action span{transition:transform .16s ease}.overview-card__action:hover span{transform:translateX(.2rem)}.overview-panels{margin-top:1.5rem}.overview-panel{overflow:hidden;scroll-margin-top:5rem;border:1px solid #becce2;background:#f3f7fd;box-shadow:0 22px 48px -34px rgb(11 39 94 / .6)}.overview-panel:focus{outline:none}.overview-panel[hidden]{display:none}.overview-panel--demo{position:relative;overflow:visible;border:0;background:transparent;box-shadow:none}.overview-panel__header{display:flex;align-items:flex-start;justify-content:space-between;gap:2rem;border-bottom:1px solid #dce3ed;background:#fff;padding:1.5rem}.overview-panel__header>div{max-width:48rem}.overview-panel__header h3{margin:.55rem 0 0;color:#15285d;font-size:clamp(1.5rem,2.5vw,2.15rem);font-weight:800;letter-spacing:-.03em;line-height:1.08}.overview-panel__header div>p:last-child{margin:.65rem 0 0;color:var(--test-soft);font-size:.95rem;line-height:1.5}.overview-panel__close{flex:none;border:1px solid #7188a8;border-radius:6px;background:#fff;padding:.5rem .8rem;color:#15285d;font:inherit;font-size:.82rem;font-weight:700;cursor:pointer}.overview-panel__close:hover{border-color:var(--test-blue);color:var(--test-blue)}.overview-panel__close--floating{position:absolute;z-index:5;top:1.1rem;right:1.1rem;display:grid;width:2.5rem;height:2.5rem;place-items:center;border:0;border-radius:50%;background:transparent;padding:0;box-shadow:none;opacity:0;visibility:hidden;transform:scale(.85);pointer-events:none;transition:opacity .18s ease,transform .18s ease,visibility 0s linear .18s}.overview-panel__close--floating.is-visible{opacity:1;visibility:visible;transform:none;pointer-events:auto;transition-delay:0s}.overview-panel__close--floating:hover{border:0;background:rgb(20 106 216 / .08);color:#15285d}.overview-panel__close--floating svg{display:block;width:1.35rem;height:1.35rem;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}.overview-panel__body{display:grid;min-height:clamp(32rem,58vw,44rem);place-items:center;padding:1rem;background:#f4f7fc}.overview-panel__body--demo{padding:0;background:transparent}.overview-panel__body--demo iframe{display:block;width:100%;height:clamp(32rem,58vw,44rem);border:0;background:transparent}.overview-video-frame{width:min(100%,62rem);overflow:hidden;border:1px solid #7188a8;border-radius:8px;background:#000;box-shadow:0 18px 40px rgb(0 33 99 / .16)}.overview-video-frame iframe{display:block;width:100%;aspect-ratio:16/9;border:0}
+  .overview-card__media{width:100%;border:0;padding:0;color:inherit;font:inherit;cursor:pointer}.overview-card__media:focus-visible{z-index:2;outline:3px solid var(--test-blue);outline-offset:-3px}
+  :global(html.overview-modal-open){overflow:hidden}.overview-panels{position:fixed;z-index:1000;inset:0;display:grid;overflow:auto;align-items:center;margin:0;background:rgb(238 245 255 / .97);padding:clamp(.75rem,2vw,1.5rem);backdrop-filter:blur(14px);overscroll-behavior:contain}.overview-panels[hidden]{display:none}.overview-panel{width:min(100%,76rem);max-height:calc(100dvh - 3rem);margin:auto;overflow:auto;scroll-margin:0;border:1px solid #b8c8df;border-radius:.45rem;background:#eef5ff;box-shadow:0 30px 90px -42px rgb(10 31 78 / .7)}.overview-panel[hidden]{display:none}.overview-panel--demo{width:min(100%,88rem);overflow:auto;border:1px solid #b8c8df;background:#eef5ff;box-shadow:0 30px 90px -42px rgb(10 31 78 / .7)}.overview-panel--contact{width:min(100%,64rem)}.overview-panel__header{position:sticky;z-index:2;top:0;display:flex;align-items:flex-start;justify-content:space-between;gap:2rem;border-bottom:1px solid #cbd7e8;background:rgb(255 255 255 / .96);padding:clamp(1.25rem,2.5vw,2rem)}.overview-panel__header>div{max-width:54rem}.overview-panel__header h3{font-size:clamp(1.65rem,2.7vw,2.45rem)}.overview-panel__close{min-width:4.5rem;border:1px solid #657d9f;border-radius:.35rem;padding:.7rem 1rem;font-size:.9rem}.overview-panel__body{min-height:0;background:transparent}.overview-panel__body--demo{padding:0}.overview-panel__body--demo iframe{display:block;width:100%;height:min(68dvh,46rem);min-height:32rem;border:0;background:#f4f7fc}.overview-panel__body--video{padding:clamp(1rem,3vw,2rem)}.overview-video-frame{width:100%;border-color:#657d9f;border-radius:.35rem;box-shadow:0 24px 55px -34px rgb(0 33 99 / .55)}.overview-panel__body--contact{display:block;padding:clamp(2rem,5vw,4rem)}.overview-contact-actions{display:flex;flex-wrap:wrap;align-items:center;gap:1.4rem}
+  .benefits-headline__agents{white-space:nowrap}.changes-layout{display:grid;grid-template-columns:minmax(25rem,.82fr) minmax(32rem,1.18fr);align-items:start;gap:clamp(2.5rem,5vw,5rem);margin-top:4rem}.changes-list{display:grid;border-top:1px solid #bccce2}.change-point{border-bottom:1px solid #cbd8e9}.change-point summary{display:grid;grid-template-columns:2.1rem minmax(0,1fr) 1.3rem;align-items:start;gap:.8rem;padding:1.55rem 0;cursor:pointer;list-style:none}.change-point summary::-webkit-details-marker{display:none}.change-point summary:focus-visible{outline:3px solid var(--test-blue);outline-offset:5px}.change-point__number{padding-top:.15rem;color:var(--test-blue);font-family:var(--font-mono);font-size:.67rem;font-weight:700;letter-spacing:.12em}.change-point h3{margin:0;color:#15285d;font-size:clamp(1.18rem,1.7vw,1.5rem);font-weight:700;letter-spacing:-.025em;line-height:1.12;white-space:nowrap}.change-point__toggle{position:relative;width:1.25rem;height:1.25rem;margin-top:.02rem}.change-point__toggle::before{position:absolute;top:43%;left:50%;width:.48rem;height:.48rem;border-right:2px solid #1769e0;border-bottom:2px solid #1769e0;content:"";transform:translate(-50%,-50%) rotate(45deg);transition:transform .18s ease,top .18s ease}.change-point[open] .change-point__toggle::before{top:58%;transform:translate(-50%,-50%) rotate(225deg)}.change-point__body{padding:0 1.65rem 1.65rem 2.9rem}.change-point p{margin:0;color:var(--test-soft);font-size:.9rem;line-height:1.58}
+  .workflow-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));margin-top:3rem;border-bottom:1px solid #c7d4e7}.workflow-tabs button{display:flex;align-items:center;justify-content:center;gap:.55rem;border:0;border-bottom:4px solid transparent;background:transparent;padding:1rem .5rem;color:#52617d;font:inherit;font-size:.8rem;font-weight:650;cursor:pointer}.workflow-tabs button span{font-family:var(--font-mono);font-size:.66rem}.workflow-tabs button[aria-selected="true"]{border-color:var(--test-blue);color:#15285d}.workflow-stage{margin-top:1.8rem}.workflow-panel{display:grid;grid-template-columns:.9fr 1.1fr;min-height:27rem;overflow:hidden;background:#fff;color:var(--test-ink)}.workflow-panel__copy{align-self:center;padding:clamp(2rem,5vw,4.5rem)}.workflow-panel__copy h3{margin:.8rem 0 0;color:#15285d;font-size:clamp(2rem,3.5vw,3.15rem);letter-spacing:-.045em;line-height:1.02}.workflow-panel__copy>p:not(.test-eyebrow){margin:1.25rem 0 0;color:var(--test-soft);font-size:1.05rem;line-height:1.65}.workflow-panel__copy aside{margin-top:1.3rem;border-left:3px solid #ffbd3c;background:#fff7e5;padding:.85rem 1rem;color:#6d5015;font-size:.9rem}.workflow-panel__art{position:relative;display:grid;min-height:27rem;place-items:center;overflow:hidden;background:linear-gradient(145deg,#e8effd,#cddcff);padding:3rem}.workflow-panel__art::before{position:absolute;width:25rem;height:25rem;border:1px solid rgb(35 82 177 / .18);border-radius:50%;content:""}.workflow-panel__art img{position:relative;z-index:1;width:min(76%,23rem);max-height:20rem;object-fit:contain;filter:drop-shadow(0 20px 26px rgb(9 38 97 / .2))}.workflow-panel__art span{position:absolute;right:1.2rem;bottom:1.2rem;border-radius:999px;background:#fff;padding:.52rem .85rem;color:#2356ac;font-size:.72rem;font-weight:700;box-shadow:0 8px 20px -12px rgb(7 30 77 / .55)}
+  .change-card{display:grid;grid-template-columns:minmax(17rem,.7fr) minmax(0,1.3fr);gap:clamp(2rem,4vw,4rem);background:#15285d;padding:clamp(2rem,4vw,3.4rem);color:#fff}.change-card__intro h3{margin:.8rem 0 0;font-size:clamp(1.7rem,3vw,2.6rem);letter-spacing:-.04em;line-height:1.08}.change-card__intro>p:last-child{margin:1.2rem 0 0;color:#cbd8f1;line-height:1.6}.change-card__comparison{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;align-self:stretch;background:rgb(255 255 255 / .16)}.change-card__comparison section{border-top:4px solid #8493b1;background:rgb(255 255 255 / .075);padding:clamp(1.3rem,2.4vw,2rem)}.change-card__comparison .change-card__new-way{border-color:#68a1ff;background:rgb(69 126 228 / .17)}.change-card__comparison h4{margin:0;color:#fff;font-size:1.1rem}.change-card__comparison ul{display:grid;gap:1rem;margin:1.2rem 0 0;padding:0;list-style:none}.change-card__comparison li{position:relative;margin:0;padding-left:1.15rem;color:#dbe4f7;font-size:.88rem;line-height:1.55}.change-card__comparison li::before{position:absolute;top:.58em;left:0;width:.38rem;height:.38rem;border-radius:50%;background:#8fa1bf;content:""}.change-card__new-way li::before{background:#7db0ff}
+  .stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin-top:3rem;background:#cbd8ea}.stat-grid article{display:grid;min-height:12rem;align-content:center;background:#101f47;padding:2rem}.stat-grid strong{color:#8db7ff;font-size:clamp(2.7rem,5vw,4.5rem);letter-spacing:-.06em;line-height:1}.stat-grid span{max-width:14rem;margin-top:.75rem;color:#d1dcf2;line-height:1.4}.proof-quote{display:grid;grid-template-columns:1.4fr .6fr;gap:3rem;margin:3rem 0 0;border-top:1px solid #c7d4e7;padding-top:3rem}.proof-quote>p{margin:0;color:#15285d;font-size:clamp(1.45rem,2.8vw,2.35rem);letter-spacing:-.035em;line-height:1.28}.proof-quote footer{display:grid;align-content:start;gap:.3rem;color:var(--test-soft)}.proof-quote footer span{font-size:.85rem;line-height:1.45}.proof-note{margin:2rem 0 0;color:#6b7891;font-size:.82rem}
+  .contact-card{display:grid;grid-template-columns:1.15fr .85fr;align-items:end;gap:4rem;border:1px solid #d6e0ec;background:linear-gradient(135deg,#f7f9fd,#edf3fc);padding:clamp(2rem,5vw,4.2rem)}.contact-card__actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:1.4rem}
+  :global(html.scroll-reveal-enabled [data-scroll-reveal]){opacity:0;translate:0 1.75rem;transition:opacity .68s cubic-bezier(.22,1,.36,1),translate .68s cubic-bezier(.22,1,.36,1);transition-delay:var(--scroll-reveal-delay,0ms);will-change:opacity,translate}:global(html.scroll-reveal-enabled [data-scroll-reveal].is-scroll-revealed){opacity:1;translate:0 0}
+  @media(max-width:1050px){.changes-layout{grid-template-columns:1fr}.change-point h3{white-space:normal}.changes-layout>:global(.supervision-diagram){width:min(100%,42rem);margin-inline:auto}}
+  @media(max-width:900px){.test-hero__grid{grid-template-columns:1fr;min-height:0}.test-hero__copy{max-width:42rem}.test-hero h1{max-width:17ch}.test-hero__visual{transform:none}.overview-grid{gap:clamp(.55rem,1.8vw,1rem)}.overview-card__content{min-height:4rem;padding:1rem clamp(.75rem,2vw,1rem)}.workflow-tabs{overflow-x:auto;grid-template-columns:repeat(5,minmax(10rem,1fr));justify-content:start}.workflow-panel,.contact-card{grid-template-columns:1fr}.workflow-panel__art{min-height:22rem}.change-card{grid-template-columns:1fr}.contact-card__actions{justify-content:flex-start}}
+  @media(max-width:620px){.test-shell{width:min(100% - 1.25rem,1200px)}.test-hero__grid{padding-block:3.8rem 5rem}.test-hero h1{font-size:clamp(2.8rem,15vw,4.2rem)}.test-hero__badge{right:.6rem;bottom:-2.5rem}.overview-backdrop__arc{top:auto;right:-15rem;bottom:0;width:30rem;height:30rem;border-width:4rem}.overview-backdrop__tiles{top:18rem;left:-10rem;opacity:.75}.overview-grid{grid-template-columns:1fr;gap:1rem}.overview-panel__header{display:grid;gap:1rem;padding:1.25rem}.overview-panel__close{justify-self:start}.overview-panel__body,.overview-panel__body--demo iframe{min-height:30rem;height:30rem}.overview-panel__body--video{min-height:20rem;height:auto;padding:.75rem}.benefits-headline__agents{white-space:normal}.stat-grid,.change-card__comparison{grid-template-columns:1fr}.change-point summary{grid-template-columns:2rem minmax(0,1fr) 1.4rem;gap:.7rem}.change-point__body{padding-right:0;padding-left:2.7rem}.workflow-panel{display:block}.workflow-panel__art{min-height:18rem}.proof-quote{grid-template-columns:1fr}.contact-card{padding:2rem 1.25rem}}
+  @media(max-width:620px){.overview-panels{padding:.5rem}.overview-panel{max-height:calc(100dvh - 1rem)}.overview-panel__header{grid-template-columns:1fr auto;gap:.75rem;padding:1.1rem}.overview-panel__close{justify-self:end}.overview-panel__body{height:auto;min-height:0}.overview-panel__body--demo iframe{height:66dvh;min-height:28rem}.overview-panel__body--video{height:auto;min-height:0;padding:.75rem}.overview-panel__body--contact{padding:1.5rem}}
+  @media(prefers-reduced-motion:reduce){:global(html){scroll-behavior:auto}:global(html.scroll-reveal-enabled [data-scroll-reveal]){opacity:1;translate:none;transition:none}.test-button,.test-link span,.overview-card,.overview-card__action span{transition:none}.test-button:hover,.overview-card:hover{transform:none}}
 </style>
 
 <script>
-  const dialog = document.querySelector<HTMLDialogElement>('[data-demo-dialog]');
-  const frame = dialog?.querySelector<HTMLIFrameElement>('iframe[data-src]');
-  let returnFocus: HTMLElement | null = null;
+  const overviewTriggers = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-overview-trigger]'));
+  const overviewPanels = Array.from(document.querySelectorAll<HTMLElement>('[data-overview-panel]'));
+  const overviewModalLayer = document.querySelector<HTMLElement>('#overview-modal-layer');
+  let lastOverviewTrigger: HTMLButtonElement | null = null;
 
-  document.querySelectorAll<HTMLElement>('[data-demo-open]').forEach((trigger) => {
+  const setOverviewPanel = (requestedPanel: string | null) => {
+    const openPanel = overviewPanels.find((panel) => panel.dataset.overviewPanel === requestedPanel);
+    const activePanel = openPanel && openPanel.hidden ? openPanel : null;
+
+    overviewTriggers.forEach((trigger) => {
+      trigger.setAttribute('aria-expanded', String(activePanel?.dataset.overviewPanel === trigger.dataset.overviewTrigger));
+    });
+
+    overviewPanels.forEach((panel) => {
+      const shouldOpen = panel === activePanel;
+      panel.hidden = !shouldOpen;
+      const frame = panel.querySelector<HTMLIFrameElement>('iframe[data-src]');
+      const currentSource = frame?.getAttribute('src');
+
+      if (shouldOpen && frame && (!currentSource || currentSource === 'about:blank')) {
+        frame.src = frame.dataset.src ?? '';
+      }
+      if (!shouldOpen && frame && currentSource && currentSource !== 'about:blank') {
+        frame.src = 'about:blank';
+      }
+    });
+
+    if (overviewModalLayer) overviewModalLayer.hidden = !activePanel;
+    document.documentElement.classList.toggle('overview-modal-open', Boolean(activePanel));
+
+    if (activePanel) {
+      window.requestAnimationFrame(() => {
+        activePanel.querySelector<HTMLButtonElement>('[data-overview-close]')?.focus({ preventScroll: true });
+      });
+    } else if (lastOverviewTrigger) {
+      const triggerToRestore = lastOverviewTrigger;
+      lastOverviewTrigger = null;
+      window.requestAnimationFrame(() => triggerToRestore.focus({ preventScroll: true }));
+    }
+  };
+
+  overviewTriggers.forEach((trigger) => {
     trigger.addEventListener('click', () => {
-      if (!dialog) return;
-      returnFocus = trigger;
-      if (frame && (!frame.src || frame.src === 'about:blank')) frame.src = frame.dataset.src ?? '';
-      dialog.showModal();
-      dialog.querySelector<HTMLButtonElement>('[data-demo-close]')?.focus();
+      lastOverviewTrigger = trigger;
+      setOverviewPanel(trigger.dataset.overviewTrigger ?? null);
     });
   });
 
-  const closeDemo = () => {
-    if (!dialog?.open) return;
-    dialog.close();
-    if (frame) frame.src = 'about:blank';
+  document.querySelectorAll<HTMLButtonElement>('[data-overview-close]').forEach((closeButton) => {
+    closeButton.addEventListener('click', () => setOverviewPanel(null));
+  });
+
+  overviewModalLayer?.addEventListener('click', (event) => {
+    if (event.target === overviewModalLayer) setOverviewPanel(null);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (!overviewModalLayer || overviewModalLayer.hidden) return;
+
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      setOverviewPanel(null);
+      return;
+    }
+
+    if (event.key !== 'Tab') return;
+    const activePanel = overviewPanels.find((panel) => !panel.hidden);
+    if (!activePanel) return;
+    const focusable = Array.from(activePanel.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), iframe, [tabindex]:not([tabindex="-1"])'))
+      .filter((element) => !element.hasAttribute('hidden'));
+    const firstFocusable = focusable[0];
+    const lastFocusable = focusable.at(-1);
+
+    if (event.shiftKey && document.activeElement === firstFocusable) {
+      event.preventDefault();
+      lastFocusable?.focus();
+    } else if (!event.shiftKey && document.activeElement === lastFocusable) {
+      event.preventDefault();
+      firstFocusable?.focus();
+    }
+  });
+
+  const workflowTabs = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-workflow-tab]'));
+  const workflowPanels = Array.from(document.querySelectorAll<HTMLElement>('[data-workflow-panel]'));
+
+  const selectWorkflowStage = (id: string) => {
+    workflowTabs.forEach((tab) => {
+      const selected = tab.dataset.workflowTab === id;
+      tab.setAttribute('aria-selected', String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+    });
+    workflowPanels.forEach((panel) => { panel.hidden = panel.dataset.workflowPanel !== id; });
   };
 
-  dialog?.querySelector('[data-demo-close]')?.addEventListener('click', closeDemo);
-  dialog?.addEventListener('click', (event) => {
-    if (event.target === dialog) closeDemo();
+  workflowTabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => selectWorkflowStage(tab.dataset.workflowTab ?? ''));
+    tab.addEventListener('keydown', (event) => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      event.preventDefault();
+      const direction = event.key === 'ArrowRight' ? 1 : -1;
+      const nextTab = workflowTabs[(index + direction + workflowTabs.length) % workflowTabs.length];
+      nextTab?.focus();
+      selectWorkflowStage(nextTab?.dataset.workflowTab ?? '');
+    });
   });
-  dialog?.addEventListener('close', () => {
-    if (frame && frame.src !== 'about:blank') frame.src = 'about:blank';
-    returnFocus?.focus({ preventScroll: true });
-    returnFocus = null;
+
+  const scrollRevealGroups = [
+    { selector: '#overview .test-section__intro', stagger: 0 },
+    { selector: '.overview-card', stagger: 85 },
+    { selector: '#outcomes .test-section__intro, .changes-list, .changes-layout > .supervision-diagram', stagger: 95 },
+    { selector: '#workflow .test-section__intro, .workflow-tabs, .workflow-stage', stagger: 90 },
+    { selector: '#specification .change-card', stagger: 0 },
+    { selector: '#proof .test-section__intro, .stat-grid article, .proof-quote, .proof-note', stagger: 70 },
+    { selector: '#book-a-call .contact-card', stagger: 0 },
+  ];
+  const scrollRevealElements = new Set<HTMLElement>();
+
+  scrollRevealGroups.forEach(({ selector, stagger }) => {
+    document.querySelectorAll<HTMLElement>(selector).forEach((element, index) => {
+      element.dataset.scrollReveal = '';
+      element.style.setProperty('--scroll-reveal-delay', `${Math.min(index * stagger, 210)}ms`);
+      scrollRevealElements.add(element);
+    });
   });
+
+  document.documentElement.classList.add('scroll-reveal-enabled');
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+    scrollRevealElements.forEach((element) => element.classList.add('is-scroll-revealed'));
+  } else {
+    const scrollRevealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-scroll-revealed');
+        scrollRevealObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: .12 });
+
+    scrollRevealElements.forEach((element) => scrollRevealObserver.observe(element));
+  }
 </script>
