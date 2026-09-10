@@ -13,6 +13,7 @@ const canonicalPath = Astro.url.pathname.endsWith('/index.html')
   : Astro.url.pathname;
 const canonical = new URL(canonicalPath, siteUrl).toString();
 const ogImage = new URL(`${basePath}hero-demo-preview.png`, siteUrl).toString();
+const favicon = `${basePath}akaden-app-icon-reference.svg`;
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
@@ -35,6 +36,7 @@ const structuredData = {
     <meta name="description" content={description} />
     <meta name="theme-color" content="#271587" />
     <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href={favicon} />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
