@@ -151,19 +151,19 @@ export const proof = {
 
 export const benefits = {
   eyebrow: 'What changes',
-  headline: 'Developers shift from doing every step to supervising the agentic flow',
+  headline: 'Your engineers lead the work. Specialized agents move it forward.',
   items: [
     {
-      title: 'Resilience and speed',
-      body: 'The repetitive configuration is done consistently, and the same requirement produces the same pipeline every time.',
+      title: 'Simplify systems and operations',
+      body: 'Make complex integrations easier to understand, govern, and evolve—so your team can move faster with less operational friction.',
     },
     {
-      title: 'Scale without headcount',
-      body: 'A SaaS migration can involve fifty to two hundred pipelines. The constraint stops being how many engineers you have.',
+      title: 'Take advantage of modern development workflows',
+      body: 'Keep intent, implementation, testing, and change connected in one specification-led flow, with proven practices built into every stage.',
     },
     {
-      title: 'One connected system',
-      body: 'Banner, the LMS, the warehouse, the legacy systems, and whatever comes next — described the same way, in one place.',
+      title: 'Deliver with pipeline expertise built in',
+      body: 'Put 50+ pipeline-specific skills and tools behind every project to surface edge cases, protect audit-ready decisions, and keep delivery practices current.',
     },
   ],
 };

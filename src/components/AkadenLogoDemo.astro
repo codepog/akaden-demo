@@ -7,7 +7,7 @@ interface Props { embedded?: boolean; hideChrome?: boolean; fast?: boolean }
 const { embedded = false, hideChrome = false, fast = false } = Astro.props;
 ---
 
-<section class:list={['akaden-launch', { 'akaden-launch--embedded': embedded, 'akaden-launch--chromeless': hideChrome }]} aria-label="Akaden interactive walkthrough" data-akaden-launch>
+<section class:list={['akaden-launch', { 'akaden-launch--embedded': embedded, 'akaden-launch--chromeless': hideChrome, 'akaden-launch--fast': fast }]} aria-label="Akaden interactive walkthrough" data-akaden-launch>
   <div class="akaden-launch__shell" data-akaden-shell>
     <div class="akaden-launch__atmosphere" aria-hidden="true"></div>
 
@@ -254,6 +254,15 @@ const { embedded = false, hideChrome = false, fast = false } = Astro.props;
   .appicon.is-splaying .mark-right { animation: ai-splay-right 1.6s cubic-bezier(.42,0,.2,1) both; }
   .appicon.is-splaying .mark-dot { animation: ai-splay-dot 1.6s cubic-bezier(.42,0,.2,1) both; }
   .appicon.is-splaying .mark-ghost { opacity: 0; animation: none; }
+
+  .akaden-launch--fast .akaden-launch__shell.is-opening .akaden-launch__welcome { animation-duration: .39s; animation-delay: 1.935s; }
+  .akaden-launch--fast .akaden-launch__shell.is-opening .akaden-launch__icon { animation-duration: .7125s; animation-delay: 1.215s; }
+  .akaden-launch--fast .akaden-launch__shell.is-opening .akaden-launch__icon::after { animation-duration: 1.1625s; }
+  .akaden-launch--fast .akaden-launch__shell.is-opening .appicon__tile { animation-duration: 1.2s, .7125s; animation-delay: 0s, 1.215s; }
+  .akaden-launch--fast .akaden-launch__shell.is-opening .akaden-launch__demo { animation-duration: .525s; animation-delay: 1.425s; }
+  .akaden-launch--fast .appicon.is-splaying .mark-left,
+  .akaden-launch--fast .appicon.is-splaying .mark-right,
+  .akaden-launch--fast .appicon.is-splaying .mark-dot { animation-duration: 1.2s; }
   @keyframes ai-splay-grow {
     0% { transform: scale(1); }
     48% { transform: scale(1.68); }
@@ -367,7 +376,7 @@ const { embedded = false, hideChrome = false, fast = false } = Astro.props;
     window.setTimeout(() => {
       shell.classList.remove('is-opening');
       showReadyState();
-    }, fast ? 2600 : 3400);
+    }, fast ? 1950 : 3400);
   }
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -376,6 +385,6 @@ const { embedded = false, hideChrome = false, fast = false } = Astro.props;
     showReadyState();
   } else {
     if (!alwaysPlayIntro) rememberIntro();
-    window.setTimeout(openAkaden, fast ? 500 : 850);
+    window.setTimeout(openAkaden, fast ? 375 : 850);
   }
 </script>
