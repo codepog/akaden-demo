@@ -58,7 +58,7 @@ export const stages: Stage[] = [
     n: '02',
     id: 'specification-builder',
     title: 'Specification Builder Agent',
-    caption: 'Discuss requirement and draft future state',
+    caption: 'Discuss requirements and draft future state',
     body:
       'You describe the requirement in plain language. The agent asks about the parts you ' +
       'left out, then drafts a written specification of the future state — sources, mappings, ' +
@@ -74,7 +74,7 @@ export const stages: Stage[] = [
     n: '03',
     id: 'review-specification',
     title: 'Review Specification',
-    caption: 'Discuss specifications with agent or edit document manually',
+    caption: 'Revise the specification with an agent or by hand until it communicates your business goals',
     body:
       'You read the specification and you approve it, or you change it. Nothing is generated ' +
       'until you do. Every constraint the pipeline will honour is visible here, in language ' +
@@ -89,7 +89,7 @@ export const stages: Stage[] = [
     n: '04',
     id: 'pipeline-builder',
     title: 'Pipeline Builder Agent',
-    caption: 'Generate pipeline from specification',
+    caption: 'Generate a pipeline from the specification',
     body:
       'The agent builds the pipeline from the approved specification — segments, field mappings, ' +
       'transformations, error handling. The work that used to be configured by hand, field by ' +
@@ -119,8 +119,8 @@ export const stages: Stage[] = [
   {
     n: '06',
     id: 'monitor-pipelines',
-    title: 'Monitoring and Upkeep',
-    caption: 'Monitor pipeline health in Akaden dashboards and apply updates',
+    title: 'Monitor',
+    caption: 'Use Akaden dashboards to monitor pipeline health and apply updates to pipelines',
     body:
       'After deployment, Akaden’s purpose-built monitoring dashboards bring pipeline status and ' +
       'operational history into one view. Your team can follow what is running and retain an ' +
