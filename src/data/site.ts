@@ -1,18 +1,10 @@
-/**
- * All page copy. Nothing is hardcoded in components (spec §12), so wording can be
- * edited without touching markup.
- *
- * NEEDS-SOURCE marks a claim that has not been confirmed by ABCloudz yet. Anything
- * still marked when the review happens does not ship (spec §15).
- */
+/** Shared landing-page copy and navigation. */
 
 export const site = {
-  name: 'Akaden',
   tagline: 'AI-assisted IDE for Ellucian pipeline development',
   description:
     'Akaden turns a written specification into a reviewed, deployable Ellucian data pipeline. ' +
     'It guides teams through the delivery work with practices built for integrations, while people keep the decisions.',
-  owner: 'ABCloudz',
   ownerUrl: 'https://abcloudz.com/',
 };
 
@@ -34,84 +26,6 @@ export const hero = {
     'Akaden turns a written request into a reviewed, deployable Ellucian data pipeline, with the right delivery practices ready when the work needs them.',
   thesis: 'Get to Know Akaden',
   thesisSub: 'See how Akaden turns a real request into a reviewed, deployable pipeline—then try the walkthrough, follow the workflow, or talk with our team.',
-  actions: {
-    demo: {
-      label: 'View demo',
-    },
-    video: {
-      label: 'Watch video',
-      eyebrow: 'Video playlist',
-      headline: 'Watch the Akaden story.',
-      body: 'Use the embedded player to watch the current playlist without leaving the product page.',
-    },
-    contact: { label: 'Book a call', href: '#book-a-call' },
-  },
-};
-
-/** Honesty label on the walkthrough. Presets are pre-recorded; the page says so (spec §7.2). */
-export const walkthroughNote =
-  'Recorded from a production run. This is not a live sandbox — nothing here connects to a real tenant.';
-
-export const whySpec = {
-  eyebrow: 'Why the specification',
-  headline: 'The specification is the thing worth keeping',
-  lead:
-    'A pipeline tells you what it does if you can read it. A specification tells you what it is ' +
-    'supposed to do, in language anyone on the team can check.',
-  points: [
-    {
-      title: 'Documentation that cannot go stale',
-      body:
-        'The document is not written about the pipeline after the fact. It is what builds the ' +
-        'pipeline. If the two ever disagree, the pipeline is the one that gets regenerated.',
-    },
-    {
-      title: 'Integrations live in git',
-      body:
-        'Specifications are text. They are reviewed, versioned, and diffable, and a change to an ' +
-        'integration shows up as a change to a document a person approved.',
-    },
-    {
-      title: 'A human-readable audit trail',
-      body:
-        'When someone asks why the export picks preferred name over legal name, the answer is a ' +
-        'line in a document with a name and a date against it — not an inference from a mapping table.',
-    },
-    {
-      title: 'Knowledge survives staff turnover',
-      body:
-        'The engineer who understood the Banner conventions writes them into specifications the ' +
-        'agents read. When they leave, that understanding stays in the repository.',
-    },
-  ],
-};
-
-export const guardrails = {
-  eyebrow: 'Guardrails',
-  headline: 'The constraints are written down before anything is built',
-  lead:
-    'The first question every institution asks is whether an AI system is going to write to the ' +
-    'student information system. The answer is not a promise made by a vendor after the fact. It ' +
-    'is a set of constraints written into the specification and approved by a person before a ' +
-    'single line of pipeline is generated.',
-  examples: [
-    'The integration must not update Banner data.',
-    'It must not rely on direct database access or direct Banner table reads.',
-  ],
-  close:
-    'You read those lines at the review step. You approve them, or you change them. Generation ' +
-    'does not start until you do.',
-  /**
-   * NEEDS-SOURCE — the enforcement paragraph (review finding 02).
-   * A constraint in a spec is an instruction to a generator. An ERP director will ask what
-   * happens if the generated pipeline does it anyway. Needed from ABCloudz:
-   *   1. Is the Banner/Ethos credential read-only?
-   *   2. Is the generated pipeline reviewed by a human before deploy, or only the spec?
-   *   3. What does "Validate" at stage 05 actually check?
-   * If the answer includes "the service account has no write scope", that sentence leads
-   * this section and everything above becomes supporting detail.
-   */
-  enforcementPending: true,
 };
 
 export const proof = {
@@ -122,31 +36,10 @@ export const proof = {
     'Akaden was built because that work was being done by hand, and it went into production on ' +
     'our own team before it went anywhere else.',
   stats: [
-    { figure: 'Used Internally', label: 'Used in production by the ABCloudz delivery team', sourced: true },
-    { figure: 'Human-led', label: 'Developers review and approve the decisions that matter', sourced: true },
-    { figure: 'Team continuity', label: 'Critical pipeline knowledge stays accessible across the team', sourced: true },
+    { figure: 'Used Internally', label: 'Used in production by the ABCloudz delivery team' },
+    { figure: 'Human-led', label: 'Developers review and approve the decisions that matter' },
+    { figure: 'Team continuity', label: 'Critical pipeline knowledge stays accessible across the team' },
   ],
-  /**
-   * NEEDS-SOURCE — the number that would matter most is not here (review finding 14).
-   * "A pipeline used to take weeks, now it takes ___." Needs: pipelines built, before and
-   * after, over what period, measured how. No percentage ships without its denominator.
-   */
-  partnership: {
-    label: 'On the ABCloudz–Ellucian partnership',
-    quote:
-      'Our partnership with ABCloudz brings proven expertise and powerful tools like ' +
-      'Modernization Studio into the fold, ensuring customers can confidently embrace digital ' +
-      'transformation and drive meaningful outcomes with Ellucian SaaS solutions.',
-    attribution: 'Jeff Dinski',
-    role: 'Chief Strategy and Corporate Development Officer, Ellucian',
-    /**
-     * Framed as partnership evidence, NOT as an Akaden endorsement — the quote names
-     * Modernization Studio, a different product (review finding 11). Do not move this
-     * under a heading that implies Ellucian endorses Akaden.
-     * NEEDS-SOURCE: permission to reuse, scoped to this page and this product.
-     */
-    pendingPermission: true,
-  },
   badgeNote: 'Akaden is built by ABCloudz, a member of the Ellucian Partner Network.',
 };
 
@@ -173,13 +66,6 @@ export const benefits = {
   ],
 };
 
-export const wholePicture = {
-  eyebrow: 'The whole picture',
-  headline: 'One engineer, supervising.',
-  lead:
-    'Every integration used to run through a person configuring it by hand. The systems have not changed. Akaden helps the engineer carry the repeatable work with familiar delivery practices close at hand.',
-};
-
 export const install = {
   eyebrow: 'Bring your roadmap',
   headline: 'See Akaden in your workflow',
@@ -187,9 +73,7 @@ export const install = {
     'Book a working session with an ABCloudz specialist. We will talk through the systems you need to connect, the delivery work in front of your team, and where Akaden can help you move from request to tested pipeline faster.',
   ctaLabel: 'Book a call',
   ctaHref: 'https://abcloudz.com/company/?page-url=Trusted+Experts+in+Cloud+Transformation#contact-us',
-  pending: false,
   secondary: {
-    text: 'Want to learn more about ABCloudz first?',
     label: 'Visit ABCloudz',
     href: 'https://abcloudz.com/',
   },
