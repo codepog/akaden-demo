@@ -78,17 +78,20 @@ const bookingHref = isCurrentPage('./') ? nav.cta.href : `${basePath}${nav.cta.h
       </a>
     </div>
   </nav>
+  <div class="section-progress" aria-hidden="true">
+    <span data-section-progress></span>
+  </div>
 </header>
 
 <style>
-  .section-nav-link{position:relative}
-  .section-nav-link::after{position:absolute;right:.75rem;bottom:-.78rem;left:.75rem;height:3px;border-radius:999px;background:#1769e0;content:"";opacity:0;transform:scaleX(.45);transition:opacity .18s ease,transform .18s ease}
   .section-nav-link.is-active{color:#1769e0}
-  .section-nav-link.is-active::after{opacity:1;transform:scaleX(1)}
-  @media(prefers-reduced-motion:reduce){.section-nav-link::after{transition:none}}
+  .section-progress{position:absolute;right:0;bottom:-1px;left:0;height:3px;overflow:hidden;background:#dbe5f4;pointer-events:none}
+  .section-progress span{display:block;width:100%;height:100%;background:#1769e0;transform:scaleX(0);transform-origin:left center;transition:transform 80ms linear;will-change:transform}
+  @media(prefers-reduced-motion:reduce){.section-progress span{transition:none}}
 </style>
 
 <script>
+  const sectionProgress = document.querySelector<HTMLElement>('[data-section-progress]');
   const sectionItems = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-section-link]'))
     .map((link) => {
       const sectionId = link.dataset.sectionLink;
@@ -102,18 +105,34 @@ const bookingHref = isCurrentPage('./') ? nav.cta.href : `${basePath}${nav.cta.h
 
     const updateActiveSection = () => {
       const activationLine = window.scrollY + Math.min(window.innerHeight * .32, 260);
-      let activeItem = sectionItems[0];
+      const sectionTops = sectionItems.map((item) => item.section.getBoundingClientRect().top + window.scrollY);
+      let activeIndex = 0;
 
-      sectionItems.forEach((item) => {
-        if (item.section.offsetTop <= activationLine) activeItem = item;
+      sectionTops.forEach((sectionTop, index) => {
+        if (sectionTop <= activationLine + 1) activeIndex = index;
       });
 
-      sectionItems.forEach((item) => {
-        const isActive = item === activeItem;
+      sectionItems.forEach((item, index) => {
+        const isActive = index === activeIndex;
         item.link.classList.toggle('is-active', isActive);
         if (isActive) item.link.setAttribute('aria-current', 'location');
         else item.link.removeAttribute('aria-current');
       });
+
+      let progress = 0;
+      const finalSegment = Math.max(sectionItems.length - 1, 1);
+      const currentTop = sectionTops[activeIndex];
+      const nextTop = sectionTops[activeIndex + 1];
+
+      if (activationLine >= sectionTops[0]) {
+        if (nextTop === undefined) progress = 1;
+        else {
+          const localProgress = Math.min(1, Math.max(0, (activationLine - currentTop) / (nextTop - currentTop)));
+          progress = (activeIndex + localProgress) / finalSegment;
+        }
+      }
+
+      sectionProgress?.style.setProperty('transform', `scaleX(${progress})`);
       updateScheduled = false;
     };
 
@@ -126,6 +145,8 @@ const bookingHref = isCurrentPage('./') ? nav.cta.href : `${basePath}${nav.cta.h
     window.addEventListener('scroll', scheduleActiveSectionUpdate, { passive: true });
     window.addEventListener('resize', scheduleActiveSectionUpdate);
     window.addEventListener('hashchange', scheduleActiveSectionUpdate);
+    const layoutObserver = new ResizeObserver(scheduleActiveSectionUpdate);
+    layoutObserver.observe(document.body);
     scheduleActiveSectionUpdate();
   }
 </script>

@@ -156,19 +156,19 @@ export const benefits = {
   items: [
     {
       title: 'Reduce integration complexity',
-      body: 'Standardize how integrations are built and managed so teams move faster, reduce operational effort, and make critical systems easier to support.',
+      body: 'Standardize how requirements, mappings, test cases, and pipeline changes are defined and managed in one connected workflow.',
     },
     {
-      title: 'Modernize the development lifecycle',
-      body: 'Bring requirements, implementation, testing, and change management into one structured workflow designed around how developers work.',
+      title: 'Accelerate pipeline delivery',
+      body: 'Move from requirements through specification, generation, testing, review, and deployment while preserving full manual control.',
     },
     {
-      title: 'Make the specification the source of truth',
-      body: 'Preserve intent, improve consistency, and give every engineer a maintainable starting point from initial delivery through every future change.',
+      title: 'Keep delivery knowledge with the team',
+      body: 'Use the specification as a durable source of intent so decisions, context, and delivery knowledge remain accessible as people and priorities change.',
     },
     {
-      title: 'Apply pipeline expertise by default',
-      body: 'Build proven engineering practices, audit controls, and hard-won edge-case guidance into every delivery without asking each team to recreate them.',
+      title: 'Apply best practices by default',
+      body: 'Build proven pipeline patterns, audit controls, and edge-case guidance into each delivery instead of asking every engineer to recreate them.',
     },
   ],
 };
@@ -185,7 +185,7 @@ export const install = {
   headline: 'See Akaden in your workflow',
   lead:
     'Book a working session with an ABCloudz specialist. We will talk through the systems you need to connect, the delivery work in front of your team, and where Akaden can help you move from request to tested pipeline faster.',
-  ctaLabel: 'Contact us',
+  ctaLabel: 'Book a call',
   ctaHref: 'https://abcloudz.com/company/?page-url=Trusted+Experts+in+Cloud+Transformation#contact-us',
   pending: false,
   secondary: {
