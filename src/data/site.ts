@@ -8,7 +8,7 @@
 
 export const site = {
   name: 'Akaden',
-  tagline: 'Technology modernization through Agentic AI',
+  tagline: 'AI-assisted IDE for Ellucian pipeline development',
   description:
     'Akaden turns a written specification into a reviewed, deployable Ellucian data pipeline. ' +
     'It guides teams through the delivery work with practices built for integrations, while people keep the decisions.',
@@ -21,14 +21,15 @@ export const nav = {
     { label: 'Overview', href: '#overview', live: true },
     { label: 'What changes', href: '#outcomes', live: true },
     { label: 'Workflow', href: '#workflow', live: true },
+    { label: 'Case Study', href: '#specification', live: true },
     { label: 'Proof', href: '#proof', live: true },
   ],
   cta: { label: 'Book a call', href: '#book-a-call' },
 };
 
 export const hero = {
-  eyebrow: 'For Ellucian Banner and Ethos',
-  headline: 'Accelerate Pipeline Development\nand Cloud Migration',
+  eyebrow: 'AI-assisted IDE for Ellucian pipeline development',
+  headline: 'Accelerate pipeline development and cloud migration.',
   lead:
     'Akaden turns a written request into a reviewed, deployable Ellucian data pipeline, with the right delivery practices ready when the work needs them.',
   thesis: 'Get to Know Akaden',
@@ -121,9 +122,9 @@ export const proof = {
     'Akaden was built because that work was being done by hand, and it went into production on ' +
     'our own team before it went anywhere else.',
   stats: [
-    { figure: '15', label: 'Engineers using it in production', sourced: true },
-    { figure: '2', label: 'US-based solutions architects', sourced: true },
-    { figure: '5–50×', label: 'Times a pipeline entry was configured by hand, per integration', sourced: true },
+    { figure: 'Used Internally', label: 'Used in production by the ABCloudz delivery team', sourced: true },
+    { figure: 'Human-led', label: 'Developers review and approve the decisions that matter', sourced: true },
+    { figure: 'Team continuity', label: 'Critical pipeline knowledge stays accessible across the team', sourced: true },
   ],
   /**
    * NEEDS-SOURCE — the number that would matter most is not here (review finding 14).
@@ -146,7 +147,7 @@ export const proof = {
      */
     pendingPermission: true,
   },
-  badgeNote: 'ABCloudz is a member of the Ellucian Partner Network.',
+  badgeNote: 'Akaden is built by ABCloudz, a member of the Ellucian Partner Network.',
 };
 
 export const benefits = {
@@ -199,7 +200,6 @@ export const footer = {
   event: 'EDUCAUSE Demo Day — 14 September 2026',
   links: [
     { label: 'ABCloudz', href: 'https://abcloudz.com/' },
-    { label: 'Accessibility', href: '#accessibility' },
     { label: 'Book a call', href: '#book-a-call' },
   ],
 };

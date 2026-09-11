@@ -1,5 +1,5 @@
 /**
- * The five walkthrough stages.
+ * The six walkthrough stages.
  *
  * SINGLE SOURCE. Both the interactive island and the always-visible text
  * equivalent below it render from this file. Authoring them separately is how
@@ -41,7 +41,7 @@ export const stages: Stage[] = [
   {
     n: '01',
     id: 'prepare-workspace',
-    title: 'Prepare workspace',
+    title: 'Prepare Workspace',
     caption: 'Input business and technical context',
     body:
       'You load the workspace with what the agents need to know: the business requirement, ' +
@@ -73,7 +73,7 @@ export const stages: Stage[] = [
   {
     n: '03',
     id: 'review-specification',
-    title: 'Review specification',
+    title: 'Review Specification',
     caption: 'Discuss specifications with agent or edit document manually',
     body:
       'You read the specification and you approve it, or you change it. Nothing is generated ' +
@@ -104,17 +104,32 @@ export const stages: Stage[] = [
   {
     n: '05',
     id: 'deploy-validate',
-    title: 'Deploy and validate',
-    caption: 'Deploy to Ellucian tenant and review',
+    title: 'Deploy and Validate',
+    caption: 'Generate test cases, deploy to the Ellucian tenant, and validate',
     body:
-      'The pipeline deploys to your Ellucian tenant and runs against the acceptance criteria ' +
-      'written into the specification. You review the result. The specification that built it ' +
-      'is still there, in git, describing exactly what shipped.',
-    actor: 'system',
-    alt: 'The generated pipeline deployed and running in the Ellucian tenant, with acceptance criteria passing.',
+      'Akaden generates test cases from the approved requirements so your team can validate the ' +
+      'pipeline’s functionality and choose when it is ready to deploy to the Ellucian tenant. ' +
+      'The specification that built it remains in git, describing what was approved and shipped.',
+    actor: 'human',
+    alt: 'A developer reviewing the generated pipeline and approving deployment to the Ellucian tenant.',
     shot: null,
     shotMobile: null,
-    mobileCrop: 'The acceptance-criteria result rows — pass state must be readable.',
+    mobileCrop: 'The functionality review and deployment approval controls.',
+  },
+  {
+    n: '06',
+    id: 'monitor-pipelines',
+    title: 'Monitoring and Upkeep',
+    caption: 'Monitor pipeline health in Akaden dashboards and apply updates',
+    body:
+      'After deployment, Akaden’s purpose-built monitoring dashboards bring pipeline status and ' +
+      'operational history into one view. Your team can follow what is running and retain an ' +
+      'auditable connection to the specification and delivery decisions behind it.',
+    actor: 'system',
+    alt: 'The Akaden monitoring dashboard showing the status and operational history of deployed pipelines.',
+    shot: null,
+    shotMobile: null,
+    mobileCrop: 'The deployed pipeline status and recent monitoring activity.',
   },
 ];
 
@@ -126,8 +141,8 @@ export const specExcerpt = `Pick the name in this order:
 
 /** The change-request beat — §7.5 calls this the highest-value element on the page. */
 export const changeRequest = {
-  when: 'Six months later',
+  when: 'Case Study',
   ask: 'The communications team needs a country column in the contact export.',
-  oldWay: 'Open the pipeline. Find the mapping. Patch it by hand. Hope the tests still cover it.',
-  newWay: 'Add the column to the specification. Regenerate. Acceptance criteria pass. The spec still describes what shipped.',
+  oldWay: 'An engineer locates the mapping in the existing pipeline and updates it manually.',
+  newWay: 'Update the approved specification to include the country field, then regenerate the pipeline.',
 };

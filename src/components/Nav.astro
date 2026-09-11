@@ -49,7 +49,8 @@ const bookingHref = isCurrentPage('./') ? nav.cta.href : `${basePath}${nav.cta.h
             <a
               href={pageHref(tab.href)}
               aria-current={isCurrentPage(tab.href) ? 'page' : undefined}
-              class="rounded-md px-3 py-2 text-[0.9375rem] font-semibold text-ink hover:text-blue-bright"
+              data-section-link={tab.href.startsWith('#') ? tab.href.slice(1) : undefined}
+              class="section-nav-link rounded-md px-3 py-2 text-[0.9375rem] font-semibold text-ink hover:text-blue-bright"
             >
               {tab.label}
             </a>
@@ -78,3 +79,53 @@ const bookingHref = isCurrentPage('./') ? nav.cta.href : `${basePath}${nav.cta.h
     </div>
   </nav>
 </header>
+
+<style>
+  .section-nav-link{position:relative}
+  .section-nav-link::after{position:absolute;right:.75rem;bottom:-.78rem;left:.75rem;height:3px;border-radius:999px;background:#1769e0;content:"";opacity:0;transform:scaleX(.45);transition:opacity .18s ease,transform .18s ease}
+  .section-nav-link.is-active{color:#1769e0}
+  .section-nav-link.is-active::after{opacity:1;transform:scaleX(1)}
+  @media(prefers-reduced-motion:reduce){.section-nav-link::after{transition:none}}
+</style>
+
+<script>
+  const sectionItems = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-section-link]'))
+    .map((link) => {
+      const sectionId = link.dataset.sectionLink;
+      const section = sectionId ? document.getElementById(sectionId) : null;
+      return section ? { link, section } : null;
+    })
+    .filter((item): item is { link: HTMLAnchorElement; section: HTMLElement } => item !== null);
+
+  if (sectionItems.length) {
+    let updateScheduled = false;
+
+    const updateActiveSection = () => {
+      const activationLine = window.scrollY + Math.min(window.innerHeight * .32, 260);
+      let activeItem = sectionItems[0];
+
+      sectionItems.forEach((item) => {
+        if (item.section.offsetTop <= activationLine) activeItem = item;
+      });
+
+      sectionItems.forEach((item) => {
+        const isActive = item === activeItem;
+        item.link.classList.toggle('is-active', isActive);
+        if (isActive) item.link.setAttribute('aria-current', 'location');
+        else item.link.removeAttribute('aria-current');
+      });
+      updateScheduled = false;
+    };
+
+    const scheduleActiveSectionUpdate = () => {
+      if (updateScheduled) return;
+      updateScheduled = true;
+      window.requestAnimationFrame(updateActiveSection);
+    };
+
+    window.addEventListener('scroll', scheduleActiveSectionUpdate, { passive: true });
+    window.addEventListener('resize', scheduleActiveSectionUpdate);
+    window.addEventListener('hashchange', scheduleActiveSectionUpdate);
+    scheduleActiveSectionUpdate();
+  }
+</script>

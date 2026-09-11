@@ -1,0 +1,106 @@
+---
+interface Props {
+  kind: string;
+}
+
+const { kind } = Astro.props;
+---
+
+<svg class:list={['workflow-line-icon', `workflow-line-icon--${kind}`]} viewBox="0 0 120 120" aria-hidden="true">
+  {kind === 'prepare-workspace' && (
+    <>
+      <ellipse cx="56" cy="39" rx="29" ry="10" />
+      <path d="M27 39v35c0 6 13 11 29 11s29-5 29-11V39M27 56c0 6 13 11 29 11s29-5 29-11" />
+      <path d="M27 49H15V25M85 49h15V28" />
+      <circle cx="15" cy="20" r="6" /><circle cx="100" cy="23" r="6" />
+      <g class="workflow-line-icon__badge workflow-line-icon__badge--blue">
+        <path d="m88 62 6 7 9-1 2 9 8 5-4 8 4 8-8 5-2 9-9-1-6 7-6-7-9 1-2-9-8-5 4-8-4-8 8-5 2-9 9 1Z" />
+        <circle cx="88" cy="90" r="7" />
+      </g>
+    </>
+  )}
+
+  {(kind === 'specification-builder' || kind === 'pipeline-builder') && (
+    <>
+      <g class="workflow-line-icon__agent">
+        <path d="M60 11v10M55 9h10" />
+        <rect x="31" y="21" width="58" height="50" rx="15" />
+        <path d="M31 34h-6c-4 0-7 3-7 7v12c0 4 3 7 7 7h6M89 34h6c4 0 7 3 7 7v12c0 4-3 7-7 7h-6" />
+        <circle cx="49" cy="43" r="3" class="workflow-line-icon__fill" />
+        <circle cx="71" cy="43" r="3" class="workflow-line-icon__fill" />
+        <path d="M48 56c3 4 7 6 12 6s9-2 12-6M43 73c-10 5-16 13-18 24M77 73c9 5 15 13 17 24M43 85h34" />
+      </g>
+      {kind === 'specification-builder' ? (
+        <g class="workflow-line-icon__badge workflow-line-icon__badge--blue">
+          <rect x="72" y="68" width="35" height="32" rx="8" />
+          <path d="M82 78h2M90 78h8M82 85h2M90 85h8M82 92h2M90 92h8" />
+        </g>
+      ) : (
+        <g class="workflow-line-icon__badge workflow-line-icon__badge--green">
+          <rect x="72" y="68" width="35" height="32" rx="8" />
+          <path d="M80 80h18l-4-4M98 80l-4 4M99 90H81l4-4M81 90l4 4" />
+        </g>
+      )}
+    </>
+  )}
+
+  {kind === 'review-specification' && (
+    <>
+      <rect x="27" y="18" width="58" height="76" rx="7" />
+      <circle cx="40" cy="39" r="4" /><path d="M50 39h22" />
+      <circle cx="40" cy="56" r="4" /><path d="M50 56h22" />
+      <circle cx="40" cy="73" r="4" /><path d="M50 73h22" />
+      <g class="workflow-line-icon__badge workflow-line-icon__badge--green">
+        <circle cx="88" cy="83" r="18" />
+        <path d="m78 83 7 7 13-15" />
+      </g>
+    </>
+  )}
+
+  {kind === 'test-builder' && (
+    <>
+      <path d="M41 18h38M49 18v24L27 82c-5 10 1 19 12 19h42c11 0 17-9 12-19L71 42V18" />
+      <path d="M38 72h44M45 84h5M58 88h4" />
+      <g class="workflow-line-icon__badge workflow-line-icon__badge--green">
+        <circle cx="89" cy="81" r="17" />
+        <path d="m80 81 6 6 12-14" />
+      </g>
+    </>
+  )}
+
+  {kind === 'deploy-validate' && (
+    <>
+      <path d="M31 75h55c12 0 21-9 21-20 0-10-8-19-19-20-4-13-15-22-29-22-16 0-29 12-30 27-10 2-17 9-17 18 0 10 8 17 19 17Z" />
+      <path d="M59 61V30M47 42l12-12 12 12" />
+      <path class="workflow-line-icon__purple-fill" d="m59 75 19 9-19 10-19-10Z" />
+      <path d="m41 93 18 9 18-9" />
+    </>
+  )}
+
+  {kind === 'monitor-pipelines' && (
+    <>
+      <rect x="17" y="22" width="86" height="61" rx="7" />
+      <path d="M38 98h44M60 83v15M33 67V51M47 67V42M61 67V55M75 67V35" />
+      <circle cx="88" cy="44" r="10" /><path d="M88 34v10h9" />
+      <g class="workflow-line-icon__badge workflow-line-icon__badge--purple">
+        <circle cx="91" cy="83" r="17" />
+        <path d="M100 80a10 10 0 1 0-2 9M100 73v7h-7" />
+      </g>
+    </>
+  )}
+</svg>
+
+<style>
+  .workflow-line-icon{display:block;width:76%;height:76%;margin:auto;overflow:visible;fill:none;stroke:#101318;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;transform-origin:center}
+  .workflow-line-icon--prepare-workspace{transform:translateY(6px) scale(.94)}
+  .workflow-line-icon--specification-builder,.workflow-line-icon--pipeline-builder{transform:translateY(2px) scale(.96)}
+  .workflow-line-icon--review-specification{transform:translate(-5px,2px) scale(.96)}
+  .workflow-line-icon--deploy-validate{transform:translateY(2px) scale(.96)}
+  .workflow-line-icon--monitor-pipelines{transform:translate(-2px,-1px) scale(.96)}
+  .workflow-line-icon__fill{fill:#101318;stroke:none}
+  .workflow-line-icon__purple-fill{fill:#b724e8;stroke:#fff;stroke-width:3}
+  .workflow-line-icon__badge>*{stroke:#fff;stroke-width:3}
+  .workflow-line-icon__badge--blue>*:first-child{fill:#2e97ed}
+  .workflow-line-icon__badge--green>*:first-child{fill:#38d763}
+  .workflow-line-icon__badge--purple>*:first-child{fill:#b724e8}
+</style>
