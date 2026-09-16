@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
+  <title>Mainframe</title>
+  <g fill="none" stroke="#17366f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="10" y="6" width="44" height="52" rx="5" />
+    <path d="M10 23h44M10 40h44" />
+    <path d="M20 15h18M20 32h18M20 49h18" />
+  </g>
+  <g fill="#1769e0">
+    <circle cx="46" cy="15" r="2.5" />
+    <circle cx="46" cy="32" r="2.5" />
+    <circle cx="46" cy="49" r="2.5" />
+  </g>
+</svg>

@@ -1,14 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img">
   <title>Akaden</title>
   <defs>
-    <linearGradient id="akaden-brand" x1="18" y1="78" x2="82" y2="22" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#146AD8"/>
-      <stop offset="1" stop-color="#6B35D2"/>
-    </linearGradient>
+    <clipPath id="akaden-appicon-left" clipPathUnits="userSpaceOnUse">
+      <polygon points="78.96,92.89 9.13,-28.45 -103.55,36.39 -33.72,157.73" />
+    </clipPath>
+    <clipPath id="akaden-appicon-right" clipPathUnits="userSpaceOnUse">
+      <polygon points="21.04,92.89 90.87,-28.45 203.55,36.39 133.72,157.73" />
+    </clipPath>
   </defs>
-  <g fill="none" stroke="url(#akaden-brand)" stroke-linecap="round" stroke-linejoin="round" stroke-width="17">
-    <path d="M18.13 77.24 50 21.86"/>
-    <path d="M50 21.86 81.87 77.24"/>
+  <rect width="100" height="100" rx="22" fill="#1769e0" />
+  <g fill="none" stroke="#fff" stroke-width="20.76" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18.13 77.24 50 21.86 81.87 77.24" opacity=".475" />
+    <path d="M50 21.86 81.87 77.24" opacity=".475" clip-path="url(#akaden-appicon-right)" />
+    <path d="M50 21.86 18.13 77.24" clip-path="url(#akaden-appicon-left)" />
   </g>
-  <circle cx="50" cy="77.89" r="8.5" fill="#146AD8"/>
+  <circle cx="50" cy="77.89" r="10.37" fill="#fff" />
 </svg>

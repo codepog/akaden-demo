@@ -47,14 +47,14 @@ export const benefits = {
     {
       key: 'intelligence',
       title: 'Intelligence',
-      summary: 'Apply leading AI models with relevant project context.',
-      body: 'Use leading AI models with the project context and specialized skills needed to reason through complex integration work. Engineers choose the models and direct the work.',
+      summary: 'Apply custom integration skills to your institutional context.',
+      body: 'Akaden combines institutional knowledge with custom skills built for Ellucian integration work. Specialized agents use that foundation to guide pipeline decisions while engineers stay in control.',
     },
     {
       key: 'development',
       title: 'Development',
-      summary: 'Build, test, review, and retain delivery knowledge.',
-      body: 'Bring agent-assisted building, testing, review, and version control into the engineering workflow while keeping people in control. Reusable knowledge and pipeline best practices stay available to the team.',
+      summary: 'Keep specifications, pipelines, and the team in sync.',
+      body: 'A spec-driven process keeps requirements, decisions, pipelines, tests, and related work connected as the project evolves. Version control records each change so any teammate can review the project and continue the work.',
     },
     {
       key: 'data',
@@ -66,7 +66,7 @@ export const benefits = {
       key: 'systems',
       title: 'Existing Systems',
       summary: 'Carry institutional context into modernization.',
-      body: 'Carry forward context from Banner, Colleague, student records, learning platforms, and existing legacy applications so modernization does not start from scratch.',
+      body: 'Carry forward context from Banner, Colleague, student records, learning platforms, legacy applications, and other existing systems so modernization does not start from scratch.',
     },
   ],
 };
@@ -75,7 +75,7 @@ export const contact = {
   eyebrow: 'Contact us',
   headline: 'See what Akaden can do with your integration.',
   lead:
-    'The integration may be critical, but moving it forward means untangling years of logic, filling in missing context, and finding time your team doesn’t have. Whether you’re modernizing Banner or Colleague, building in Data Connect, or inheriting someone else’s work, Akaden turns what already exists into a reviewed specification and a tested pipeline, so your engineers can make progress without starting over.',
+    'Have an integration your team needs to build, modernize, or take over? Tell us what you’re working on, and we’ll show you how Akaden can help move it forward.',
   close: 'Bring a real use case. Leave with a clearer path forward.',
   ctaLabel: 'Contact Us',
   ctaHref: '',
@@ -83,7 +83,6 @@ export const contact = {
 
 export const footer = {
   note: 'Akaden is built by ABCloudz.',
-  event: 'EDUCAUSE Demo Day, 14 September 2026',
   links: [
     { label: 'ABCloudz', href: 'https://abcloudz.com/' },
     { label: 'Contact Us', href: '#form' },
