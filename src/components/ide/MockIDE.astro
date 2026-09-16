@@ -185,6 +185,7 @@ import Chat from './Chat.astro';
     let busy = false;
     let transition = 0;
     let calloutTarget: HTMLElement | null = null;
+    const mobileTour = window.matchMedia('(max-width: 620px)');
 
     const step = () => steps[cur - 1];
     const promptFor = (candidate = step()) => candidate.chat.find((message) => message.from === 'you')?.text ?? null;
@@ -353,9 +354,20 @@ import Chat from './Chat.astro';
       if (s.id === 'refine' && openFile === 'test') cue = { ...s, ring: '[data-run-quick-test]', instruct: 'This separate .test_pipeline file lives beside the pipeline in pipelines. Run the quick test to check execution and compare the output with the expected file.', nextLabel: 'Run quick test' };
       if (s.id === 'refine' && quickTestPassed) cue = { ...s, ring: '[data-toolbar-action="ready-to-deploy"]', instruct: 'The simulated checks passed. Next, deploy the pipeline as a draft in Ellucian. Need changes? Refine the pipeline or add another test case, then test again.', nextLabel: 'Continue to deploy' };
       if (s.id === 'publish' && published) cue = { ...s, ring: '[data-publish-badge]', instruct: 'Published: version 0.0.1 is now live in the demo environment. Publishing does not execute it. Next, configure the job’s runtime parameters.', nextLabel: 'Configure job' };
+      if (s.id === 'monitor' && mobileTour.matches && !walkthroughComplete) cue = { ...s, nextLabel: 'Complete demo' };
       const target = !exploreMode && !(walkthroughComplete && s.id === 'monitor') ? (q<HTMLElement>(cue.ring) ?? document.querySelector<HTMLElement>(cue.ring)) : null;
       target?.classList.add('is-target');
-      updateCallout(target, cue);
+      if (walkthroughComplete && mobileTour.matches) {
+        calloutTarget = null;
+        if (calloutText) calloutText.textContent = 'Demo complete. You have seen how a request moves from workspace setup through a live, monitored pipeline.';
+        if (calloutNext) {
+          calloutNext.textContent = 'Restart demo';
+          calloutNext.disabled = false;
+        }
+        if (callout) callout.hidden = false;
+      } else {
+        updateCallout(target, cue);
+      }
 
       topActions.forEach((button) => {
         const action = button.dataset.topAction;
@@ -365,8 +377,10 @@ import Chat from './Chat.astro';
       ide!.dataset.step = String(cur);
       ide!.dataset.explore = String(exploreMode);
       ide!.dataset.focus = s.focus;
-      const guideHeading = document.querySelector<HTMLElement>('[data-guide-heading]');
-      if (guideHeading) guideHeading.textContent = walkthroughComplete ? 'Tutorial complete · Explore the workspace' : `Step ${s.n} of ${steps.length} · ${s.title}`;
+      const guideProgress = document.querySelector<HTMLElement>('[data-guide-progress]');
+      const guideTitle = document.querySelector<HTMLElement>('[data-guide-title]');
+      if (guideProgress) guideProgress.textContent = walkthroughComplete ? '10 of 10' : `${s.n} of ${steps.length}`;
+      if (guideTitle) guideTitle.textContent = walkthroughComplete ? (mobileTour.matches ? 'Demo complete' : 'Tutorial complete') : s.title;
       const guideStatus = document.querySelector<HTMLElement>('[data-guide-status]');
       if (guideStatus) guideStatus.textContent = walkthroughComplete ? 'Completed' : 'Interactive simulation';
       ide!.classList.remove('step-change');
@@ -379,6 +393,13 @@ import Chat from './Chat.astro';
         d.classList.toggle('past', completed);
         d.setAttribute('aria-current', String(n === cur && !walkthroughComplete));
       });
+      window.dispatchEvent(new CustomEvent('akaden-step-rendered', {
+        detail: {
+          target,
+          step: s.n,
+          mobilePane: s.n === 1 ? 'side' : s.focus,
+        },
+      }));
     }
 
     function go(n: number, { preserveExplore = false } = {}) {
@@ -445,6 +466,10 @@ import Chat from './Chat.astro';
     function publishVersion() { if (step().id !== 'publish') return; published = true; render(); }
     function next() {
       if (exploreMode || busy) return;
+      if (walkthroughComplete && mobileTour.matches) {
+        go(1);
+        return;
+      }
       if (cur === 1 && !uploadPlaying) {
         uploadPlaying = true;
         busy = true;
@@ -530,6 +555,11 @@ import Chat from './Chat.astro';
       if (step().id === 'publish' && !published) { publishVersion(); return; }
       if (cur === steps.length) {
         walkthroughComplete = true;
+        if (mobileTour.matches) {
+          exploreMode = false;
+          render();
+          return;
+        }
         exploreMode = true;
         openFile = 'pipeline';
         render();

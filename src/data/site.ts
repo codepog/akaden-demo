@@ -77,8 +77,10 @@ export const contact = {
   lead:
     'Have an integration your team needs to build, modernize, or take over? Tell us what you’re working on, and we’ll show you how Akaden can help move it forward.',
   close: 'Bring a real use case. Leave with a clearer path forward.',
-  ctaLabel: 'Contact Us',
-  ctaHref: '',
+  ctaLabel: 'Submit',
+  // At launch, set this to the confirmed Contact Form 7 feedback endpoint.
+  // The current akaden.ai form uses form ID 9 and a /contact-forms/9/feedback route.
+  submitEndpoint: '',
 };
 
 export const footer = {

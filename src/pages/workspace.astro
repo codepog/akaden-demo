@@ -27,7 +27,11 @@ const basePath = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_U
     </aside>
 
     <nav class="guide" data-guide aria-label="Walkthrough controls">
-      <div class="guide-heading"><span data-guide-heading>Step 1 of 10 · Prepare workspace</span><small data-guide-status>Interactive simulation</small></div>
+      <div class="guide-heading">
+        <span class="guide-heading__progress" data-guide-progress>1 of 10</span>
+        <strong class="guide-heading__title" data-guide-title>Prepare workspace</strong>
+        <small data-guide-status>Interactive simulation</small>
+      </div>
       <ol class="g-dots" data-g-dots>
         {steps.map((s) => (
           <li><button type="button" data-dot={s.n} aria-label={`Step ${s.n}: ${s.title}`}></button></li>
@@ -61,7 +65,7 @@ const basePath = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_U
     padding:10px clamp(12px,2.4vw,20px);
   }
   .g-dots{list-style:none;display:flex;gap:6px;margin:0;padding:0;}
-  .guide-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:9px;font-size:12px;font-weight:700;color:#205eac}.guide-heading small{font-size:10px;font-weight:500;color:#68707e}
+  .guide-heading{display:flex;align-items:center;gap:7px;margin-bottom:9px;font-size:12px;color:#205eac}.guide-heading__progress,.guide-heading__title{font-weight:700}.guide-heading__progress::before{content:"Step "}.guide-heading__progress::after{content:" ·"}.guide-heading small{margin-left:auto;font-size:10px;font-weight:500;color:#68707e}
   .g-dots li{flex:1;}
   .g-dots button{
     display:block;width:100%;height:4px;border:0;padding:0;border-radius:2px;
@@ -93,14 +97,34 @@ const basePath = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_U
   @media (max-width:620px){
     .page{
       grid-template-areas:"guide" "coach" "frame";
-      grid-template-rows:auto auto auto;
+      grid-template-rows:auto auto minmax(0,1fr);
       height:auto;
       min-height:100dvh;
     }
-    .frame{width:100%;height:auto;aspect-ratio:16/9;align-self:start;}
+    .frame{
+      position:relative;
+      width:100%;
+      height:clamp(15.25rem,66vw,18rem);
+      align-self:start;
+      overflow:hidden;
+      border-top:1px solid #d8e3f1;
+      background:#f7faff;
+      box-shadow:inset 0 16px 30px -30px rgb(0 33 99 / .55);
+    }
+    .frame::after{
+      position:absolute;
+      z-index:4;
+      inset:0;
+      box-shadow:inset 0 0 22px rgb(18 53 112 / .1);
+      content:"";
+      pointer-events:none;
+    }
     .g-dots{gap:4px;}
-    .guide{padding:8px 10px;}
-    .guide-heading{margin-bottom:7px;}
+    .guide{position:relative;z-index:6;padding:10px 12px 9px;}
+    .guide-heading{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 10px;margin-bottom:9px;}
+    .guide-heading__progress{grid-column:1;color:#1769e0;font-family:var(--font-mono);font-size:.7rem;letter-spacing:.045em;white-space:nowrap;}
+    .guide-heading__progress::before,.guide-heading__progress::after{content:""}
+    .guide-heading__title{grid-column:2;color:#15285d;font-size:.98rem;line-height:1.2;}
     .guide-heading small{display:none;}
     .coach-callout{
       position:relative!important;
@@ -113,26 +137,43 @@ const basePath = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_U
       border-radius:0;
       background:#fff;
       display:block;
-      min-height:5.75rem;
-      padding:9px 10px;
+      min-height:6.3rem;
+      padding:12px 12px 13px;
       box-shadow:0 10px 26px rgb(0 33 99 / .1);
     }
     .coach-callout::after{display:none;}
-    .coach-callout p:last-child{margin:0;font-size:.8rem;line-height:1.35;}
+    .coach-callout p:last-child{margin:0;color:#344661;font-size:.94rem;line-height:1.42;}
     .coach-actions{position:fixed;z-index:95;right:10px;bottom:10px;margin:0;border:0;padding:0;}
-    .coach-next{width:auto;min-width:7.25rem;min-height:38px;padding-inline:12px;}
+    .coach-next{width:auto;max-width:9.5rem;min-width:5.1rem;min-height:42px;padding:8px 13px;box-shadow:0 10px 24px rgb(17 75 156 / .28);}
     .frame :global(.ide){
-      width:1024px;
-      grid-template-columns:48px 200px minmax(0,1fr) 290px!important;
-      grid-template-areas:"menu menu menu menu" "rail side ed chat"!important;
-      transform-origin:top left;
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      grid-template-rows:minmax(0,1fr)!important;
+      pointer-events:none;
+      will-change:opacity;
+      transition:opacity .2s ease;
     }
-    .frame :global(.ide .rail){display:flex!important;}
-    .frame :global(.ide .side){display:flex!important;}
-    .frame :global(.ide .ed){display:flex!important;}
-    .frame :global(.ide .chat){display:flex!important;}
-    .frame :global(.ide .menubar .mi:not(.plus)){display:block!important;}
-    .frame :global(.ide .menubar .chipbtn){display:inline-flex!important;max-width:none!important;}
+    .frame :global(.ide .menubar){display:none!important;}
+    .frame :global(.ide .rail),
+    .frame :global(.ide .side),
+    .frame :global(.ide .ed),
+    .frame :global(.ide .chat){display:none!important;}
+    .frame :global(.ide[data-mobile-pane="side"]){grid-template-columns:48px minmax(0,1fr)!important;grid-template-areas:"rail side"!important;}
+    .frame :global(.ide[data-mobile-pane="side"] .rail),
+    .frame :global(.ide[data-mobile-pane="side"] .side){display:flex!important;}
+    .frame :global(.ide[data-mobile-pane="ed"]){grid-template-columns:minmax(0,1fr)!important;grid-template-areas:"ed"!important;}
+    .frame :global(.ide[data-mobile-pane="ed"] .ed){display:flex!important;}
+    .frame :global(.ide[data-mobile-pane="chat"]){grid-template-columns:minmax(0,1fr)!important;grid-template-areas:"chat"!important;}
+    .frame :global(.ide[data-mobile-pane="chat"] .chat){display:flex!important;}
+    .frame :global(.ide[data-mobile-pane="side"] .side){animation:mobilePaneFromLeft .42s cubic-bezier(.22,1,.36,1) both;}
+    .frame :global(.ide[data-mobile-pane="ed"] .ed){animation:mobilePaneFromCenter .38s cubic-bezier(.22,1,.36,1) both;}
+    .frame :global(.ide[data-mobile-pane="chat"] .chat){animation:mobilePaneFromRight .42s cubic-bezier(.22,1,.36,1) both;}
+    @keyframes mobilePaneFromLeft{from{opacity:.45;transform:translateX(-1.5rem)}to{opacity:1;transform:none}}
+    @keyframes mobilePaneFromCenter{from{opacity:.45;transform:translateY(.65rem)}to{opacity:1;transform:none}}
+    @keyframes mobilePaneFromRight{from{opacity:.45;transform:translateX(1.5rem)}to{opacity:1;transform:none}}
   }
   @media (prefers-reduced-motion: reduce){
     .g-dots button,.coach-next{transition:none;}
@@ -143,30 +184,62 @@ const basePath = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_U
   const workspaceFrame = document.querySelector<HTMLElement>('.frame');
   const workspaceIde = workspaceFrame?.querySelector<HTMLElement>('[data-ide]');
   const mobileWorkspace = window.matchMedia('(max-width:620px)');
-  const mobileCanvasWidth = 1024;
+  let mobileTarget: HTMLElement | null = null;
+  let mobilePane: 'side' | 'ed' | 'chat' = 'side';
+  let mobileReframeToken = 0;
 
-  const fitMobileWorkspace = () => {
+  const revealTargetWithinPane = (target: HTMLElement | null, pane: HTMLElement | null) => {
+    if (!target || !pane || !pane.contains(target)) return;
+    let scrollParent = target.parentElement;
+    while (scrollParent && scrollParent !== pane) {
+      const overflow = window.getComputedStyle(scrollParent).overflowY;
+      if ((overflow === 'auto' || overflow === 'scroll') && scrollParent.scrollHeight > scrollParent.clientHeight) break;
+      scrollParent = scrollParent.parentElement;
+    }
+    if (!scrollParent) return;
+    const targetRect = target.getBoundingClientRect();
+    const parentRect = scrollParent.getBoundingClientRect();
+    scrollParent.scrollTo({
+      top: scrollParent.scrollTop + targetRect.top - parentRect.top - (parentRect.height - targetRect.height) / 2,
+      behavior: 'smooth',
+    });
+  };
+
+  const frameMobileWorkspace = (target = mobileTarget, pane = mobilePane) => {
     if (!workspaceFrame || !workspaceIde) return;
     if (!mobileWorkspace.matches) {
-      workspaceIde.style.removeProperty('width');
-      workspaceIde.style.removeProperty('height');
-      workspaceIde.style.removeProperty('transform');
+      workspaceIde.style.removeProperty('opacity');
+      delete workspaceIde.dataset.mobilePane;
       return;
     }
-    const width = workspaceFrame.clientWidth;
-    const height = workspaceFrame.clientHeight;
-    if (!width || !height) return;
-    const scale = width / mobileCanvasWidth;
-    workspaceIde.style.width = `${mobileCanvasWidth}px`;
-    workspaceIde.style.height = `${height / scale}px`;
-    workspaceIde.style.transform = `scale(${scale})`;
+    const token = ++mobileReframeToken;
+    workspaceIde.style.opacity = '.45';
+    workspaceIde.dataset.mobilePane = pane;
+    window.requestAnimationFrame(() => {
+      if (token !== mobileReframeToken) return;
+      workspaceIde.style.opacity = '1';
+      const paneElement = workspaceIde.querySelector<HTMLElement>(`.${pane}`);
+      window.setTimeout(() => revealTargetWithinPane(target, paneElement), 80);
+    });
   };
 
   const workspaceObserver = workspaceFrame && 'ResizeObserver' in window
-    ? new ResizeObserver(fitMobileWorkspace)
+    ? new ResizeObserver(() => frameMobileWorkspace())
     : null;
   if (workspaceFrame) workspaceObserver?.observe(workspaceFrame);
-  mobileWorkspace.addEventListener('change', fitMobileWorkspace);
-  window.addEventListener('load', fitMobileWorkspace, { once: true });
-  window.requestAnimationFrame(fitMobileWorkspace);
+  mobileWorkspace.addEventListener('change', () => frameMobileWorkspace());
+  window.addEventListener('akaden-step-rendered', (event) => {
+    const detail = (event as CustomEvent<{
+      target?: HTMLElement | null;
+      mobilePane?: 'side' | 'ed' | 'chat';
+    }>).detail;
+    mobileTarget = detail?.target ?? null;
+    mobilePane = detail?.mobilePane ?? 'ed';
+    frameMobileWorkspace(mobileTarget, mobilePane);
+  });
+  window.addEventListener('load', () => frameMobileWorkspace(), { once: true });
+  window.requestAnimationFrame(() => {
+    mobileTarget = workspaceIde?.querySelector<HTMLElement>('.is-target') ?? null;
+    frameMobileWorkspace();
+  });
 </script>
