@@ -87,6 +87,8 @@ const layers = [
           type="button"
           data-connected-layer={layer.key}
           aria-pressed="false"
+          aria-disabled="true"
+          disabled
           style={`--layer-index:${index};--layer-order:${layers.length - index}`}
         >
           <span class="connected-layer__artwork">
@@ -141,7 +143,7 @@ const layers = [
      prism faces may overlap, but they never compete for the pointer. */
   .connected-layer{height:var(--layer-step);transition:opacity .28s ease,filter .28s ease}
   .connected-layer:last-child{height:8rem}
-  .connected-layer{pointer-events:auto}
+  .connected-layer{cursor:default;pointer-events:none}
   .connected-layer__plane,.connected-layer__face,.connected-layer__projection,.connected-layer__label,.connected-layer__inline-icons{pointer-events:none}
   .connected-layer.is-active{transform:translateX(-50%)}
   .connected-layer__plane{clip-path:polygon(8% 30%,26% 5%,92% 5%,74% 30%)}

@@ -1,32 +1,30 @@
 <figure
   class="hero-data-flow"
   role="img"
-  aria-label="Data moving from a server, cloud, and document into an Akaden development workspace"
+  aria-label="Akaden workspace showing a reviewed and tested pipeline"
 >
   <svg viewBox="0 0 840 470" aria-hidden="true">
     <defs>
-      <linearGradient id="hero-device-fill" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#f8fbff" />
+      <linearGradient id="hero-workspace-fill" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#f7fbff" />
+        <stop offset="1" stop-color="#e7f1ff" />
+      </linearGradient>
+      <linearGradient id="hero-canvas-fill" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#1a72e8" />
+        <stop offset=".58" stop-color="#2459cf" />
+        <stop offset="1" stop-color="#2f3fa8" />
+      </linearGradient>
+      <linearGradient id="hero-node-fill" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#fff" />
         <stop offset="1" stop-color="#dceaff" />
       </linearGradient>
-      <linearGradient id="hero-screen-fill" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#2f6ce6" />
-        <stop offset=".52" stop-color="#1769e0" />
-        <stop offset="1" stop-color="#1d4ec1" />
-      </linearGradient>
-      <radialGradient id="hero-screen-glow" cx="50%" cy="42%" r="62%">
-        <stop offset="0" stop-color="#6ba4ff" stop-opacity=".48" />
-        <stop offset="1" stop-color="#1769e0" stop-opacity="0" />
-      </radialGradient>
-      <filter id="hero-flow-shadow" x="-60%" y="-60%" width="220%" height="220%">
-        <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#1769e0" flood-opacity=".48" />
+      <clipPath id="hero-workspace-clip">
+        <rect x="184" y="102" width="470" height="298" rx="24" />
+      </clipPath>
+      <filter id="hero-card-shadow" x="-30%" y="-30%" width="160%" height="180%">
+        <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#173f82" flood-opacity=".2" />
       </filter>
-      <filter id="hero-device-shadow" x="-30%" y="-30%" width="160%" height="180%">
-        <feDropShadow dx="0" dy="9" stdDeviation="10" flood-color="#194e9b" flood-opacity=".16" />
-      </filter>
-      <path id="hero-flow-left" d="M182 270 H255" />
-      <path id="hero-flow-cloud" d="M420 116 V165" />
-      <path id="hero-flow-right" d="M697 270 H585" />
+
       <clipPath id="hero-mark-left" clipPathUnits="userSpaceOnUse">
         <polygon points="78.96,92.89 9.13,-28.45 -103.55,36.39 -33.72,157.73" />
       </clipPath>
@@ -35,112 +33,84 @@
       </clipPath>
     </defs>
 
-    <ellipse cx="420" cy="435" rx="265" ry="18" fill="#d9e8fb" opacity=".62" />
+    <ellipse cx="420" cy="447" rx="315" ry="16" fill="#d4e5fa" opacity=".58" />
 
-    <g class="hero-data-flow__route" fill="none" stroke-linecap="round">
-      <use href="#hero-flow-left" />
-      <use href="#hero-flow-cloud" />
-      <use href="#hero-flow-right" />
-    </g>
+    <g class="hero-data-flow__workspace" filter="url(#hero-card-shadow)" transform="translate(-221 -149) scale(1.53)">
+      <rect x="184" y="102" width="470" height="298" rx="24" fill="url(#hero-workspace-fill)" />
+      <g clip-path="url(#hero-workspace-clip)">
+      <path d="M208 102h422c13 0 24 11 24 24v32H184v-32c0-13 11-24 24-24Z" fill="#fff" />
+      <path d="M184 158h470" fill="none" stroke="#bad0ec" stroke-width="3" />
 
-    <g class="hero-data-flow__icon hero-data-flow__icon--server" filter="url(#hero-device-shadow)">
-      <rect x="52" y="220" width="130" height="124" rx="25" fill="url(#hero-device-fill)" />
-      <g fill="#e5efff" stroke="#1556ad" stroke-width="6">
-        <rect x="76" y="244" width="82" height="22" rx="7" />
-        <rect x="76" y="273" width="82" height="22" rx="7" />
-        <rect x="76" y="302" width="82" height="22" rx="7" />
+      <g class="hero-data-flow__brand" transform="translate(208 113)">
+        <rect width="36" height="34" rx="9" fill="#1769e0" />
+        <g transform="translate(9.1 5.5) scale(.18)" fill="none" stroke="#fff" stroke-width="20.76" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18.13 77.24 50 21.86 81.87 77.24" opacity=".45" />
+          <path d="M50 21.86 81.87 77.24" opacity=".45" clip-path="url(#hero-mark-right)" />
+          <path d="M50 21.86 18.13 77.24" clip-path="url(#hero-mark-left)" />
+          <circle cx="50" cy="77.89" r="10.37" fill="#fff" stroke="none" />
+        </g>
+        <text x="47" y="23" fill="#143876" font-size="18" font-weight="800" letter-spacing="1.2">AKADEN</text>
+      </g>
+
+      <g fill="#b4c9e6">
+        <circle cx="595" cy="130" r="5" />
+        <circle cx="614" cy="130" r="5" />
+        <circle cx="633" cy="130" r="5" />
+      </g>
+
+      <path d="M184 158h112v242h-88c-13 0-24-11-24-24Z" fill="#edf5ff" />
+      <g fill="#bbd2f1">
+        <rect x="204" y="180" width="70" height="9" rx="4.5" />
+        <rect x="204" y="208" width="52" height="8" rx="4" />
+        <rect x="204" y="232" width="66" height="8" rx="4" />
+        <rect x="204" y="256" width="45" height="8" rx="4" />
+        <rect x="204" y="304" width="68" height="8" rx="4" />
+        <rect x="204" y="328" width="55" height="8" rx="4" />
+      </g>
+      <rect x="198" y="272" width="82" height="14" rx="7" fill="#1769e0" opacity=".88" />
+
+      <rect x="313" y="178" width="322" height="162" rx="17" fill="url(#hero-canvas-fill)" />
+      <g class="hero-data-flow__pipeline" fill="none" stroke="#9ec7ff" stroke-width="4" stroke-linecap="round">
+        <path d="M362 259h43M455 259h44M550 259h34" />
+      </g>
+      <g fill="url(#hero-node-fill)" stroke="#fff" stroke-width="3">
+        <rect x="330" y="232" width="64" height="54" rx="12" />
+        <rect x="409" y="225" width="76" height="68" rx="14" />
+        <rect x="501" y="232" width="64" height="54" rx="12" />
+        <circle cx="602" cy="259" r="21" />
       </g>
       <g fill="#1769e0">
-        <circle cx="145" cy="255" r="4" />
-        <circle cx="145" cy="284" r="4" />
-        <circle cx="145" cy="313" r="4" />
+        <path d="M349 260h26M362 247v26" />
+        <circle cx="447" cy="259" r="10" />
+        <path d="M518 249h30v6h-30Zm0 14h23v6h-23Z" />
       </g>
-    </g>
+      <path d="m593 259 7 7 12-15" fill="none" stroke="#168052" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
 
-    <g class="hero-data-flow__icon hero-data-flow__icon--cloud" filter="url(#hero-device-shadow)">
-      <path
-        d="M366 94h103c17 0 29-11 29-26s-12-26-28-26c-5-16-20-27-38-27-20 0-37 14-40 33-3-1-7-2-11-2-16 0-29 11-29 25 0 13 7 23 14 23Z"
-        fill="url(#hero-device-fill)"
-        stroke="#1556ad"
-        stroke-width="6"
-        stroke-linejoin="round"
-      />
-    </g>
-
-    <g class="hero-data-flow__icon hero-data-flow__icon--document" filter="url(#hero-device-shadow)">
-      <path
-        d="M706 220h61l31 31v93H706Z"
-        fill="url(#hero-device-fill)"
-        stroke="#1556ad"
-        stroke-width="6"
-        stroke-linejoin="round"
-      />
-      <path d="M767 220v31h31" fill="#cfe2ff" stroke="#1556ad" stroke-width="6" stroke-linejoin="round" />
-      <g fill="none" stroke="#1769e0" stroke-width="5" stroke-linecap="round">
-        <path d="M726 276h51" />
-        <path d="M726 297h51" />
-        <path d="M726 318h36" />
-      </g>
-    </g>
-
-    <g class="hero-data-flow__monitor" filter="url(#hero-device-shadow)">
-      <rect x="255" y="165" width="330" height="225" rx="18" fill="#f8fbff" stroke="#1556ad" stroke-width="7" />
-      <rect x="276" y="186" width="288" height="176" rx="7" fill="url(#hero-screen-fill)" />
-      <rect x="276" y="186" width="288" height="176" rx="7" fill="url(#hero-screen-glow)" />
-      <circle cx="420" cy="376" r="4" fill="#76a1e9" />
-
-      <g class="hero-data-flow__mark" transform="translate(350 204) scale(1.4)">
-        <g fill="none" stroke="#fff" stroke-width="20.76" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18.13 77.24 50 21.86 81.87 77.24" opacity=".46" />
-          <path d="M50 21.86 81.87 77.24" opacity=".46" clip-path="url(#hero-mark-right)" />
-          <path d="M50 21.86 18.13 77.24" clip-path="url(#hero-mark-left)" />
+      <g font-family="Arial, sans-serif" font-size="12" font-weight="700">
+        <g transform="translate(321 358)">
+          <rect width="88" height="25" rx="12.5" fill="#e5f4ec" />
+          <circle cx="16" cy="12.5" r="4" fill="#168052" />
+          <text x="27" y="17" fill="#17653f">REVIEWED</text>
         </g>
-        <circle cx="50" cy="77.89" r="10.37" fill="#fff" />
+        <g transform="translate(421 358)">
+          <rect width="76" height="25" rx="12.5" fill="#e5efff" />
+          <circle cx="16" cy="12.5" r="4" fill="#1769e0" />
+          <text x="27" y="17" fill="#2358a1">TESTED</text>
+        </g>
+        <g transform="translate(509 358)">
+          <rect width="96" height="25" rx="12.5" fill="#fff4d8" />
+          <circle cx="16" cy="12.5" r="4" fill="#c98a00" />
+          <text x="27" y="17" fill="#8b6209">READY</text>
+        </g>
       </g>
-
-      <path d="M405 390v28h30v-28" fill="url(#hero-device-fill)" stroke="#1556ad" stroke-width="7" stroke-linejoin="round" />
-      <path d="M355 433c0-8 7-15 15-15h100c8 0 15 7 15 15Z" fill="url(#hero-device-fill)" stroke="#1556ad" stroke-width="7" stroke-linejoin="round" />
+      </g>
+      <rect x="184" y="102" width="470" height="298" rx="24" fill="none" stroke="#1556ad" stroke-width="5" />
     </g>
 
-    <g class="hero-data-flow__ports" fill="#ffd56a" stroke="#1556ad" stroke-width="5">
-      <circle cx="255" cy="270" r="12" />
-      <circle cx="420" cy="165" r="12" />
-      <circle cx="585" cy="270" r="12" />
-    </g>
-
-    <g class="hero-data-flow__dots" fill="#1769e0" filter="url(#hero-flow-shadow)">
-      <circle class="hero-data-flow__dot" r="5">
-        <animateMotion dur="2.5s" begin="0s" repeatCount="indefinite"><mpath href="#hero-flow-left" /></animateMotion>
-      </circle>
-      <circle class="hero-data-flow__dot" r="4">
-        <animateMotion dur="2.5s" begin="-1.25s" repeatCount="indefinite"><mpath href="#hero-flow-left" /></animateMotion>
-      </circle>
-
-      <circle class="hero-data-flow__dot hero-data-flow__dot--cloud" r="5">
-        <animateMotion dur="3.8s" begin="0s" repeatCount="indefinite"><mpath href="#hero-flow-cloud" /></animateMotion>
-      </circle>
-      <circle class="hero-data-flow__dot hero-data-flow__dot--cloud" r="4">
-        <animateMotion dur="3.8s" begin="-1.9s" repeatCount="indefinite"><mpath href="#hero-flow-cloud" /></animateMotion>
-      </circle>
-
-      <circle class="hero-data-flow__dot" r="5">
-        <animateMotion dur="2.8s" begin="0s" repeatCount="indefinite"><mpath href="#hero-flow-right" /></animateMotion>
-      </circle>
-      <circle class="hero-data-flow__dot" r="4">
-        <animateMotion dur="2.8s" begin="-1.4s" repeatCount="indefinite"><mpath href="#hero-flow-right" /></animateMotion>
-      </circle>
-    </g>
   </svg>
 </figure>
 
 <style>
-  .hero-data-flow{display:block;width:100%;aspect-ratio:840/470;margin:0;overflow:hidden;border-radius:.75rem;background:linear-gradient(145deg,#fff 0%,#f8fbff 72%,#edf5ff 100%)}
+  .hero-data-flow{display:block;width:100%;aspect-ratio:840/470;margin:0;overflow:visible;background:transparent}
   .hero-data-flow svg{display:block;width:100%;height:100%}
-  .hero-data-flow__route use{stroke:#85aff2;stroke-width:6}
-  .hero-data-flow__icon{transform-origin:center;transition:transform .3s cubic-bezier(.22,1,.36,1)}
-  .hero-data-flow:is(:hover,:focus-within) .hero-data-flow__icon--server{transform:translateX(-3px)}
-  .hero-data-flow:is(:hover,:focus-within) .hero-data-flow__icon--cloud{transform:translateY(-3px)}
-  .hero-data-flow:is(:hover,:focus-within) .hero-data-flow__icon--document{transform:translateX(3px)}
-  .hero-data-flow__mark{filter:drop-shadow(0 5px 10px rgb(3 37 116/.25))}
-  @media(prefers-reduced-motion:reduce){.hero-data-flow__dot{display:none}.hero-data-flow__icon{transition:none}}
 </style>

@@ -30,7 +30,7 @@ export const hero = {
 
 export const proof = {
   eyebrow: 'Proof',
-  headline: 'Battle-tested by our own delivery team.',
+  headline: 'We built the tool our delivery team needed.',
   lead:
     'We built Akaden to help our own delivery team do better integration work faster, more consistently, and with knowledge the whole team could use. ' +
     'After seeing how much it improved real Ellucian projects, we decided to share it with other teams facing the same challenges.',
