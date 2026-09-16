@@ -222,27 +222,6 @@ const layers = [
       }
     };
 
-    const renderScrollPosition = (position: number, selectedIndex?: number) => {
-      if (!changeDetail || changePanels.length === 0) return;
-      const nearestIndex = Math.min(changePanels.length - 1, Math.max(0, selectedIndex ?? Math.round(position)));
-      const panelTravel = mobileScrollStoryQuery.matches ? 8.5 : 13;
-      changeDetail.classList.add('is-scroll-controlled');
-      window.clearTimeout(panelTransitionTimer);
-      changePanels.forEach((panel, index) => {
-        const offset = index - position;
-        const distance = Math.abs(offset);
-        const active = index === nearestIndex;
-        panel.classList.toggle('is-active', active);
-        panel.classList.remove('is-leaving');
-        panel.style.opacity = String(Math.max(0, 1 - distance));
-        panel.style.transform = `translateY(${offset * panelTravel}rem)`;
-        panel.style.visibility = distance < 1 ? 'visible' : 'hidden';
-        panel.style.pointerEvents = active ? 'auto' : 'none';
-        panel.style.zIndex = String(active ? 2 : 1);
-        panel.setAttribute('aria-hidden', String(!active));
-      });
-    };
-
     const resetScrollPosition = () => {
       changeDetail?.classList.remove('is-scroll-controlled');
       changePanels.forEach((panel) => {
@@ -326,8 +305,8 @@ const layers = [
         activeIndex = index;
       }
       const key = changePanels[index]?.dataset.changePanel;
-      if (key) render(key, false);
-      renderScrollPosition(position, index);
+      resetScrollPosition();
+      if (key && root.dataset.active !== key) render(key);
 
       if (mobileScrollStoryQuery.matches) {
         window.clearTimeout(settleTimer);
