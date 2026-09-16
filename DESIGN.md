@@ -6,8 +6,8 @@ The site uses an approachable, technical visual language inspired by Microsoft D
 
 - Use deep navy for headings and near-black for body copy.
 - Use bright blue for actions, progress, and system cues.
-- Reserve purple for iteration and continuous-update loops.
-- Use pale blue surfaces to group related workflow stages.
+- Reserve purple for agentic and iterative cues.
+- Use pale blue surfaces to group related content.
 - Keep icons as clean, rounded outlines with small color badges only when they add meaning.
 - Prefer direct, professional language over hype or AI-themed decoration.
 
@@ -25,11 +25,11 @@ The site uses an approachable, technical visual language inspired by Microsoft D
 - Preserve visible keyboard focus and reduced-motion behavior.
 - Scroll-reveal motion should support orientation, never hide the existence of content.
 
-## Workflow diagram
+## Page structure
 
-- Design contains Prepare Workspace, Specification Builder Agent, and Review Specification.
-- Operate contains Develop plus Monitor.
-- Develop contains Pipeline Builder Agent and Deploy and Validate.
-- Purple loops show revision between steps 2–3 and 4–5.
-- The purple “Update pipeline” connector returns monitoring feedback to Develop.
-- Step captions stay aligned beneath their corresponding icons.
+- The overview contrasts the conventional delivery model with Akaden’s agent-assisted approach.
+- What Changes explains the product benefits and keeps engineers visibly in control.
+- The embedded demo walks through the ten-step pipeline lifecycle without calling live services.
+- The case study uses estimated and actual engineering hours from a real delivery project.
+- Proof establishes that the ABCloudz delivery team uses Akaden internally.
+- Contact Us is the final page destination for every conversion link.

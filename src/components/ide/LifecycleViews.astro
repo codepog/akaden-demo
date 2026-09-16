@@ -1,7 +1,7 @@
 ---
 import { FILES, outputCsv } from '../../data/ide';
-import testRaw from '../../data/demo/05-alumni-pipeline.pipeline-test?raw';
-import pipelineRaw from '../../data/demo/04-alumni-contact-export.pipeline?raw';
+import testRaw from '../../data/demo/student-contact-export.pipeline-test?raw';
+import pipelineRaw from '../../data/demo/student-contact-export.pipeline?raw';
 const test = JSON.parse(testRaw);
 const pipeline = JSON.parse(pipelineRaw);
 const checks = test.segments['Verify success'].config.checks as {path:string;operator:string}[];

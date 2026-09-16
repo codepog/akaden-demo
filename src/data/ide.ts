@@ -286,7 +286,7 @@ export const runLog = [
 export const outputCsv = {
   header: ['bannerid','firstName','lastName','dateofbirth','email','phone','city','address','emergencyContact'],
   rows: [
-    ['BAN001','John','Smith','1985-06-15','john.smith@alumni.edu','555-123-4567','Boston','123 Main Street Apt 4B','Jane Smith - 555-987-6543'],
+    ['BAN001','John','Smith','1985-06-15','john.smith@example.edu','555-123-4567','Boston','123 Main Street Apt 4B','Jane Smith - 555-987-6543'],
     ['BAN002','Mary','Johnson','1990-03-22','mary.j@email.com','','Portland','456 Oak Avenue Apt 201',''],
     ['BAN003','Robert','Williams','1978-11-08','','555-234-5678','Seattle','789 Pine Road','Robert Williams'],
     ['BAN004','Sarah','Brown','1995-01-14','sarah.brown@example.com','555-345-6789','Denver','321 Elm Street','Margaret Chen - 555-456-7890'],

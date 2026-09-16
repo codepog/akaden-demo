@@ -43,7 +43,6 @@ export const proof = {
 
 export const benefits = {
   eyebrow: 'What changes',
-  headline: 'Your engineers lead the work. Specialized agents move it forward.',
   items: [
     {
       title: 'Reduce integration complexity',
@@ -64,7 +63,7 @@ export const benefits = {
   ],
 };
 
-export const install = {
+export const contact = {
   eyebrow: 'Contact us',
   headline: 'See what Akaden can do with your integration.',
   lead:

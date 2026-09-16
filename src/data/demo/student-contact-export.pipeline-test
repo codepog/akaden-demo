@@ -1,7 +1,7 @@
 {
   "name": "student-contact-export",
   "description": "End-to-end validation: verifies the pipeline runs successfully, writes to S3, and produces a complete, well-formed CSV file.",
-  "pipeline": "../pipelines/alumni-contact-export.pipeline",
+  "pipeline": "../pipelines/student-contact-export.pipeline",
   "onlySegments": [],
   "parameters": [{ "name": "fileName", "value": "test-persons.csv" }],
   "flow": ["Verify success", "Extract CSV payload", "compareFile"],
@@ -22,7 +22,7 @@
     },
     "compareFile": {
       "class": "compareFile",
-      "description": "Output CSV content matches expected alumni export format and records",
+      "description": "Output CSV content matches the expected student contact export format and records",
       "config": { "expectedFile": "../validation/expected-output.csv", "source": "csv" }
     }
   }

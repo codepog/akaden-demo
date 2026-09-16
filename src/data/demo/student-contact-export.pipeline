@@ -261,8 +261,8 @@
       "type": "string"
     },
     {
-      "default": "alumni_exports/output.csv",
-      "description": "Full S3 object key/path where output.csv will be stored. Must end with 'output.csv'. Default: alumni_exports/output.csv",
+      "default": "student_contacts/output.csv",
+      "description": "Full S3 object key/path where output.csv will be stored. Must end with 'output.csv'. Default: student_contacts/output.csv",
       "label": "S3 Key Path",
       "name": "s3KeyPath",
       "type": "string"
