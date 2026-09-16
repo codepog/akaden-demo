@@ -1,5 +1,5 @@
 /**
- * Mock IDE demo — hard-coded state machine for the Akaden SDLC walkthrough.
+ * Mock IDE demo: hard-coded state machine for the Akaden SDLC walkthrough.
  *
  * This is the WEBSITE, not the app. Every response here is pre-written. The file
  * contents, prompts, agent names, and validation warnings are real and come from
@@ -10,7 +10,7 @@
  */
 
 export type Actor = 'you' | 'agent' | 'system';
-export type ViewKind = 'empty' | 'markdown' | 'pipeline' | 'params' | 'run';
+export type ViewKind = 'empty' | 'markdown' | 'pipeline' | 'test' | 'publish' | 'params' | 'run' | 'monitor';
 
 export interface ChatMsg {
   from: 'you' | 'agent';
@@ -36,7 +36,7 @@ export interface Step {
   chat: ChatMsg[];
   /** Agent shown in the composer picker. */
   agent: string;
-  /** Buttons in the editor toolbar. Same action as Next — the product's own control. */
+  /** Buttons in the editor toolbar. Same action as Next, using the product's own control. */
   toolbar?: { label: string; kind: 'primary' | 'ghost'; action: string }[];
   /** Plain-language coach copy, shown beside the active product feature. */
   instruct: string;
@@ -44,7 +44,7 @@ export interface Step {
   focus: 'side' | 'ed' | 'chat';
   /** The control worth looking at. Gets a ring. */
   ring: string;
-  /** Label on the Next button — it names the action it performs. */
+  /** Label on the Next button. It names the action it performs. */
   nextLabel: string;
   /** Short plain-language gloss shown under the step in the guide rail. */
   gloss: string;
@@ -59,18 +59,19 @@ export const AGENTS = [
   'Specification QA Agent',
 ];
 
-export const FILES: Record<string, { folder: string; name: string; kind: 'md' | 'pipeline' }> = {
+export const FILES: Record<string, { folder: string; name: string; kind: 'md' | 'pipeline' | 'test' }> = {
   requirement: { folder: 'inputs', name: 'student-contact-export-requirement.md', kind: 'md' },
   spec: { folder: 'specifications', name: 'student-contact-export-spec.md', kind: 'md' },
   readme: { folder: 'pipelines', name: 'STUDENT_CONTACT_EXPORT_README.md', kind: 'md' },
   pipeline: { folder: 'pipelines', name: 'student-contact-export.pipeline', kind: 'pipeline' },
+  test: { folder: 'pipelines', name: 'student-contact-export.test_pipeline', kind: 'test' },
 };
 
 export const FOLDERS = ['inputs', 'pipelines', 'specifications', 'sub-pipelines', 'validation'];
 
 export const steps: Step[] = [
   {
-    n: 1, id: 'prepare', title: 'Upload request', actor: 'you',
+    n: 1, id: 'prepare', title: 'Prepare workspace', actor: 'you',
     gloss: 'Upload the request file into inputs. Nothing is generated yet.',
     suggested: 'Upload the request into inputs',
     files: [], open: null, view: 'empty', agent: 'Agent',
@@ -100,7 +101,7 @@ export const steps: Step[] = [
           { kind: 'p', text: "I've read the student contact export request in `inputs/`. Drafting the integration specification now." },
           { kind: 'h', text: 'What I extracted' },
           { kind: 'ul', items: [
-            'Source: Ellucian Banner SaaS via Ethos APIs — no direct database access',
+            'Source: Ellucian Banner SaaS via Ethos APIs, with no direct database access',
             'Source: approved Banner contact data, read through Ethos APIs',
             'Output: one clean CSV contact file, delivered to a secure S3 folder',
             'Guardrail: the pipeline reads data but never updates Banner',
@@ -110,7 +111,7 @@ export const steps: Step[] = [
             'The integration must not update Banner data',
             'It must not rely on direct database access or direct Banner table reads',
           ]},
-          { kind: 'p', text: 'Written to `/specifications/student-contact-export-spec.md` — with test cases and an acceptance checklist included.' },
+          { kind: 'p', text: 'Written to `/specifications/student-contact-export-spec.md`, with test cases and an acceptance checklist included.' },
         ],
       },
     ],
@@ -132,8 +133,8 @@ export const steps: Step[] = [
         text: '', blocks: [
           { kind: 'p', text: 'Specification is complete and internally consistent. Two things worth your eyes before approval:' },
           { kind: 'ol', items: [
-            'Name selection order — preferred, then legal/official, then any available. This is an institutional decision, not a technical one.',
-            'Priority direction — the spec assumes the lowest numeric priority wins. If Banner returns it the other way round, the selection logic inverts.',
+            'Name selection order: preferred, then legal/official, then any available. This is an institutional decision, not a technical one.',
+            'Priority direction: the spec assumes the lowest numeric priority wins. If Banner returns it the other way round, the selection logic inverts.',
           ]},
           { kind: 'p', text: 'Nothing is generated until you approve.' },
         ],
@@ -141,7 +142,7 @@ export const steps: Step[] = [
     ],
   },
   {
-    n: 4, id: 'generate', title: 'Generate / Implement', actor: 'agent',
+    n: 4, id: 'generate', title: 'Generate pipeline', actor: 'agent',
     gloss: 'The Pipeline Builder Agent is ready to turn the approved spec into a pipeline.',
     suggested: 'Send the ready prompt to the Pipeline Builder Agent',
     files: ['requirement', 'spec'], open: 'spec', view: 'markdown',
@@ -160,7 +161,7 @@ export const steps: Step[] = [
           { kind: 'ul', items: [
             '39 segments in run order',
             '25 pipeline parameters',
-            '7 Ethos API calls — persons, names, emails, phones, addresses, emergency-contacts',
+            '7 Ethos API calls: persons, names, emails, phones, addresses, emergency-contacts',
             '18 JavaScript transforms including the best-record selection rules',
           ]},
           { kind: 'p', text: 'Saved to `/pipelines/`. Documentation written alongside it.' },
@@ -169,70 +170,54 @@ export const steps: Step[] = [
     ],
   },
   {
-    n: 5, id: 'refine', title: 'Review generated pipeline', actor: 'agent',
-    gloss: 'The generated pipeline is ready to inspect before deployment.',
-    suggested: 'Deploy — open a file or pick an SDLC step',
-    files: ['requirement', 'spec', 'pipeline', 'readme'], open: 'pipeline', view: 'pipeline',
-    agent: 'Pipeline QA Agent',
-    toolbar: [],
-    instruct: 'The generated pipeline is open for review. Inspect its steps and details, then decide when it is ready to move to a real environment.',
+    n: 5, id: 'refine', title: 'Refine & quick-test', actor: 'you',
+    gloss: 'Revise the generated pipeline, quick-test it, and repeat until it is ready to deploy.',
+    suggested: 'Review the test case and check the expected output',
+    files: ['requirement', 'spec', 'pipeline', 'readme', 'test'], open: 'pipeline', view: 'pipeline',
+    agent: 'Pipeline Testing Agent',
+    toolbar: [{ label: 'Pipeline', kind: 'ghost', action: 'pipeline' }, { label: 'Test case', kind: 'ghost', action: 'test' }, { label: 'Continue to deploy', kind: 'primary', action: 'ready-to-deploy' }],
+    instruct: 'Review the generated pipeline, then open its separate .test_pipeline file in pipelines to run a quick test before deployment. You can revise and retest if needed.',
     focus: 'ed',
     ring: '[data-pipeline-canvas]',
-    nextLabel: 'Deploy it',
+    nextLabel: 'Review test case',
     chat: [
-      {
-        from: 'agent', agent: 'Pipeline QA Agent', meta: 'Anthropic Claude Haiku 4.5 · just now',
-        text: '', blocks: [
-          { kind: 'p', text: '**Pipeline is valid** with 5 warnings (expected):' },
-          { kind: 'p', text: 'Warnings are on API endpoint names (`names`, `emails`, `phones`) — these are expected to be either:' },
-          { kind: 'ul', items: [
-            'SPEC APIs that need to be created, or',
-            'Actual endpoint names that differ from the assumed names',
-          ]},
-          { kind: 'p', text: '**Resolution:** During implementation, confirm actual Ethos API names and update resource definitions accordingly. The business logic and structure are complete and correct.' },
-          { kind: 'h', text: '📕 Documentation' },
-          { kind: 'p', text: 'Created `/pipelines/ALUMNI_CONTACT_EXPORT_README.md` with:' },
-          { kind: 'ul', items: [
-            'Pipeline overview and parameter guide',
-            'Detailed business logic description',
-            'Best-record selection rule documentation',
-            'CSV output format examples',
-            'Operational logging details',
-            'Troubleshooting guide',
-            'Next steps for testing and deployment',
-          ]},
-          { kind: 'h', text: '🚀 Ready For' },
-          { kind: 'ol', items: [
-            '**API endpoint verification** — Confirm exact Ethos API names for Banner contact data',
-            '**Test execution** — Run against test Banner records with known contact data variations',
-            '**Parameter testing** — Validate filter logic with different dateOfBirthCutoff values',
-            '**S3 integration** — Test S3 bucket connectivity and conditional upload behavior',
-            '**Performance baseline** — Measure extraction and upload times for production planning',
-          ]},
-          { kind: 'p', text: 'The pipeline is fully functional and grounded in the specification. All business requirements are implemented with proper loop gating, best-record logic, and error handling.' },
-        ],
-      },
+      { from: 'agent', agent: 'Pipeline Testing Agent', meta: 'Demo response', text: '', blocks: [
+        { kind: 'p', text: 'The generated pipeline is ready for engineer review. Confirm the API endpoints and business rules before moving it to an environment.' },
+        { kind: 'p', text: 'Open pipelines/student-contact-export.test_pipeline alongside the pipeline. This separate test file checks:' },
+        { kind: 'ol', items: ['Verify success: no errors, a data array, and a string payload.', 'Extract CSV payload: make the CSV available for comparison.', 'compareFile: compare the output with validation/expected-output.csv.'] },
+        { kind: 'p', text: 'Run the quick test, review the results, then continue to deployment. If anything needs changing, return to the pipeline and retest. Both files belong to step 5: Refine & quick-test.' },
+      ] },
     ],
   },
   {
-    n: 6, id: 'deploy', title: 'Deploy', actor: 'system',
-    gloss: 'The pipeline goes to your Ellucian Integration Designer tenant.',
-    suggested: 'Set job parameters — choose the runtime values',
-    files: ['requirement', 'spec', 'pipeline', 'readme'], open: 'pipeline', view: 'pipeline',
+    n: 6, id: 'deploy', title: 'Deploy pipeline', actor: 'system',
+    gloss: 'Deploy sends a draft to Ellucian. It does not make a live version.',
+    suggested: 'Deploy a draft to the selected tenant',
+    files: ['requirement', 'spec', 'pipeline', 'readme', 'test'], open: 'pipeline', view: 'pipeline',
     agent: 'Pipeline Builder Agent',
-    instruct: 'You choose where the approved pipeline goes. Confirm the tenant and deployment package, then continue to the runtime settings.',
-    focus: 'ed', ring: '[data-deploy-panel]', nextLabel: 'Set job parameters',
+    instruct: 'Choose the Ellucian tenant and package. Deploy saves a draft there; it does not make the pipeline live. Publishing is a separate decision in the next step.',
+    focus: 'ed', ring: '[data-deploy-panel]', nextLabel: 'Deploy draft',
     chat: [
       { from: 'agent', agent: 'Pipeline Builder Agent', meta: 'just now', text: '', blocks: [
-        { kind: 'p', text: 'Ready to deploy `Student Contact Export` to the Ellucian Integration Designer tenant.' },
+        { kind: 'p', text: 'Ready to send `Student Contact Export` to Ellucian as a draft. No live version changes until you publish.' },
       ]},
     ],
   },
   {
-    n: 7, id: 'params', title: 'Set job parameters', actor: 'you',
+    n: 7, id: 'publish', title: 'Publish pipeline', actor: 'you',
+    gloss: 'Publish the deployed draft to make this version live in the environment.',
+    suggested: 'Review the draft, then publish the version',
+    files: ['requirement', 'spec', 'pipeline', 'readme', 'test'], open: null, view: 'publish',
+    agent: 'Pipeline Builder Agent',
+    instruct: 'The draft is now in Ellucian, but it is not live. Review its details and select Publish to make this version available in the environment.',
+    focus: 'ed', ring: '[data-publish-button]', nextLabel: 'Publish version',
+    chat: [{ from: 'agent', agent: 'Pipeline Builder Agent', meta: 'Demo response', blocks: [{ kind: 'p', text: 'Draft deployed to Demo University. Publishing creates the live version; it does not run a job.' }], text: '' }],
+  },
+  {
+    n: 8, id: 'params', title: 'Configure job', actor: 'you',
     gloss: 'The runtime values. The cutoff here is the one from your specification.',
-    suggested: 'Job run and validate. Run it and check the criteria.',
-    files: ['requirement', 'spec', 'pipeline', 'readme'], open: null, view: 'params',
+    suggested: 'Run and validate the job against the specification',
+    files: ['requirement', 'spec', 'pipeline', 'readme', 'test'], open: null, view: 'params',
     agent: 'Agent',
     instruct: 'These are runtime values, so you can adjust them for this run without changing the pipeline. Check the defaults and update any value that needs to differ.',
     focus: 'ed', ring: '[data-view="params"] .form', nextLabel: 'Run the job',
@@ -243,24 +228,34 @@ export const steps: Step[] = [
     ],
   },
   {
-    n: 8, id: 'run', title: 'Job run and validate', actor: 'system',
+    n: 9, id: 'run', title: 'Run & validate job', actor: 'system',
     gloss: 'It runs. The output is checked against the criteria written in the spec.',
-    suggested: 'Done. The specification that built this is still in git.',
-    files: ['requirement', 'spec', 'pipeline', 'readme'], open: null, view: 'run',
+    suggested: 'Open monitoring to review job history',
+    files: ['requirement', 'spec', 'pipeline', 'readme', 'test'], open: null, view: 'run',
     agent: 'Pipeline Testing Agent',
     instruct: 'The run is checked against the acceptance criteria in the specification. Review the results knowing that every output can be traced back to the approved plan.',
-    focus: 'ed', ring: '[data-view="run"] .run', nextLabel: 'Explore the workspace',
+    focus: 'ed', ring: '[data-view="run"] .run', nextLabel: 'Open monitoring',
     chat: [
       { from: 'agent', agent: 'Pipeline Testing Agent', meta: 'just now', text: '', blocks: [
         { kind: 'p', text: 'Run complete. Output written and validated against the acceptance criteria in the specification.' },
         { kind: 'ul', items: [
           '1,200 records exported',
-          '87 excluded — dateOfBirth missing',
-          '1,256 excluded — dateOfBirth on or after the cutoff',
+          '87 excluded because dateOfBirth is missing',
+          '1,256 excluded because dateOfBirth is on or after the cutoff',
           'All nine columns present, in order',
         ]},
       ]},
     ],
+  },
+  {
+    n: 10, id: 'monitor', title: 'Monitor job', actor: 'you',
+    gloss: 'Track job health and inspect runs after the pipeline is live.',
+    suggested: 'Review the monitoring dashboard and open a job run',
+    files: ['requirement', 'spec', 'pipeline', 'readme', 'test'], open: null, view: 'monitor',
+    agent: 'Agent',
+    instruct: 'The pipeline is now live. Use Akaden’s built-in dashboards to monitor its performance, review job history, and investigate individual runs. This demo uses simulated monitoring data.',
+    focus: 'ed', ring: '[data-monitor-heading]', nextLabel: 'Explore the workspace',
+    chat: [{ from: 'agent', agent: 'Agent', meta: 'Demo response', text: '', blocks: [{ kind: 'p', text: 'The pipeline is live. Its built-in monitoring dashboard shows two successful runs and no failures today. Open a job to inspect its results, or return to the pipeline when an update is needed.' }] }],
   },
 ];
 
@@ -287,7 +282,7 @@ export const runLog = [
   '[INFO] Execution completed successfully.',
 ];
 
-/** Output rows. Synthetic names and numbers throughout — nothing resembling real data. */
+/** Output rows. Synthetic names and numbers throughout, with nothing resembling real data. */
 export const outputCsv = {
   header: ['bannerid','firstName','lastName','dateofbirth','email','phone','city','address','emergencyContact'],
   rows: [

@@ -7,6 +7,8 @@ const icons = [
   { id: 'skills', label: 'Spec APIs', description: 'Define the APIs and reusable rules in your specification.', d: 'M12 3v5a4 4 0 0 1-4 4H5a3 3 0 1 0 0 6h3a4 4 0 0 1 4 4v5M12 3v5a4 4 0 0 0 4 4h3a3 3 0 1 1 0 6h-3a4 4 0 0 0-4 4v5' },
   { id: 'deploy', label: 'Ellucian DataConnect', description: 'Deploy and operate pipelines in Integration Designer.', d: 'M6 15a4 4 0 0 1 .8-7.9 5.5 5.5 0 0 1 10.6 1.4A3.5 3.5 0 0 1 17 15zM5 19h14M12 15v4M9 19a1 1 0 1 0 0 .01M15 19a1 1 0 1 0 0 .01' },
   { id: 'data', label: 'Database', description: 'Inspect the data sources and records this work uses.', d: 'M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3zM4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6' },
+  { id: 'monitor', label: 'Monitoring', description: 'Review pipeline health, failed runs, and job history.', d: 'M2 12h5l3-9 4 18 3-9h5' },
+  { id: 'knowledge', label: 'Knowledge base', description: 'Find shared specifications and integration guidance.', d: 'M5 3h14v18H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM3 17h16M8 7h7' },
   { id: 'git', label: 'Source control', description: 'Track the files and decisions that define this pipeline.', d: 'M7 4v10M7 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM7 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM17 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM17 8v2a4 4 0 0 1-4 4H7' },
 ];
 ---
@@ -14,7 +16,7 @@ const icons = [
   <ul>
     {icons.map((i) => (
       <li>
-        <button type="button" class="rail-btn" data-rail-tool title={i.label} aria-label={i.label} aria-expanded="false">
+        <button type="button" class="rail-btn" data-rail-tool={i.id} title={i.label} aria-label={i.label} aria-expanded="false">
           {i.text
             ? <span class="rail-text">{i.text}</span>
             : <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={i.d} /></svg>}
@@ -44,6 +46,7 @@ const icons = [
     position:relative;color:var(--ide-icon);cursor:pointer;transition:background-color 120ms,color 120ms;
   }
   .rail-btn:hover{background:var(--ide-hover);color:var(--ide-ink);}
+  .rail-btn[aria-current="true"]{background:#e2efff;color:#0078d4}
   .rail-text{font-family:var(--ide-mono);font-size:11px;font-weight:700;letter-spacing:.02em;}
   .rail-btn:focus-visible{outline:2px solid var(--ide-accent);outline-offset:-2px;}
   .rail-popover{display:none;position:absolute;z-index:45;left:calc(100% + 8px);top:0;width:13rem;border:1px solid #B9C7D9;border-radius:7px;background:#fff;padding:.55rem .65rem;box-shadow:0 12px 28px rgba(0,33,99,.18);color:var(--ide-ink);text-align:left;white-space:normal;}

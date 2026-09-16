@@ -2,7 +2,7 @@
 @import "tailwindcss";
 
 /* =========================================================================
-   Akaden design tokens — see DESIGN.md
+   Akaden design tokens. See DESIGN.md
    Blue = a person or a system.  Amber = an agent is acting.  Nothing else.
    ========================================================================= */
 @theme {
@@ -36,7 +36,7 @@ body {
 }
 
 /* Focus lives on the page ground, not on the control fill.
-   A blue ring on the blue CTA measures 1.16:1 — see DESIGN.md §2. */
+   A blue ring on the blue CTA measures 1.16:1. See DESIGN.md §2. */
 :focus-visible {
   outline: 2px solid var(--color-ink);
   outline-offset: 2px;
@@ -126,7 +126,7 @@ body {
 }
 .u-bezel > * { border-radius: 4px; display: block; width: 100%; }
 
-/* Placeholder frame — visibly not a real capture, so nothing ships by accident. */
+/* Placeholder frame. It is visibly not a real capture, so nothing ships by accident. */
 .u-placeholder {
   min-width: 0;
   aspect-ratio: 16 / 10;

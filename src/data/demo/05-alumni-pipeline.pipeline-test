@@ -1,0 +1,29 @@
+{
+  "name": "demo-simple-s3-happy-path",
+  "description": "Happy path test: verifies the pipeline runs end-to-end, writes to S3, and the CSV content is well-formed (not just header-only).",
+  "pipeline": "../pipelines/alumni-contact-export.pipeline",
+  "onlySegments": [],
+  "parameters": [{ "name": "fileName", "value": "test-persons.csv" }],
+  "flow": ["Verify success", "Extract CSV payload", "compareFile"],
+  "segments": {
+    "Verify success": {
+      "class": "assert",
+      "description": "Pipeline executed without errors and produced output",
+      "config": { "checks": [
+        { "path": "errors", "operator": "notExists", "value": "" },
+        { "path": "data", "operator": "isArray", "value": "" },
+        { "path": "data[0].payload", "operator": "isString", "value": "" }
+      ] }
+    },
+    "Extract CSV payload": {
+      "class": "JavaScriptTransform",
+      "description": "Extract the CSV string from execute envelope into chain payload for compareFile",
+      "config": { "code": "function transform(message, context) {\n  const csv = message.payload && message.payload.data && message.payload.data[0]\n    ? message.payload.data[0].payload : '';\n  message.payload = { csv: csv };\n  return message;\n}" }
+    },
+    "compareFile": {
+      "class": "compareFile",
+      "description": "Output CSV content matches expected alumni export format and records",
+      "config": { "expectedFile": "../validation/expected-output.csv", "source": "csv" }
+    }
+  }
+}

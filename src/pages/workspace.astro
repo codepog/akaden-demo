@@ -25,6 +25,7 @@ import { steps } from '../data/ide';
     </aside>
 
     <nav class="guide" data-guide aria-label="Walkthrough controls">
+      <div class="guide-heading"><span data-guide-heading>Step 1 of 10 · Prepare workspace</span><small data-guide-status>Interactive simulation</small></div>
       <ol class="g-dots" data-g-dots>
         {steps.map((s) => (
           <li><button type="button" data-dot={s.n} aria-label={`Step ${s.n}: ${s.title}`}></button></li>
@@ -58,6 +59,7 @@ import { steps } from '../data/ide';
     padding:10px clamp(12px,2.4vw,20px);
   }
   .g-dots{list-style:none;display:flex;gap:6px;margin:0;padding:0;}
+  .guide-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:9px;font-size:12px;font-weight:700;color:#205eac}.guide-heading small{font-size:10px;font-weight:500;color:#68707e}
   .g-dots li{flex:1;}
   .g-dots button{
     display:block;width:100%;height:4px;border:0;padding:0;border-radius:2px;

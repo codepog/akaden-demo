@@ -14,7 +14,7 @@ import Chat from './Chat.astro';
     <button type="button" class="chipbtn top-item"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h6l2 2h8v12H4z"/></svg> test-env <span class="cv">⌄</span><span class="top-popover"><b>test-env</b><small>The active test workspace. Use it to safely build and validate before production.</small></span></button>
     <button type="button" class="mi plus top-item" aria-label="New item">+<span class="top-popover"><b>New</b><small>Add a file, folder, or pipeline item.</small></span></button>
     <div class="run-actions" role="group" aria-label="Pipeline actions">
-      <button type="button" class="top-item" data-top-action="deploy">Deploy<span class="top-popover"><b>Deploy</b><small>Choose a tenant and send the approved pipeline.</small></span></button>
+      <button type="button" class="top-item" data-top-action="deploy">Deploy<span class="top-popover"><b>Deploy draft</b><small>Send a draft to Ellucian. Publish separately to make it live.</small></span></button>
       <button type="button" class="top-item" data-top-action="run">Run<span class="top-popover"><b>Run</b><small>Execute the current pipeline with its parameters.</small></span></button>
     </div>
     <span class="spacer"></span>
@@ -104,7 +104,7 @@ import Chat from './Chat.astro';
   }
 
   /* done markers in the step list */
-  .ide :global(.sdlc-row.done .sdlc-n){background:#1E7A55;color:#fff;font-size:11px;}
+  .ide :global(.sdlc-row.done .sdlc-n){color:var(--ide-ink-soft);font-size:11px;}
   .ide :global(.sdlc-row.done .sdlc-t){color:var(--ide-ink-soft);}
   @media (prefers-reduced-motion: no-preference){
     .ide.step-change :global(.side){animation:paneArrive .34s ease-out both;}
@@ -117,13 +117,22 @@ import Chat from './Chat.astro';
     .ide{grid-template-columns:48px 220px minmax(0,1fr) minmax(250px,.8fr);}
     .menubar .chipbtn{max-width:9rem;overflow:hidden;text-overflow:ellipsis;}
   }
-  @media (max-width:820px){
+  @media (max-width:1020px){
     .ide{grid-template-columns:minmax(0,1fr) minmax(235px,.82fr);grid-template-areas:"menu menu" "ed chat";}
     .ide :global(.rail){display:none;}
     .ide :global(.side){display:none;}
     .menubar .mi:not(.plus){display:none;}
     .menubar .chipbtn:first-of-type{display:none;}
     .menubar{gap:2px;}
+  }
+  @media (min-width:1021px) and (max-width:1500px){.ide{grid-template-columns:48px 200px minmax(0,1fr) 290px}}
+  @media (max-width:600px){
+    .ide{grid-template-columns:minmax(0,1fr);grid-template-areas:"menu" "ed"}
+    .ide :global(.chat){display:none}
+    .ide[data-focus="chat"]{grid-template-areas:"menu" "chat"}
+    .ide[data-focus="chat"] :global(.chat){display:flex}
+    .ide[data-focus="chat"] :global(.ed){display:none}
+    .menubar .chipbtn{display:none}
   }
 </style>
 
@@ -170,13 +179,18 @@ import Chat from './Chat.astro';
     let uploadPlaying = false;
     let deployOpen = false;
     let exploreMode = false;
+    let walkthroughComplete = false;
+    let quickTestPassed = false;
+    let published = false;
+    let busy = false;
+    let transition = 0;
     let calloutTarget: HTMLElement | null = null;
 
     const step = () => steps[cur - 1];
     const promptFor = (candidate = step()) => candidate.chat.find((message) => message.from === 'you')?.text ?? null;
 
     /* The cutoff typed at step 8 turns up in the run log at step 9. The value flows
-       forward — the product thesis, in miniature. */
+       forward, which is the product thesis in miniature. */
     const logTemplate = q<HTMLElement>('[data-log]')?.textContent ?? '';
     const cutoffInput = q<HTMLInputElement>('[data-param="dateOfBirthCutoff"]');
     function applyCutoff() {
@@ -187,7 +201,7 @@ import Chat from './Chat.astro';
     cutoffInput?.addEventListener('input', applyCutoff);
 
     const viewFor = (file: string | null, fallback: string) =>
-      !file ? fallback : file === 'pipeline' ? 'pipeline' : `doc:${file}`;
+      !file ? fallback : file === 'pipeline' ? 'pipeline' : file === 'test' ? 'test' : `doc:${file}`;
 
     function positionCallout() {
       if (!callout || !calloutTarget || callout.hidden) return;
@@ -248,10 +262,9 @@ import Chat from './Chat.astro';
         const done = n < cur;
         r.setAttribute('aria-current', String(n === cur));
         r.classList.toggle('done', done);
-        r.classList.toggle('faded', n !== cur);
         r.classList.remove('is-next');
         const numEl = r.querySelector<HTMLElement>('.sdlc-n');
-        if (numEl) numEl.textContent = done ? '✓' : String(n);
+        if (numEl) numEl.textContent = String(n);
       });
 
       fileBtns.forEach((b) => {
@@ -286,7 +299,12 @@ import Chat from './Chat.astro';
           el.className = 'tb-btn' + (b.kind === 'primary' ? ' primary' : '');
           el.dataset.toolbarAction = b.action;
           el.textContent = b.label;
-          el.addEventListener('click', next);
+          el.hidden = b.action === 'ready-to-deploy' && !quickTestPassed;
+          el.addEventListener('click', () => {
+            if (b.action === 'test' || b.action === 'pipeline') { openFile = b.action; render(); }
+            else if (b.action === 'ready-to-deploy') openDeploy();
+            else next();
+          });
           toolbarEl.appendChild(el);
         });
       }
@@ -305,39 +323,75 @@ import Chat from './Chat.astro';
       if (pendingTurn) pendingTurn.hidden = true;
       if (typing) typing.hidden = true;
       if (deployPanel) deployPanel.hidden = !deployOpen;
+      const monitoring = s.id === 'monitor' && openFile === null;
+      const filePanel = q<HTMLElement>('[data-file-panel]');
+      const monitorSidebar = q<HTMLElement>('[data-monitor-sidebar]');
+      if (filePanel) filePanel.hidden = monitoring;
+      if (monitorSidebar) monitorSidebar.hidden = !monitoring;
+      q('[data-rail-tool="monitor"]')?.setAttribute('aria-current', String(monitoring));
+      q('[data-rail-tool="files"]')?.setAttribute('aria-current', String(!monitoring));
+      qa<HTMLElement>('[data-published-name]').forEach(el => { el.textContent = q<HTMLInputElement>('[aria-label="Pipeline name"]')?.value.trim() || 'contact-export'; });
+      const badge = q<HTMLElement>('[data-publish-badge]');
+      if (badge) { badge.textContent = published ? 'PUBLISHED' : 'DRAFT'; badge.classList.toggle('published', published); badge.classList.toggle('draft', !published); }
+      const publishButton = q<HTMLButtonElement>('[data-publish-button]');
+      if (publishButton) { publishButton.textContent = published ? 'Published' : 'Publish'; publishButton.disabled = published; }
+      const version = q<HTMLElement>('[data-published-version]');
+      if (version) version.textContent = published ? '0.0.1' : 'Not published';
+      const publishStatus = q<HTMLElement>('[data-published-status]');
+      if (publishStatus) publishStatus.textContent = published ? 'PUBLISHED' : 'DRAFT';
+      const publishMessage = q<HTMLElement>('[data-publish-message]');
+      if (publishMessage) publishMessage.textContent = published ? 'Version 0.0.1 is live in the demo environment. Configure a job to run it.' : 'Draft deployed to Ellucian. Publish this version to make it live in the selected environment.';
       applyCutoff();
       if (thread) thread.scrollTop = thread.scrollHeight;
 
       // dim every pane except the one holding the action
-      Object.entries(panes).forEach(([k, el]) => el?.classList.toggle('dim', !exploreMode && (cur === 1 ? k === 'chat' : k !== s.focus)));
+      Object.entries(panes).forEach(([k, el]) => el?.classList.toggle('dim', k !== 'side' && !monitoring && !exploreMode && (cur === 1 ? k === 'chat' : k !== s.focus)));
 
       // ring the one control worth looking at
       qa<HTMLElement>('.is-target').forEach((e) => e.classList.remove('is-target'));
-      const target = !exploreMode ? (q<HTMLElement>(s.ring) ?? document.querySelector<HTMLElement>(s.ring)) : null;
+      let cue = s;
+      if (s.id === 'refine' && openFile === 'test') cue = { ...s, ring: '[data-run-quick-test]', instruct: 'This separate .test_pipeline file lives beside the pipeline in pipelines. Run the quick test to check execution and compare the output with the expected file.', nextLabel: 'Run quick test' };
+      if (s.id === 'refine' && quickTestPassed) cue = { ...s, ring: '[data-toolbar-action="ready-to-deploy"]', instruct: 'The simulated checks passed. Next, deploy the pipeline as a draft in Ellucian. Need changes? Refine the pipeline or add another test case, then test again.', nextLabel: 'Continue to deploy' };
+      if (s.id === 'publish' && published) cue = { ...s, ring: '[data-publish-badge]', instruct: 'Published: version 0.0.1 is now live in the demo environment. Publishing does not execute it. Next, configure the job’s runtime parameters.', nextLabel: 'Configure job' };
+      const target = !exploreMode && !(walkthroughComplete && s.id === 'monitor') ? (q<HTMLElement>(cue.ring) ?? document.querySelector<HTMLElement>(cue.ring)) : null;
       target?.classList.add('is-target');
-      updateCallout(target, s);
+      updateCallout(target, cue);
 
       topActions.forEach((button) => {
         const action = button.dataset.topAction;
-        const current = action === 'deploy' ? cur >= 6 && cur < 8 : cur === 8;
+        const current = action === 'deploy' ? s.id === 'deploy' || s.id === 'publish' : s.id === 'run';
         button.setAttribute('aria-current', String(current));
       });
       ide!.dataset.step = String(cur);
       ide!.dataset.explore = String(exploreMode);
+      ide!.dataset.focus = s.focus;
+      const guideHeading = document.querySelector<HTMLElement>('[data-guide-heading]');
+      if (guideHeading) guideHeading.textContent = walkthroughComplete ? 'Tutorial complete · Explore the workspace' : `Step ${s.n} of ${steps.length} · ${s.title}`;
+      const guideStatus = document.querySelector<HTMLElement>('[data-guide-status]');
+      if (guideStatus) guideStatus.textContent = walkthroughComplete ? 'Completed' : 'Interactive simulation';
       ide!.classList.remove('step-change');
       void ide!.offsetWidth;
       ide!.classList.add('step-change');
       qa<HTMLElement>('[data-dot]', gDots ?? document).forEach((d) => {
         const n = Number(d.dataset.dot);
-        d.classList.toggle('on', n === cur);
-        d.classList.toggle('past', n < cur);
-        d.setAttribute('aria-current', String(n === cur));
+        const completed = n < cur || (walkthroughComplete && n === cur);
+        d.classList.toggle('on', n === cur && !walkthroughComplete);
+        d.classList.toggle('past', completed);
+        d.setAttribute('aria-current', String(n === cur && !walkthroughComplete));
       });
     }
 
     function go(n: number, { preserveExplore = false } = {}) {
+      transition++;
+      busy = false;
+      uploadPlaying = false;
+      if (send) send.disabled = false;
+      if (panes.chat) delete panes.chat.dataset.sending;
       const nextStep = Math.min(Math.max(n, 1), steps.length);
-      if (nextStep !== 6) deployOpen = false;
+      if (nextStep === 1) walkthroughComplete = false;
+      deployOpen = steps[nextStep - 1].id === 'deploy';
+      published = nextStep >= 8;
+      if (nextStep <= 5) resetQuickTest();
       if (!preserveExplore) exploreMode = false;
       cur = nextStep;
       openFile = step().open;
@@ -350,12 +404,51 @@ import Chat from './Chat.astro';
     }
     function openRun() {
       deployOpen = false;
-      go(8, { preserveExplore: exploreMode });
+      go(9, { preserveExplore: exploreMode });
     }
+    function resetQuickTest() {
+      quickTestPassed = false;
+      qa<HTMLElement>('[data-test-result]').forEach(el => { el.hidden = true; });
+      const summary = q<HTMLElement>('[data-test-summary]');
+      if (summary) summary.hidden = true;
+      const button = q<HTMLButtonElement>('[data-run-quick-test]');
+      if (button) { button.disabled = false; button.textContent = 'Run quick test'; }
+    }
+    function runQuickTest() {
+      if (busy) return;
+      const summary = q<HTMLElement>('[data-test-summary]');
+      const button = q<HTMLButtonElement>('[data-run-quick-test]');
+      resetQuickTest();
+      if (!qa<HTMLInputElement>('[data-test-segment]').some(input => input.checked)) {
+        if (summary) { summary.hidden = false; summary.dataset.state = 'error'; summary.textContent = 'Select at least one pipeline segment to run this demo test.'; }
+        return;
+      }
+      if (!q<HTMLInputElement>('[data-test-filename]')?.value.trim()) {
+        if (summary) { summary.hidden = false; summary.dataset.state = 'error'; summary.textContent = 'Enter a fileName for this test.'; }
+        return;
+      }
+      busy = true;
+      const token = transition;
+      if (button) { button.disabled = true; button.textContent = 'Running demo checks…'; }
+      if (calloutNext) calloutNext.disabled = true;
+      if (summary) { summary.hidden = false; summary.dataset.state = 'running'; summary.textContent = 'Simulating execution, payload extraction, and file comparison…'; }
+      window.setTimeout(() => {
+        if (token !== transition) return;
+        busy = false;
+        quickTestPassed = true;
+        qa<HTMLElement>('[data-test-result]').forEach(el => { el.hidden = false; });
+        if (summary) { summary.dataset.state = 'passed'; summary.textContent = '3 verification steps passed · Simulated response and expected CSV sample matched. No live pipeline was executed.'; }
+        if (button) { button.disabled = false; button.textContent = 'Run again'; }
+        render();
+      }, 650);
+    }
+    function publishVersion() { if (step().id !== 'publish') return; published = true; render(); }
     function next() {
-      if (exploreMode) return;
+      if (exploreMode || busy) return;
       if (cur === 1 && !uploadPlaying) {
         uploadPlaying = true;
+        busy = true;
+        const token = transition;
         const uploadView = q<HTMLElement>('[data-view="empty"]');
         const requestFile = q<HTMLButtonElement>('[data-file="requirement"]');
         const source = q<HTMLElement>('[data-upload-source]');
@@ -393,6 +486,8 @@ import Chat from './Chat.astro';
         if (calloutNext) calloutNext.disabled = true;
         window.setTimeout(() => {
           uploadView?.classList.remove('is-uploading');
+          if (token !== transition) return;
+          busy = false;
           uploadPlaying = false;
           if (calloutNext) calloutNext.disabled = false;
           go(2);
@@ -400,6 +495,8 @@ import Chat from './Chat.astro';
         return;
       }
       if (promptFor()) {
+        busy = true;
+        const token = transition;
         const currentChat = panes.chat;
         const prompt = promptFor();
         // Once the message leaves the composer, its coaching cue has done its job.
@@ -414,6 +511,8 @@ import Chat from './Chat.astro';
         if (calloutNext) calloutNext.disabled = true;
         if (send) send.disabled = true;
         window.setTimeout(() => {
+          if (token !== transition) return;
+          busy = false;
           if (typing) typing.hidden = true;
           if (currentChat) delete currentChat.dataset.sending;
           if (calloutNext) calloutNext.disabled = false;
@@ -423,11 +522,16 @@ import Chat from './Chat.astro';
         return;
       }
       if (step().id === 'refine') {
-        openDeploy();
+        if (quickTestPassed) { openDeploy(); return; }
+        if (openFile !== 'test') { openFile = 'test'; render(); return; }
+        runQuickTest();
         return;
       }
+      if (step().id === 'publish' && !published) { publishVersion(); return; }
       if (cur === steps.length) {
+        walkthroughComplete = true;
         exploreMode = true;
+        openFile = 'pipeline';
         render();
         return;
       }
@@ -436,6 +540,19 @@ import Chat from './Chat.astro';
     function prev() { go(cur - 1); }
 
     calloutNext?.addEventListener('click', next);
+    q('[data-run-quick-test]')?.addEventListener('click', runQuickTest);
+    q('[data-return-to-pipeline]')?.addEventListener('click', () => { openFile = 'pipeline'; render(); });
+    ide.addEventListener('pipeline-revised', () => { transition++; busy = false; resetQuickTest(); render(); });
+    q('[data-publish-button]')?.addEventListener('click', publishVersion);
+    q('[data-deploy-confirm]')?.addEventListener('click', () => go(7));
+    q('[data-rail-tool="monitor"]')?.addEventListener('click', () => go(10));
+    q('[data-rail-tool="files"]')?.addEventListener('click', () => { if (step().files.includes('pipeline')) { openFile = 'pipeline'; render(); } });
+    qa<HTMLButtonElement>('[data-view-job]').forEach(button => button.addEventListener('click', () => {
+      go(9);
+      const runId = q<HTMLElement>('[data-run-id]');
+      if (runId) runId.textContent = `#DEMO-00${button.dataset.viewJob}`;
+    }));
+    qa<HTMLInputElement>('[data-test-segment],[data-test-filename]').forEach(input => input.addEventListener('change', () => { transition++; busy = false; resetQuickTest(); render(); }));
     send?.addEventListener('click', next);
     sdlcRows.forEach((r) => r.addEventListener('click', () => go(Number(r.dataset.goto))));
     fileBtns.forEach((b) => b.addEventListener('click', () => { openFile = b.dataset.file!; render(); }));

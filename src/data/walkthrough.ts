@@ -40,7 +40,5 @@ export const stages: Stage[] = [
 
 export const changeRequest = {
   when: 'Case Study',
-  ask: 'The communications team needs a country column in the contact export.',
-  oldWay: 'An engineer locates the mapping in the existing pipeline and updates it manually.',
-  newWay: 'Update the approved specification to include the country field, then regenerate the pipeline.',
+  ask: '28% of engineering hours saved.',
 };

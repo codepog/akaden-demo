@@ -22,7 +22,7 @@ The **Student Contact Export** pipeline is an Akaden-generated outbound extracti
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
 | `dateOfBirthCutoff` | string | No | `2000-01-01` | Records with dateOfBirth earlier than this value (YYYY-MM-DD) are included. |
-| `s3BucketName` | string | **Yes** | — | Target Amazon S3 bucket name. |
+| `s3BucketName` | string | **Yes** | None | Target Amazon S3 bucket name. |
 | `s3KeyPath` | string | No | `student_contacts/output.csv` | Full S3 object key/path for the output CSV file. |
 | `executionMode` | enum | No | `export` | `validateOnly` (test config) or `export` (full export). |
 | `batchIdentifier` | string | No | Auto-generated | Optional batch identifier for traceability. |
@@ -222,7 +222,7 @@ The pipeline applies deterministic selection logic for each contact field:
 **Resolution:**
 1. Check that filtered persons array contains records (evaluatedPersonCount > 0)
 2. Verify API calls are returning contact data
-3. Check dateOfBirthCutoff parameter value—may be filtering all records
+3. Check the dateOfBirthCutoff parameter value. It may be filtering all records.
 
 ### S3 Upload Fails
 

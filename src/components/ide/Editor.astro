@@ -1,6 +1,7 @@
 ---
 import { marked } from 'marked';
 import { FILES, jobParams, runLog, outputCsv, acceptance } from '../../data/ide';
+import LifecycleViews from './LifecycleViews.astro';
 
 import requirementRaw from '../../data/demo/01-requirement.md?raw';
 import specRaw from '../../data/demo/02-specification.md?raw';
@@ -46,7 +47,7 @@ const pipelineDetail = (name: string, kind?: string) => {
   <div class="tabs" data-tabs hidden>
     {Object.entries(FILES).map(([key, v]) => (
       <button type="button" class="tab" data-tab={key} hidden>
-        <span class:list={['ficon', v.kind]} aria-hidden="true">{v.kind === 'pipeline' ? 'S' : 'TXT'}</span>
+        <span class:list={['ficon', v.kind]} aria-hidden="true">{v.kind === 'pipeline' ? 'S' : v.kind === 'test' ? 'TEST' : 'TXT'}</span>
         {v.name}
       </button>
     ))}
@@ -55,6 +56,7 @@ const pipelineDetail = (name: string, kind?: string) => {
   <div class="editor-toolbar" data-toolbar aria-label="Editor actions"></div>
 
   <div class="ed-body">
+    <LifecycleViews />
     <!-- step 1: the incoming request visibly lands in inputs/ -->
     <div class="view drop-stage" data-view="empty">
       <div class="stage-in">
@@ -133,7 +135,8 @@ const pipelineDetail = (name: string, kind?: string) => {
     <!-- job parameters -->
     <div class="view" data-view="params" hidden>
       <div class="form">
-        <h2>Job parameters</h2>
+        <h2>Configure job</h2>
+        <p class="form-note">Student Contact Export · Published version 0.0.1 · Demo University</p>
         <p class="form-note">Read from the pipeline. <b>Date of Birth Cutoff</b> is the value your specification set.</p>
         {jobParams.map((p) => (
           <label class="field">
@@ -149,14 +152,15 @@ const pipelineDetail = (name: string, kind?: string) => {
     <!-- run + validate -->
     <div class="view" data-view="run" hidden>
       <div class="run">
-        <h2>Job run</h2>
+        <h2>Job run <span data-run-id>#DEMO-001</span></h2>
+        <p class="synth">Simulated run · Published version 0.0.1 · Demo University</p>
         <pre class="log" data-log>{runLog.join('\n')}</pre>
 
         <h3>output.csv</h3>
         <div class="tw">
           <table>
             <thead><tr>{outputCsv.header.map((h) => <th>{h}</th>)}</tr></thead>
-            <tbody>{outputCsv.rows.map((r) => <tr>{r.map((c) => <td>{c || <span class="empty">—</span>}</td>)}</tr>)}</tbody>
+            <tbody>{outputCsv.rows.map((r) => <tr>{r.map((c) => <td>{c || <span class="empty">N/A</span>}</td>)}</tr>)}</tbody>
           </table>
         </div>
         <p class="synth">Synthetic records. Nothing on this page resembles real student data.</p>
@@ -186,6 +190,8 @@ const pipelineDetail = (name: string, kind?: string) => {
         <label class="deploy-field"><span>Tenant</span><select aria-label="Tenant"><option>Demo University</option></select></label>
         <label class="deploy-field"><span>Package</span><select aria-label="Package"><option>demo-package</option></select></label>
         <label class="deploy-field"><span>Pipeline name</span><input type="text" value="contact-export" aria-label="Pipeline name" /></label>
+        <p class="deploy-note">Saves a draft in Ellucian. Publish separately to make this version live.</p>
+        <button type="button" class="deploy-confirm" data-deploy-confirm>Deploy draft</button>
       </div>
   </section>
 </main>
@@ -202,17 +208,18 @@ const pipelineDetail = (name: string, kind?: string) => {
   .ficon{font-size:7px;font-weight:700;font-family:var(--ide-mono);border:1px solid currentColor;border-radius:2px;padding:1px 2px;color:#5B8DD6;}
   .ficon.pipeline{color:#C0392B;}
 
-  .editor-toolbar{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-height:43px;padding:6px 14px;background:#F5F8FC;border-bottom:1px solid var(--ide-border);}
+  .editor-toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px;min-height:43px;padding:6px 14px;background:#F5F8FC;border-bottom:1px solid var(--ide-border);}
   .editor-toolbar:empty{display:none;}
-  .tb-btn{height:30px;border:1px solid var(--ide-border-strong);border-radius:6px;background:var(--ide-editor);padding:0 11px;color:var(--ide-ink);font:inherit;font-size:12px;font-weight:600;cursor:pointer;}
-  .tb-btn:hover{border-color:var(--ide-ink-soft);}.tb-btn:focus-visible{outline:2px solid var(--ide-accent);outline-offset:2px;}
-  .tb-btn.primary{border-color:var(--ide-accent);background:var(--ide-accent);color:#fff;}
-  .tb-btn.primary:hover{background:#2866B5;border-color:#2866B5;}
+  .editor-toolbar :global(.tb-btn){height:30px;border:1px solid var(--ide-border-strong);border-radius:6px;background:var(--ide-editor);padding:0 11px;color:var(--ide-ink);font:inherit;font-size:12px;font-weight:600;cursor:pointer;}
+  .editor-toolbar :global(.tb-btn:hover){border-color:var(--ide-ink-soft);}.editor-toolbar :global(.tb-btn:focus-visible){outline:2px solid var(--ide-accent);outline-offset:2px;}
+  .editor-toolbar :global(.tb-btn.primary){border-color:var(--ide-accent);background:var(--ide-accent);color:#fff;}
+  .editor-toolbar :global(.tb-btn.primary:hover){background:#2866B5;border-color:#2866B5;}
 
   .ed-body{flex:1;min-height:0;overflow:hidden;position:relative;}
   .view{position:absolute;inset:0;overflow-y:auto;}
   .view[hidden]{display:none;}
-  .deploy-drawer{position:absolute;z-index:9;right:0;bottom:0;left:0;height:15.4rem;border-top:1px solid #B8C7D9;background:#F1F3F6;box-shadow:0 -10px 24px rgba(0,33,99,.14);overflow:hidden;animation:deployDrawer .25s ease-out both;}
+  .deploy-drawer{position:absolute;z-index:9;right:0;bottom:0;left:0;max-height:85%;height:21rem;border-top:1px solid #B8C7D9;background:#F1F3F6;box-shadow:0 -10px 24px rgba(0,33,99,.14);overflow:auto;animation:deployDrawer .25s ease-out both;}
+  .deploy-note{margin:3px 0;color:#5e697a;font-size:11px}.deploy-confirm{justify-self:end;border:0;border-radius:5px;background:#0078d4;padding:7px 12px;color:white;font:inherit;font-size:12px;cursor:pointer}
   .deploy-drawer[hidden]{display:none;}
   .deploy-head{display:flex;align-items:center;min-height:2.75rem;border-bottom:1px solid #C9CDD3;background:#E8EBF0;}
   .deploy-tabs{display:flex;align-self:stretch;}
@@ -228,7 +235,7 @@ const pipelineDetail = (name: string, kind?: string) => {
   @keyframes deployDrawer{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
   [data-view="empty"]{display:flex;align-items:center;justify-content:center;position:absolute;}
   .mark{width:min(30%,190px);height:auto;opacity:.45;position:absolute;z-index:0;}
-  /* the card is the subject at step 1 — the watermark stops competing with it */
+  /* The card is the subject at step 1, so the watermark stops competing with it. */
   .drop-stage:has(.stage-in:not([hidden])) .mark{display:none;}
   .stage-in{position:relative;z-index:1;text-align:center;}
   .from{
@@ -276,6 +283,7 @@ const pipelineDetail = (name: string, kind?: string) => {
   .pl-head p{margin:3px 0 0;font-size:11.5px;color:var(--ide-ink-soft);}
   .pl-canvas{list-style:none;margin:15px auto 0;max-width:900px;padding:0 0 20px;display:grid;gap:8px;}
   .pl-canvas > li{position:relative;display:grid;grid-template-columns:30px minmax(0,1fr);gap:9px;align-items:center;}
+  .pl-canvas > li:has(.segment-menu:not([hidden])){z-index:10;}
   .pl-canvas > li:not(:last-child)::after{content:"";position:absolute;left:39px;top:100%;height:8px;border-left:2px dashed #BFC9D8;}
   .segment-drag{display:grid;place-items:center;width:28px;height:32px;border:0;border-radius:6px;background:transparent;color:var(--ide-ink-soft);font-size:19px;letter-spacing:-.15em;cursor:grab;}
   .segment-drag:hover{background:var(--ide-hover);color:var(--ide-ink);}.segment-drag:active{cursor:grabbing;}.segment-drag:focus-visible{outline:2px solid var(--ide-accent);outline-offset:1px;}
@@ -389,6 +397,7 @@ const pipelineDetail = (name: string, kind?: string) => {
         }
         if (action === 'delete') segment.remove();
         closeMenus();
+        if (action !== 'copy') canvas.dispatchEvent(new CustomEvent('pipeline-revised', { bubbles: true }));
       });
     });
 
@@ -439,6 +448,7 @@ const pipelineDetail = (name: string, kind?: string) => {
         const bounds = segment.getBoundingClientRect();
         canvas.insertBefore(dragging, event.clientY < bounds.top + bounds.height / 2 ? segment : segment.nextSibling);
         reindexSegments();
+        canvas.dispatchEvent(new CustomEvent('pipeline-revised', { bubbles: true }));
       });
     });
 

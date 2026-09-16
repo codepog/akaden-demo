@@ -3,7 +3,7 @@ import { FILES, FOLDERS } from '../../data/ide';
 const byFolder = (f: string) => Object.entries(FILES).filter(([, v]) => v.folder === f);
 ---
 <aside class="side" data-explorer data-explorer-mode="folders">
-  <section class="panel explorer">
+  <section class="panel explorer" data-file-panel>
     <header class="panel-head">
       <span>Explorer</span>
       <button type="button" class="explorer-mode" data-explorer-toggle aria-label="Switch to file view" title="Switch Explorer view">
@@ -22,8 +22,8 @@ const byFolder = (f: string) => Object.entries(FILES).filter(([, v]) => v.folder
               <span>{folder}</span>
             </div>
             {items.map(([key, v]) => (
-              <button type="button" class="file" data-file={key} hidden>
-                <span class:list={['ficon', v.kind]} aria-hidden="true">{v.kind === 'pipeline' ? 'S' : 'TXT'}</span>
+              <button type="button" class="file" data-file={key} title={`${v.folder}/${v.name}`} hidden>
+                <span class:list={['ficon', v.kind]} aria-hidden="true">{v.kind === 'pipeline' ? 'S' : v.kind === 'test' ? 'TEST' : 'TXT'}</span>
                 <span class="fname">{v.name}</span>
               </button>
             ))}
@@ -31,6 +31,12 @@ const byFolder = (f: string) => Object.entries(FILES).filter(([, v]) => v.folder
         );
       })}
     </div>
+  </section>
+  <section class="monitor-side" data-monitor-sidebar hidden>
+    <header class="panel-head">Monitoring</header>
+    <details><summary>Change selection</summary><p>Demo University · test-env</p><p>Student Contact Export</p><small>This preview includes one simulated pipeline.</small></details>
+    <article><h3>Critical status</h3><strong>0</strong><b>Failed runs today</b><p>Across 1 monitored environment.</p></article>
+    <article><h3>Demo University</h3><p>test-env</p><span class="healthy">✓ Student Contact Export</span></article>
   </section>
 </aside>
 
@@ -40,6 +46,7 @@ const byFolder = (f: string) => Object.entries(FILES).filter(([, v]) => v.folder
     display:flex; flex-direction:column; min-height:0; overflow:hidden;
   }
   .panel{display:flex;flex-direction:column;min-height:0;}
+  .monitor-side{flex:1;min-height:0}
   .explorer{flex:1;min-height:0;}
   .panel-head{
     display:flex;align-items:center;justify-content:space-between;
@@ -77,4 +84,5 @@ const byFolder = (f: string) => Object.entries(FILES).filter(([, v]) => v.folder
     color:#5B8DD6;
   }
   .ficon.pipeline{color:#C0392B;}
+  .ficon.test{color:#b57900}.monitor-side[hidden],.panel[hidden]{display:none}.monitor-side{overflow:auto;padding:0 12px 18px}.monitor-side .panel-head{padding-left:0}.monitor-side details{border:1px solid #cdd4dc;border-radius:7px;padding:10px;font-size:12px}.monitor-side summary{cursor:pointer}.monitor-side article{border:1px solid #d0d5dd;border-radius:9px;background:#fafcff;padding:16px;margin-top:15px}.monitor-side h3{margin:0 0 9px;font-size:13px}.monitor-side article:first-of-type h3{color:#993332}.monitor-side strong{display:block;font-size:32px;color:#993332}.monitor-side b{display:block;font-size:12px}.monitor-side p,.monitor-side small{color:#68707e;font-size:11px}.healthy{font-size:11px;color:#217049}
 </style>

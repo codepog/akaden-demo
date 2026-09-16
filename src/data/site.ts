@@ -12,11 +12,11 @@ export const nav = {
   tabs: [
     { label: 'Overview', href: '#overview', live: true },
     { label: 'What changes', href: '#outcomes', live: true },
-    { label: 'Workflow', href: '#workflow', live: true },
+    { label: 'Demo', href: '#interactive-demo', live: true },
     { label: 'Case Study', href: '#specification', live: true },
     { label: 'Proof', href: '#proof', live: true },
   ],
-  cta: { label: 'Book a call', href: '#book-a-call' },
+  cta: { label: 'Contact Us', href: '#form' },
 };
 
 export const hero = {
@@ -25,22 +25,20 @@ export const hero = {
   lead:
     'Akaden turns a written request into a reviewed, deployable Ellucian data pipeline, with the right delivery practices ready when the work needs them.',
   thesis: 'Get to Know Akaden',
-  thesisSub: 'See how Akaden turns a real request into a reviewed, deployable pipeline—then try the walkthrough, follow the workflow, or talk with our team.',
+  thesisSub: 'Bring the systems, code, and business rules you already have. Akaden helps your team deliver reliable pipelines faster while preserving the knowledge behind them.',
 };
 
 export const proof = {
   eyebrow: 'Proof',
-  headline: 'Built for our own delivery team first',
+  headline: 'Battle-tested by our own delivery team.',
   lead:
-    'ABCloudz builds and migrates data integrations for institutions running Ellucian Banner. ' +
-    'Akaden was built because that work was being done by hand, and it went into production on ' +
-    'our own team before it went anywhere else.',
+    'We built Akaden to help our own delivery team do better integration work faster, more consistently, and with knowledge the whole team could use. ' +
+    'After seeing how much it improved real Ellucian projects, we decided to share it with other teams facing the same challenges.',
   stats: [
     { figure: 'Used Internally', label: 'Used in production by the ABCloudz delivery team' },
     { figure: 'Human-led', label: 'Developers review and approve the decisions that matter' },
     { figure: 'Team continuity', label: 'Critical pipeline knowledge stays accessible across the team' },
   ],
-  badgeNote: 'Akaden is built by ABCloudz, a member of the Ellucian Partner Network.',
 };
 
 export const benefits = {
@@ -67,23 +65,20 @@ export const benefits = {
 };
 
 export const install = {
-  eyebrow: 'Bring your roadmap',
-  headline: 'See Akaden in your workflow',
+  eyebrow: 'Contact us',
+  headline: 'See what Akaden can do with your integration.',
   lead:
-    'Book a working session with an ABCloudz specialist. We will talk through the systems you need to connect, the delivery work in front of your team, and where Akaden can help you move from request to tested pipeline faster.',
-  ctaLabel: 'Book a call',
-  ctaHref: 'https://abcloudz.com/company/?page-url=Trusted+Experts+in+Cloud+Transformation#contact-us',
-  secondary: {
-    label: 'Visit ABCloudz',
-    href: 'https://abcloudz.com/',
-  },
+    'The integration may be critical, but moving it forward means untangling years of logic, filling in missing context, and finding time your team doesn’t have. Whether you’re modernizing Banner or Colleague, building in Data Connect, or inheriting someone else’s work, Akaden turns what already exists into a reviewed specification and a tested pipeline, so your engineers can make progress without starting over.',
+  close: 'Bring a real use case. Leave with a clearer path forward.',
+  ctaLabel: 'Contact Us',
+  ctaHref: '',
 };
 
 export const footer = {
   note: 'Akaden is built by ABCloudz.',
-  event: 'EDUCAUSE Demo Day — 14 September 2026',
+  event: 'EDUCAUSE Demo Day, 14 September 2026',
   links: [
     { label: 'ABCloudz', href: 'https://abcloudz.com/' },
-    { label: 'Book a call', href: '#book-a-call' },
+    { label: 'Contact Us', href: '#form' },
   ],
 };
