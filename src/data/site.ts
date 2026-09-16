@@ -45,20 +45,28 @@ export const benefits = {
   eyebrow: 'What changes',
   items: [
     {
-      title: 'Reduce integration complexity',
-      body: 'Standardize how requirements, mappings, test cases, and pipeline changes are defined and managed in one connected workflow.',
+      key: 'intelligence',
+      title: 'Intelligence',
+      summary: 'Apply leading AI models with relevant project context.',
+      body: 'Use leading AI models with the project context and specialized skills needed to reason through complex integration work. Engineers choose the models and direct the work.',
     },
     {
-      title: 'Accelerate pipeline delivery',
-      body: 'Move from requirements through specification, generation, testing, review, and deployment while preserving full manual control.',
+      key: 'development',
+      title: 'Development',
+      summary: 'Build, test, review, and retain delivery knowledge.',
+      body: 'Bring agent-assisted building, testing, review, and version control into the engineering workflow while keeping people in control. Reusable knowledge and pipeline best practices stay available to the team.',
     },
     {
-      title: 'Keep delivery knowledge with the team',
-      body: 'Use the specification as a durable source of intent so decisions, context, and delivery knowledge remain accessible as people and priorities change.',
+      key: 'data',
+      title: 'Data & Cloud',
+      summary: 'Work across existing data and cloud platforms.',
+      body: 'Build across the data platforms, warehouses, and cloud infrastructure your institution already relies on from one connected environment.',
     },
     {
-      title: 'Apply best practices by default',
-      body: 'Build proven pipeline patterns, audit controls, and edge-case guidance into each delivery instead of asking every engineer to recreate them.',
+      key: 'systems',
+      title: 'Existing Systems',
+      summary: 'Carry institutional context into modernization.',
+      body: 'Carry forward context from Banner, Colleague, student records, learning platforms, and existing legacy applications so modernization does not start from scratch.',
     },
   ],
 };

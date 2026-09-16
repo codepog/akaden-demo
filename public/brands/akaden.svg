@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img">
+  <title>Akaden</title>
+  <defs>
+    <linearGradient id="akaden-brand" x1="18" y1="78" x2="82" y2="22" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#146AD8"/>
+      <stop offset="1" stop-color="#6B35D2"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="url(#akaden-brand)" stroke-linecap="round" stroke-linejoin="round" stroke-width="17">
+    <path d="M18.13 77.24 50 21.86"/>
+    <path d="M50 21.86 81.87 77.24"/>
+  </g>
+  <circle cx="50" cy="77.89" r="8.5" fill="#146AD8"/>
+</svg>
