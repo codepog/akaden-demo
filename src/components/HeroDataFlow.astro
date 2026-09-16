@@ -1,0 +1,146 @@
+<figure
+  class="hero-data-flow"
+  role="img"
+  aria-label="Data moving from a server, cloud, and document into an Akaden development workspace"
+>
+  <svg viewBox="0 0 840 470" aria-hidden="true">
+    <defs>
+      <linearGradient id="hero-device-fill" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#f8fbff" />
+        <stop offset="1" stop-color="#dceaff" />
+      </linearGradient>
+      <linearGradient id="hero-screen-fill" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#2f6ce6" />
+        <stop offset=".52" stop-color="#1769e0" />
+        <stop offset="1" stop-color="#1d4ec1" />
+      </linearGradient>
+      <radialGradient id="hero-screen-glow" cx="50%" cy="42%" r="62%">
+        <stop offset="0" stop-color="#6ba4ff" stop-opacity=".48" />
+        <stop offset="1" stop-color="#1769e0" stop-opacity="0" />
+      </radialGradient>
+      <filter id="hero-flow-shadow" x="-60%" y="-60%" width="220%" height="220%">
+        <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#1769e0" flood-opacity=".48" />
+      </filter>
+      <filter id="hero-device-shadow" x="-30%" y="-30%" width="160%" height="180%">
+        <feDropShadow dx="0" dy="9" stdDeviation="10" flood-color="#194e9b" flood-opacity=".16" />
+      </filter>
+      <path id="hero-flow-left" d="M182 270 H255" />
+      <path id="hero-flow-cloud" d="M420 116 V165" />
+      <path id="hero-flow-right" d="M697 270 H585" />
+      <clipPath id="hero-mark-left" clipPathUnits="userSpaceOnUse">
+        <polygon points="78.96,92.89 9.13,-28.45 -103.55,36.39 -33.72,157.73" />
+      </clipPath>
+      <clipPath id="hero-mark-right" clipPathUnits="userSpaceOnUse">
+        <polygon points="21.04,92.89 90.87,-28.45 203.55,36.39 133.72,157.73" />
+      </clipPath>
+    </defs>
+
+    <ellipse cx="420" cy="435" rx="265" ry="18" fill="#d9e8fb" opacity=".62" />
+
+    <g class="hero-data-flow__route" fill="none" stroke-linecap="round">
+      <use href="#hero-flow-left" />
+      <use href="#hero-flow-cloud" />
+      <use href="#hero-flow-right" />
+    </g>
+
+    <g class="hero-data-flow__icon hero-data-flow__icon--server" filter="url(#hero-device-shadow)">
+      <rect x="52" y="220" width="130" height="124" rx="25" fill="url(#hero-device-fill)" />
+      <g fill="#e5efff" stroke="#1556ad" stroke-width="6">
+        <rect x="76" y="244" width="82" height="22" rx="7" />
+        <rect x="76" y="273" width="82" height="22" rx="7" />
+        <rect x="76" y="302" width="82" height="22" rx="7" />
+      </g>
+      <g fill="#1769e0">
+        <circle cx="145" cy="255" r="4" />
+        <circle cx="145" cy="284" r="4" />
+        <circle cx="145" cy="313" r="4" />
+      </g>
+    </g>
+
+    <g class="hero-data-flow__icon hero-data-flow__icon--cloud" filter="url(#hero-device-shadow)">
+      <path
+        d="M366 94h103c17 0 29-11 29-26s-12-26-28-26c-5-16-20-27-38-27-20 0-37 14-40 33-3-1-7-2-11-2-16 0-29 11-29 25 0 13 7 23 14 23Z"
+        fill="url(#hero-device-fill)"
+        stroke="#1556ad"
+        stroke-width="6"
+        stroke-linejoin="round"
+      />
+    </g>
+
+    <g class="hero-data-flow__icon hero-data-flow__icon--document" filter="url(#hero-device-shadow)">
+      <path
+        d="M706 220h61l31 31v93H706Z"
+        fill="url(#hero-device-fill)"
+        stroke="#1556ad"
+        stroke-width="6"
+        stroke-linejoin="round"
+      />
+      <path d="M767 220v31h31" fill="#cfe2ff" stroke="#1556ad" stroke-width="6" stroke-linejoin="round" />
+      <g fill="none" stroke="#1769e0" stroke-width="5" stroke-linecap="round">
+        <path d="M726 276h51" />
+        <path d="M726 297h51" />
+        <path d="M726 318h36" />
+      </g>
+    </g>
+
+    <g class="hero-data-flow__monitor" filter="url(#hero-device-shadow)">
+      <rect x="255" y="165" width="330" height="225" rx="18" fill="#f8fbff" stroke="#1556ad" stroke-width="7" />
+      <rect x="276" y="186" width="288" height="176" rx="7" fill="url(#hero-screen-fill)" />
+      <rect x="276" y="186" width="288" height="176" rx="7" fill="url(#hero-screen-glow)" />
+      <circle cx="420" cy="376" r="4" fill="#76a1e9" />
+
+      <g class="hero-data-flow__mark" transform="translate(350 204) scale(1.4)">
+        <g fill="none" stroke="#fff" stroke-width="20.76" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18.13 77.24 50 21.86 81.87 77.24" opacity=".46" />
+          <path d="M50 21.86 81.87 77.24" opacity=".46" clip-path="url(#hero-mark-right)" />
+          <path d="M50 21.86 18.13 77.24" clip-path="url(#hero-mark-left)" />
+        </g>
+        <circle cx="50" cy="77.89" r="10.37" fill="#fff" />
+      </g>
+
+      <path d="M405 390v28h30v-28" fill="url(#hero-device-fill)" stroke="#1556ad" stroke-width="7" stroke-linejoin="round" />
+      <path d="M355 433c0-8 7-15 15-15h100c8 0 15 7 15 15Z" fill="url(#hero-device-fill)" stroke="#1556ad" stroke-width="7" stroke-linejoin="round" />
+    </g>
+
+    <g class="hero-data-flow__ports" fill="#ffd56a" stroke="#1556ad" stroke-width="5">
+      <circle cx="255" cy="270" r="12" />
+      <circle cx="420" cy="165" r="12" />
+      <circle cx="585" cy="270" r="12" />
+    </g>
+
+    <g class="hero-data-flow__dots" fill="#1769e0" filter="url(#hero-flow-shadow)">
+      <circle class="hero-data-flow__dot" r="5">
+        <animateMotion dur="2.5s" begin="0s" repeatCount="indefinite"><mpath href="#hero-flow-left" /></animateMotion>
+      </circle>
+      <circle class="hero-data-flow__dot" r="4">
+        <animateMotion dur="2.5s" begin="-1.25s" repeatCount="indefinite"><mpath href="#hero-flow-left" /></animateMotion>
+      </circle>
+
+      <circle class="hero-data-flow__dot hero-data-flow__dot--cloud" r="5">
+        <animateMotion dur="3.8s" begin="0s" repeatCount="indefinite"><mpath href="#hero-flow-cloud" /></animateMotion>
+      </circle>
+      <circle class="hero-data-flow__dot hero-data-flow__dot--cloud" r="4">
+        <animateMotion dur="3.8s" begin="-1.9s" repeatCount="indefinite"><mpath href="#hero-flow-cloud" /></animateMotion>
+      </circle>
+
+      <circle class="hero-data-flow__dot" r="5">
+        <animateMotion dur="2.8s" begin="0s" repeatCount="indefinite"><mpath href="#hero-flow-right" /></animateMotion>
+      </circle>
+      <circle class="hero-data-flow__dot" r="4">
+        <animateMotion dur="2.8s" begin="-1.4s" repeatCount="indefinite"><mpath href="#hero-flow-right" /></animateMotion>
+      </circle>
+    </g>
+  </svg>
+</figure>
+
+<style>
+  .hero-data-flow{display:block;width:100%;aspect-ratio:840/470;margin:0;overflow:hidden;border-radius:.75rem;background:linear-gradient(145deg,#fff 0%,#f8fbff 72%,#edf5ff 100%)}
+  .hero-data-flow svg{display:block;width:100%;height:100%}
+  .hero-data-flow__route use{stroke:#85aff2;stroke-width:6}
+  .hero-data-flow__icon{transform-origin:center;transition:transform .3s cubic-bezier(.22,1,.36,1)}
+  .hero-data-flow:is(:hover,:focus-within) .hero-data-flow__icon--server{transform:translateX(-3px)}
+  .hero-data-flow:is(:hover,:focus-within) .hero-data-flow__icon--cloud{transform:translateY(-3px)}
+  .hero-data-flow:is(:hover,:focus-within) .hero-data-flow__icon--document{transform:translateX(3px)}
+  .hero-data-flow__mark{filter:drop-shadow(0 5px 10px rgb(3 37 116/.25))}
+  @media(prefers-reduced-motion:reduce){.hero-data-flow__dot{display:none}.hero-data-flow__icon{transition:none}}
+</style>
