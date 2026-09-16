@@ -446,6 +446,67 @@ const caseStudyTotal = { estimated: 824, actual: 590, saved: 234 };
   @media(max-width:900px){.contact-layout{grid-template-columns:1fr;gap:2.5rem}.contact-copy{max-width:42rem}.contact-copy h2{max-width:none}}
   @media(max-width:620px){.contact-section{padding:2.25rem 0 3.75rem}.contact-copy h2{font-size:clamp(2.8rem,14vw,4rem)}.contact-form{border-radius:1.2rem;padding:1.3rem}.contact-form__row{grid-template-columns:1fr}}
   @media(max-width:620px){.contact-copy h2{font-size:clamp(2.65rem,11.5vw,3.4rem)}}
+  @media(max-width:760px){
+    .case-study-card__header{padding-top:.75rem;padding-bottom:1.6rem}
+    .case-study-table-wrap{overflow:visible;border:0;background:transparent;box-shadow:none}
+    .case-study-table,.case-study-table tbody,.case-study-table tfoot{display:block;width:100%}
+    .case-study-table tbody,.case-study-table tfoot{display:grid;gap:.8rem}
+    .case-study-table tbody tr,.case-study-table tfoot tr{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      overflow:hidden;
+      border:1px solid #c9d7ea;
+      border-radius:.8rem;
+      background:rgb(255 255 255 / .76);
+      padding:0;
+      box-shadow:0 12px 28px -24px rgb(15 46 104 / .5);
+    }
+    .case-study-table tbody tr:nth-child(even){background:rgb(255 255 255 / .76)}
+    .case-study-table tbody tr.case-study-table__other{background:#edf4fc}
+    .case-study-table tbody th,.case-study-table tfoot th{
+      grid-column:1/-1;
+      border:0;
+      background:transparent!important;
+      padding:.85rem 1rem .75rem;
+      font-size:1rem;
+      line-height:1.32;
+    }
+    .case-study-table th[data-label]::before{display:none}
+    .case-study-table tbody td,.case-study-table tfoot td{
+      border:0;
+      background:transparent!important;
+      padding:.72rem 1rem;
+      font-size:.9rem;
+      line-height:1.42;
+      text-align:left!important;
+    }
+    .case-study-table [data-label]::before{font-size:.61rem;letter-spacing:.075em}
+    .case-study-table tbody td:nth-child(2),.case-study-table tfoot td:nth-child(2){
+      border-top:1px solid #d7e1ef;
+    }
+    .case-study-table tbody td:nth-child(3),.case-study-table tfoot td:nth-child(3){
+      border-top:1px solid #c9d7ea!important;
+      border-left:1px solid #c9d7ea!important;
+      background:#eef5ff!important;
+      padding-left:1rem;
+      color:#1769e0;
+      font-size:1.05rem;
+    }
+    .case-study-table tbody td:last-child,.case-study-table tfoot td:last-child{
+      grid-column:1/-1;
+      margin:0;
+      border-top:1px solid #d7e1ef;
+      padding-top:.8rem;
+      padding-bottom:.9rem;
+    }
+    .case-study-table tfoot{margin-top:.25rem}
+    .case-study-table tfoot tr{border-top:4px solid #15285d;background:#dbe9ff;box-shadow:none}
+    .case-study-table tfoot th{padding-top:.8rem;font-size:1.1rem}
+    .case-study-table tfoot td:last-child{font-size:.9rem}
+  }
+  @media(max-width:620px){
+    .demo-embed{height:clamp(36rem,78svh,42rem)}
+  }
   @media(prefers-reduced-motion:reduce){:global(html){scroll-behavior:auto}:global(html.scroll-reveal-enabled [data-scroll-reveal]){opacity:1;translate:none;transition:none}.test-button,.test-link span,.overview-card,.overview-card__action span,.test-scroll-gate{transition:none}.test-button:hover,.overview-card:hover{transform:none}.test-hero__scroll-cue svg{animation:none}}
 </style>
 

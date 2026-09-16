@@ -303,6 +303,16 @@ const { embedded = false, hideChrome = false, fast = false } = Astro.props;
     .akaden-launch__chrome { min-height: 4rem; padding-left: 1rem; }
   }
 
+  @media (max-width: 620px) {
+    .akaden-launch--embedded { padding: 0; }
+    .akaden-launch--embedded .akaden-launch__demo {
+      inset: 0;
+      width: auto;
+      border: 0;
+      border-radius: 0;
+    }
+  }
+
   @keyframes ai-demo-through-portal-mobile {
     from { opacity: 0; transform: scale(1.035); }
     to { opacity: 1; transform: scale(1); }

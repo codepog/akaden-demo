@@ -89,9 +89,32 @@ import { steps } from '../data/ide';
   .coach-next:hover:not(:disabled){border-color:var(--color-blue-deep);background:var(--color-blue-deep);}.coach-next:disabled{opacity:.5;cursor:not-allowed;}.coach-next:focus-visible{outline:2px solid var(--color-ink);outline-offset:2px;}
 
   @media (max-width:620px){
-    .page{height:100dvh;}
+    .page{
+      grid-template-areas:"guide" "frame" "coach";
+      grid-template-rows:auto minmax(0,1fr) auto;
+      height:100dvh;
+    }
     .g-dots{gap:4px;}
-    .coach-callout{width:min(19rem,calc(100vw - 1.5rem));padding:10px 14px 12px;}
+    .guide{padding:8px 10px;}
+    .guide-heading{margin-bottom:7px;}
+    .guide-heading small{display:none;}
+    .coach-callout{
+      position:relative!important;
+      inset:auto!important;
+      grid-area:coach;
+      box-sizing:border-box;
+      width:100%;
+      max-width:none;
+      border-width:1px 0 0;
+      border-radius:0;
+      background:#fff;
+      padding:10px 12px 12px;
+      box-shadow:0 -10px 26px rgb(0 33 99 / .12);
+    }
+    .coach-callout::after{display:none;}
+    .coach-callout p:last-child{margin:0;font-size:.82rem;line-height:1.42;}
+    .coach-actions{margin-top:8px;padding-top:8px;}
+    .coach-next{min-height:38px;}
   }
   @media (prefers-reduced-motion: reduce){
     .g-dots button,.coach-next{transition:none;}
