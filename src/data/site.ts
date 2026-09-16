@@ -23,7 +23,7 @@ export const hero = {
   eyebrow: 'AI-assisted IDE for Ellucian pipeline development',
   headline: 'Accelerate pipeline development and cloud migration.',
   lead:
-    'Akaden turns a written request into a reviewed, deployable Ellucian data pipeline, with the right delivery practices ready when the work needs them.',
+    'Akaden turns a written request into a reviewed, deployable Ellucian data pipeline with review, testing, and delivery best practices built into the workflow.',
   thesis: 'Get to Know Akaden',
   thesisSub: 'Bring the systems, code, and business rules you already have. Akaden helps your team deliver reliable pipelines faster while preserving the knowledge behind them.',
 };

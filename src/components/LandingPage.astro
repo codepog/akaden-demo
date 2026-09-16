@@ -206,7 +206,7 @@ const caseStudyTotal = { estimated: 824, actual: 590, saved: 234 };
             <div>
             <p class="test-eyebrow test-eyebrow--blue">{changeRequest.when}</p>
             <h3>{changeRequest.ask}</h3>
-            <p>Moving the university’s integrations to Ellucian Data Connect meant carrying years of business logic into a new platform. Akaden helped the delivery team get past the manual analysis and troubleshooting that made that work demanding.</p>
+            <p>Moving the university’s integrations to Ellucian DataConnect meant carrying years of business logic into a new platform. Akaden helped the delivery team get past the manual analysis and troubleshooting that made that work demanding.</p>
             </div>
           </header>
 
@@ -575,6 +575,29 @@ const caseStudyTotal = { estimated: 824, actual: 590, saved: 234 };
       window.requestAnimationFrame(() => window.scrollTo(0, 0));
     }, { once: true });
   }
+
+  document.querySelectorAll<HTMLAnchorElement>('.section-nav-link[href^="#"]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const hash = link.hash;
+      if (!hash) return;
+      if (mobileDemoNavigation.matches && hash === '#interactive-demo') return;
+      const target = document.querySelector<HTMLElement>(hash);
+      if (!target) return;
+
+      event.preventDefault();
+      window.history.pushState(null, '', hash);
+      scrollGate?.classList.add('is-dismissed');
+      if (scrollGate) {
+        scrollGate.style.transition = 'none';
+        scrollGate.style.height = '0px';
+        scrollGate.getBoundingClientRect();
+      }
+      window.requestAnimationFrame(() => {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  });
 
   document.querySelectorAll<HTMLAnchorElement>('a[href$="#interactive-demo"]').forEach((link) => {
     link.addEventListener('click', (event) => {

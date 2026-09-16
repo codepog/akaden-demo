@@ -189,6 +189,31 @@ const layers = [
     let settleTimer = 0;
     let isSnapping = false;
     let lastScrollY = window.scrollY;
+    let suppressSnappingUntil = 0;
+
+    const suspendSnappingForNavigation = () => {
+      suppressSnappingUntil = performance.now() + 2500;
+      isSnapping = false;
+      window.clearTimeout(snapTimer);
+      window.clearTimeout(settleTimer);
+    };
+
+    const onPageAnchorClick = (event: MouseEvent) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const link = target.closest<HTMLAnchorElement>('a[href]');
+      if (!link) return;
+      const destination = new URL(link.href, window.location.href);
+      if (
+        destination.origin !== window.location.origin
+        || destination.pathname !== window.location.pathname
+        || !destination.hash
+      ) return;
+      suspendSnappingForNavigation();
+    };
+
+    document.addEventListener('click', onPageAnchorClick, true);
+    window.addEventListener('hashchange', suspendSnappingForNavigation);
 
     const render = (key: string, animatePanels = true) => {
       if (!key) return;
@@ -308,6 +333,12 @@ const layers = [
       resetScrollPosition();
       if (key && root.dataset.active !== key) render(key);
 
+      const snappingSuppressed = performance.now() < suppressSnappingUntil;
+      if (snappingSuppressed) {
+        window.clearTimeout(settleTimer);
+        return;
+      }
+
       if (mobileScrollStoryQuery.matches) {
         window.clearTimeout(settleTimer);
         if (!isSnapping && scrollDirection !== 0 && progress > 0 && progress < 1) {
@@ -357,6 +388,8 @@ const layers = [
       window.clearTimeout(panelTransitionTimer);
       window.clearTimeout(snapTimer);
       window.clearTimeout(settleTimer);
+      document.removeEventListener('click', onPageAnchorClick, true);
+      window.removeEventListener('hashchange', suspendSnappingForNavigation);
     });
 
     render(activeKey);
