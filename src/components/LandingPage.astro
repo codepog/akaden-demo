@@ -483,7 +483,6 @@ const caseStudyTotal = { estimated: 824, actual: 590, saved: 234 };
       font-size:1rem;
       line-height:1.32;
     }
-    .case-study-table th[data-label]::before{display:none}
     .case-study-table tbody td,.case-study-table tfoot td{
       border:0;
       background:transparent!important;
@@ -517,7 +516,7 @@ const caseStudyTotal = { estimated: 824, actual: 590, saved: 234 };
     .case-study-table tfoot td:last-child{font-size:.9rem}
   }
   @media(max-width:620px){
-    .demo-embed{height:clamp(36rem,78svh,42rem)}
+    .demo-embed{height:clamp(25rem,calc((100vw - 1.25rem) * .5625 + 12.5rem),26rem)}
     #specification::after,#proof::after{display:none}
   }
   @media(prefers-reduced-motion:reduce){:global(html){scroll-behavior:auto}:global(html.scroll-reveal-enabled [data-scroll-reveal]){opacity:1;translate:none;transition:none}.test-button,.test-link span,.overview-card,.overview-card__action span,.test-scroll-gate{transition:none}.test-button:hover,.overview-card:hover{transform:none}.test-hero__scroll-cue svg{animation:none}}

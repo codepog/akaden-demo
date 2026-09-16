@@ -91,9 +91,11 @@ import { steps } from '../data/ide';
   @media (max-width:620px){
     .page{
       grid-template-areas:"guide" "coach" "frame";
-      grid-template-rows:auto auto minmax(0,1fr);
-      height:100dvh;
+      grid-template-rows:auto auto auto;
+      height:auto;
+      min-height:100dvh;
     }
+    .frame{width:100%;height:auto;aspect-ratio:16/9;align-self:start;}
     .g-dots{gap:4px;}
     .guide{padding:8px 10px;}
     .guide-heading{margin-bottom:7px;}
@@ -108,15 +110,64 @@ import { steps } from '../data/ide';
       border-width:0 0 1px;
       border-radius:0;
       background:#fff;
-      padding:10px 12px 12px;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      align-items:center;
+      gap:10px;
+      min-height:9.75rem;
+      padding:9px 10px;
       box-shadow:0 10px 26px rgb(0 33 99 / .1);
     }
     .coach-callout::after{display:none;}
-    .coach-callout p:last-child{margin:0;font-size:.82rem;line-height:1.42;}
-    .coach-actions{margin-top:8px;padding-top:8px;}
-    .coach-next{min-height:38px;}
+    .coach-callout p:last-child{margin:0;font-size:.8rem;line-height:1.35;}
+    .coach-actions{margin:0;border:0;padding:0;}
+    .coach-next{width:auto;min-width:7.25rem;min-height:38px;padding-inline:12px;}
+    .frame :global(.ide){
+      width:1024px;
+      grid-template-columns:48px 200px minmax(0,1fr) 290px!important;
+      grid-template-areas:"menu menu menu menu" "rail side ed chat"!important;
+      transform-origin:top left;
+    }
+    .frame :global(.ide .rail){display:flex!important;}
+    .frame :global(.ide .side){display:flex!important;}
+    .frame :global(.ide .ed){display:flex!important;}
+    .frame :global(.ide .chat){display:flex!important;}
+    .frame :global(.ide .menubar .mi:not(.plus)){display:block!important;}
+    .frame :global(.ide .menubar .chipbtn){display:inline-flex!important;max-width:none!important;}
   }
   @media (prefers-reduced-motion: reduce){
     .g-dots button,.coach-next{transition:none;}
   }
 </style>
+
+<script>
+  const workspaceFrame = document.querySelector<HTMLElement>('.frame');
+  const workspaceIde = workspaceFrame?.querySelector<HTMLElement>('[data-ide]');
+  const mobileWorkspace = window.matchMedia('(max-width:620px)');
+  const mobileCanvasWidth = 1024;
+
+  const fitMobileWorkspace = () => {
+    if (!workspaceFrame || !workspaceIde) return;
+    if (!mobileWorkspace.matches) {
+      workspaceIde.style.removeProperty('width');
+      workspaceIde.style.removeProperty('height');
+      workspaceIde.style.removeProperty('transform');
+      return;
+    }
+    const width = workspaceFrame.clientWidth;
+    const height = workspaceFrame.clientHeight;
+    if (!width || !height) return;
+    const scale = width / mobileCanvasWidth;
+    workspaceIde.style.width = `${mobileCanvasWidth}px`;
+    workspaceIde.style.height = `${height / scale}px`;
+    workspaceIde.style.transform = `scale(${scale})`;
+  };
+
+  const workspaceObserver = workspaceFrame && 'ResizeObserver' in window
+    ? new ResizeObserver(fitMobileWorkspace)
+    : null;
+  if (workspaceFrame) workspaceObserver?.observe(workspaceFrame);
+  mobileWorkspace.addEventListener('change', fitMobileWorkspace);
+  window.addEventListener('load', fitMobileWorkspace, { once: true });
+  window.requestAnimationFrame(fitMobileWorkspace);
+</script>
