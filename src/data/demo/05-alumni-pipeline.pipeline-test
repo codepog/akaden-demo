@@ -1,6 +1,6 @@
 {
-  "name": "demo-simple-s3-happy-path",
-  "description": "Happy path test: verifies the pipeline runs end-to-end, writes to S3, and the CSV content is well-formed (not just header-only).",
+  "name": "student-contact-export",
+  "description": "End-to-end validation: verifies the pipeline runs successfully, writes to S3, and produces a complete, well-formed CSV file.",
   "pipeline": "../pipelines/alumni-contact-export.pipeline",
   "onlySegments": [],
   "parameters": [{ "name": "fileName", "value": "test-persons.csv" }],

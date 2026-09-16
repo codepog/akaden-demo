@@ -90,8 +90,8 @@ import { steps } from '../data/ide';
 
   @media (max-width:620px){
     .page{
-      grid-template-areas:"guide" "frame" "coach";
-      grid-template-rows:auto minmax(0,1fr) auto;
+      grid-template-areas:"guide" "coach" "frame";
+      grid-template-rows:auto auto minmax(0,1fr);
       height:100dvh;
     }
     .g-dots{gap:4px;}
@@ -105,11 +105,11 @@ import { steps } from '../data/ide';
       box-sizing:border-box;
       width:100%;
       max-width:none;
-      border-width:1px 0 0;
+      border-width:0 0 1px;
       border-radius:0;
       background:#fff;
       padding:10px 12px 12px;
-      box-shadow:0 -10px 26px rgb(0 33 99 / .12);
+      box-shadow:0 10px 26px rgb(0 33 99 / .1);
     }
     .coach-callout::after{display:none;}
     .coach-callout p:last-child{margin:0;font-size:.82rem;line-height:1.42;}
