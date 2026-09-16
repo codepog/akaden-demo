@@ -183,6 +183,7 @@ const layers = [
     const activeKey = changePanels.find((panel) => panel.classList.contains('is-active'))?.dataset.changePanel
       || layerButtons[0]?.dataset.connectedLayer
       || '';
+    let activeIndex = Math.max(0, changePanels.findIndex((panel) => panel.dataset.changePanel === activeKey));
     let panelTransitionTimer = 0;
     let snapTimer = 0;
     let settleTimer = 0;
@@ -221,9 +222,10 @@ const layers = [
       }
     };
 
-    const renderScrollPosition = (position: number) => {
+    const renderScrollPosition = (position: number, selectedIndex?: number) => {
       if (!changeDetail || changePanels.length === 0) return;
-      const nearestIndex = Math.min(changePanels.length - 1, Math.max(0, Math.round(position)));
+      const nearestIndex = Math.min(changePanels.length - 1, Math.max(0, selectedIndex ?? Math.round(position)));
+      const panelTravel = mobileScrollStoryQuery.matches ? 8.5 : 13;
       changeDetail.classList.add('is-scroll-controlled');
       window.clearTimeout(panelTransitionTimer);
       changePanels.forEach((panel, index) => {
@@ -233,7 +235,7 @@ const layers = [
         panel.classList.toggle('is-active', active);
         panel.classList.remove('is-leaving');
         panel.style.opacity = String(Math.max(0, 1 - distance));
-        panel.style.transform = `translateY(${offset * 13}rem)`;
+        panel.style.transform = `translateY(${offset * panelTravel}rem)`;
         panel.style.visibility = distance < 1 ? 'visible' : 'hidden';
         panel.style.pointerEvents = active ? 'auto' : 'none';
         panel.style.zIndex = String(active ? 2 : 1);
@@ -312,11 +314,20 @@ const layers = [
       const travel = Math.max(rect.height - (changesScene?.offsetHeight || window.innerHeight * .65), 1);
       const progress = Math.min(1, Math.max(0, (activationLine - rect.top) / travel));
       const rawPosition = progress * (changePanels.length - 1);
-      const position = magnetizePosition(rawPosition);
-      const index = Math.min(changePanels.length - 1, Math.round(position));
+      const position = mobileScrollStoryQuery.matches ? rawPosition : magnetizePosition(rawPosition);
+      let index = Math.min(changePanels.length - 1, Math.round(position));
+      if (mobileScrollStoryQuery.matches) {
+        const delta = rawPosition - activeIndex;
+        if (Math.abs(delta) > 1.15) activeIndex = index;
+        else if (delta > .6) activeIndex = Math.min(changePanels.length - 1, activeIndex + 1);
+        else if (delta < -.6) activeIndex = Math.max(0, activeIndex - 1);
+        index = activeIndex;
+      } else {
+        activeIndex = index;
+      }
       const key = changePanels[index]?.dataset.changePanel;
       if (key) render(key, false);
-      renderScrollPosition(position);
+      renderScrollPosition(position, index);
 
       if (mobileScrollStoryQuery.matches) {
         window.clearTimeout(settleTimer);
@@ -331,7 +342,7 @@ const layers = [
             snapTimer = window.setTimeout(() => {
               isSnapping = false;
             }, reducedMotion.matches ? 80 : 460);
-          }, 115);
+          }, 175);
         }
       } else if (!isSnapping && scrollDirection !== 0 && progress > 0 && progress < 1) {
         const baseIndex = Math.floor(rawPosition);
