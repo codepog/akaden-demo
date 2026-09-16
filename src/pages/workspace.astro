@@ -110,17 +110,14 @@ import { steps } from '../data/ide';
       border-width:0 0 1px;
       border-radius:0;
       background:#fff;
-      display:grid;
-      grid-template-columns:minmax(0,1fr) auto;
-      align-items:center;
-      gap:10px;
-      min-height:9.75rem;
+      display:block;
+      min-height:5.75rem;
       padding:9px 10px;
       box-shadow:0 10px 26px rgb(0 33 99 / .1);
     }
     .coach-callout::after{display:none;}
     .coach-callout p:last-child{margin:0;font-size:.8rem;line-height:1.35;}
-    .coach-actions{margin:0;border:0;padding:0;}
+    .coach-actions{position:fixed;z-index:95;right:10px;bottom:10px;margin:0;border:0;padding:0;}
     .coach-next{width:auto;min-width:7.25rem;min-height:38px;padding-inline:12px;}
     .frame :global(.ide){
       width:1024px;
