@@ -12,9 +12,9 @@ export const nav = {
   tabs: [
     { label: 'Overview', href: '#overview', live: true },
     { label: 'What changes', href: '#outcomes', live: true },
-    { label: 'Demo', href: '#interactive-demo', live: true },
     { label: 'Case Study', href: '#specification', live: true },
     { label: 'Proof', href: '#proof', live: true },
+    { label: 'Demo', href: '#interactive-demo', live: true },
   ],
   cta: { label: 'Contact Us', href: '#form' },
 };
