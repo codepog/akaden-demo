@@ -1,5 +1,6 @@
 ---
 import { FILES, outputCsv } from '../../data/ide';
+import JobWorkspace from './JobWorkspace.astro';
 import testRaw from '../../data/demo/student-contact-export.pipeline-test?raw';
 import pipelineRaw from '../../data/demo/student-contact-export.pipeline?raw';
 const test = JSON.parse(testRaw);
@@ -58,15 +59,18 @@ const operators: Record<string,string> = {notExists:'not exists',isArray:'is arr
   <div data-publish-content="json" role="tabpanel" hidden><pre>{pipelineRaw}</pre></div>
 </div>
 
+<JobWorkspace />
+
 <div class="view lifecycle" data-view="monitor" hidden>
   <header data-monitor-heading><span class="eyebrow">Monitoring</span><h2>Demo University <span class="environment">test-env</span></h2><p class="muted">Live pipeline performance and job history</p></header>
   <p class="demo-note">Student Contact Export v0.0.1 is live · Built-in Akaden dashboard · Simulated monitoring data</p>
-  <section class="failure-chart" aria-label="Failures this week: zero across all seven days"><h3>Failures this week</h3>
-    <svg viewBox="0 0 600 170" role="img" aria-label="Zero failed runs each day from Thursday to Wednesday">
+  <section class="failure-chart" aria-label="Failures this week: one on Sunday"><h3>Failures this week</h3>
+    <svg viewBox="0 0 600 170" role="img" aria-label="One failed run on Sunday and zero failed runs on the other six days">
       <g stroke="#e2e7ef"><path d="M35 20H575M35 70H575M35 120H575" /></g>
       <g fill="#68707e" font-size="12"><text x="12" y="24">5</text><text x="12" y="74">3</text><text x="12" y="124">0</text></g>
-      <path d="M65 120H545" stroke="#d76060" stroke-width="2" fill="none" />
-      {['Thu','Fri','Sat','Sun','Mon','Tue','Wed'].map((day,i)=><g><circle cx={65+i*80} cy="120" r="4" fill="#d76060"/><text x={65+i*80} y="150" text-anchor="middle" fill="#68707e" font-size="13">{day}</text></g>)}
+      <rect x="265" y="100" width="80" height="20" fill="#d76060" fill-opacity=".18" stroke="#d76060" stroke-width="1" />
+      <path d="M65 120L145 120L225 120L305 100L385 120L465 120L545 120" stroke="#d76060" stroke-width="2" fill="none" />
+      {['Thu','Fri','Sat','Sun','Mon','Tue','Wed'].map((day,i)=><g><circle cx={65+i*80} cy={day === 'Sun' ? 100 : 120} r="4" fill="#d76060"/><text x={65+i*80} y="150" text-anchor="middle" fill="#68707e" font-size="13">{day}</text></g>)}
     </svg>
   </section>
   <section class="job-history" aria-label="Job runs"><h3>Job runs <small>Today</small></h3>

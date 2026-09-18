@@ -231,10 +231,10 @@ export const steps: Step[] = [
     n: 9, id: 'run', title: 'Run & validate job', actor: 'system',
     gloss: 'It runs. The output is checked against the criteria written in the spec.',
     suggested: 'Open monitoring to review job history',
-    files: ['requirement', 'spec', 'pipeline', 'readme', 'test'], open: null, view: 'run',
+    files: ['requirement', 'spec', 'pipeline', 'readme', 'test'], open: 'job', view: 'run',
     agent: 'Pipeline Testing Agent',
     instruct: 'The run is checked against the acceptance criteria in the specification. Review the results knowing that every output can be traced back to the approved plan.',
-    focus: 'ed', ring: '[data-view="run"] .run', nextLabel: 'Open monitoring',
+    focus: 'ed', ring: '[data-job-run-history]', nextLabel: 'Open monitoring',
     chat: [
       { from: 'agent', agent: 'Pipeline Testing Agent', meta: 'just now', text: '', blocks: [
         { kind: 'p', text: 'Run complete. Output written and validated against the acceptance criteria in the specification.' },
@@ -251,10 +251,10 @@ export const steps: Step[] = [
     n: 10, id: 'monitor', title: 'Monitor job', actor: 'you',
     gloss: 'Track job health and inspect runs after the pipeline is live.',
     suggested: 'Review the monitoring dashboard and open a job run',
-    files: ['requirement', 'spec', 'pipeline', 'readme', 'test'], open: null, view: 'monitor',
+    files: ['requirement', 'spec', 'pipeline', 'readme', 'test'], open: 'job', view: 'monitor',
     agent: 'Agent',
     instruct: 'The pipeline is now live. Use Akaden’s built-in dashboards to monitor its performance, review job history, and investigate individual runs. This demo uses simulated monitoring data.',
-    focus: 'ed', ring: '[data-monitor-heading]', nextLabel: 'Explore the workspace',
+    focus: 'ed', ring: '[data-job-tabs]', nextLabel: 'Complete demo',
     chat: [{ from: 'agent', agent: 'Agent', meta: 'Demo response', text: '', blocks: [{ kind: 'p', text: 'The pipeline is live. Its built-in monitoring dashboard shows two successful runs and no failures today. Open a job to inspect its results, or return to the pipeline when an update is needed.' }] }],
   },
 ];

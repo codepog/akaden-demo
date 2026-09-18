@@ -1,0 +1,143 @@
+---
+import { jobParams } from '../../data/ide';
+import pipelineRaw from '../../data/demo/student-contact-export.pipeline?raw';
+---
+
+<div class="view job-workspace" data-view="job" data-job-workspace hidden>
+  <div class="job-breadcrumbs" aria-label="Pipeline location">
+    <span>Demo University</span><b aria-hidden="true">›</b><span>demo-package</span><b aria-hidden="true">›</b><strong>Student Contact Export v0.0.1</strong>
+  </div>
+
+  <header class="job-pipeline-heading">
+    <div><h2>Student Contact Export v0.0.1</h2><span class="job-badge">Published</span></div>
+    <span class="job-environment">test-env</span>
+  </header>
+
+  <nav class="job-tabs" role="tablist" aria-label="Pipeline and job details" data-job-tabs>
+    <button type="button" role="tab" aria-selected="false" data-job-section="overview">Overview</button>
+    <button type="button" role="tab" aria-selected="true" data-job-section="jobs">Jobs</button>
+    <button type="button" role="tab" aria-selected="false" data-job-section="parameters">Pipeline Parameters</button>
+    <button type="button" role="tab" aria-selected="false" data-job-section="json">Pipeline JSON</button>
+  </nav>
+
+  <section class="job-panel" role="tabpanel" data-job-panel="overview" hidden>
+    <h3>Pipeline overview</h3>
+    <dl class="job-facts">
+      <dt>Name</dt><dd>Student Contact Export</dd>
+      <dt>Version</dt><dd>v0.0.1</dd>
+      <dt>Status</dt><dd><span class="status status--success">Published</span></dd>
+      <dt>Type</dt><dd>Pipeline</dd>
+      <dt>Package</dt><dd>demo-package</dd>
+      <dt>Tenant</dt><dd>Demo University</dd>
+      <dt>Environment</dt><dd>test-env</dd>
+    </dl>
+  </section>
+
+  <section class="job-panel" role="tabpanel" data-job-panel="jobs">
+    <div class="job-detail-head">
+      <div><span class="job-panel-label">Job</span><h3>student-contact-export-job</h3></div>
+      <div class="job-actions"><button type="button" class="secondary" data-job-edit>Edit configuration</button><button type="button" class="primary">Run job</button></div>
+    </div>
+
+    <div class="job-summary">
+      <dl class="job-facts job-facts--compact">
+        <dt>Status</dt><dd><span class="status status--success">Ready</span></dd>
+        <dt>Version</dt><dd>v0.0.1</dd>
+        <dt>Maximum concurrency</dt><dd data-job-value="concurrency">10</dd>
+        <dt>HTTP request timeout</dt><dd><span data-job-value="timeout">3</span> minutes</dd>
+      </dl>
+      <div class="job-parameter-preview">
+        <span>Runtime parameters</span>
+        <strong>Student contacts → S3</strong>
+        <small>Cutoff: 2000-01-01 · Bucket: student-contact-bucket</small>
+      </div>
+    </div>
+
+    <form class="job-config" data-job-config hidden>
+      <h4>Edit job configuration</h4>
+      <div class="job-config-grid">
+        <label>Maximum concurrency<input name="concurrency" type="number" min="1" value="10" /></label>
+        <label>HTTP timeout (minutes)<input name="timeout" type="number" min="1" value="3" /></label>
+        <label>S3 bucket<input name="bucket" value="student-contact-bucket" /></label>
+        <label>Date of birth cutoff<input name="cutoff" type="date" value="2000-01-01" /></label>
+      </div>
+      <div class="job-config-actions"><button type="button" class="secondary" data-job-cancel>Cancel</button><button type="submit" class="primary">Save changes</button></div>
+      <p class="job-config-status" data-job-config-status role="status" hidden>Configuration saved for this demo job.</p>
+    </form>
+
+    <section class="run-performance" aria-labelledby="run-history-heading" data-job-run-history>
+      <div class="run-performance__heading"><div><span class="job-panel-label">Performance</span><h4 id="run-history-heading">Run history</h4></div><span>2 succeeded · 1 failed</span></div>
+      <div class="job-table-wrap">
+        <table class="job-runs">
+          <thead><tr><th>Run ID</th><th>Version</th><th>Started</th><th>Duration</th><th>Status</th><th>Errors</th></tr></thead>
+          <tbody>
+            <tr><td>#DEMO-002</td><td>v0.0.1</td><td>Today, 9:02 AM</td><td>22 sec</td><td><span class="status status--success">Succeeded</span></td><td>0</td></tr>
+            <tr><td>#DEMO-001</td><td>v0.0.1</td><td>Today, 8:58 AM</td><td>19 sec</td><td><span class="status status--success">Succeeded</span></td><td>0</td></tr>
+            <tr><td>#DEMO-SUN-001</td><td>v0.0.1</td><td>Sunday, 7:00 AM</td><td>8 sec</td><td><span class="status status--failed">Failed</span></td><td><span class="run-error">1 · S3 bucket unavailable</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </section>
+
+  <section class="job-panel" role="tabpanel" data-job-panel="parameters" hidden>
+    <div class="job-detail-head"><div><span class="job-panel-label">Pipeline</span><h3>Pipeline parameters</h3></div><button type="button" class="secondary" data-job-edit>Edit job configuration</button></div>
+    <p class="job-help">These values define the runtime configuration used by this job.</p>
+    <dl class="pipeline-parameters">
+      {jobParams.map((parameter) => <><dt>{parameter.label}</dt><dd>{parameter.value}</dd></>)}
+    </dl>
+  </section>
+
+  <section class="job-panel" role="tabpanel" data-job-panel="json" hidden>
+    <h3>Pipeline JSON</h3>
+    <pre>{pipelineRaw}</pre>
+  </section>
+</div>
+
+<style>
+  .job-workspace{padding:0 22px 38px;background:#fafcff;color:var(--ide-ink);font-size:12px;line-height:1.45}
+  .job-breadcrumbs{display:flex;align-items:center;gap:7px;margin:0 -22px;border-bottom:1px solid #d5dbe4;background:#f5f7fa;padding:9px 20px;color:#5d6674;white-space:nowrap;overflow:auto}.job-breadcrumbs b{color:#a0a7b2}.job-breadcrumbs strong{color:#222b38}
+  .job-pipeline-heading{display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid #dfe4ea;padding:20px 0}.job-pipeline-heading>div{display:flex;align-items:center;gap:10px;min-width:0}.job-pipeline-heading h2{margin:0;font-size:19px;overflow-wrap:anywhere}.job-badge,.status{display:inline-flex;align-items:center;border-radius:999px;padding:2px 9px;font-size:10px;font-weight:750;text-transform:uppercase}.job-badge,.status--success{background:#e3f4e9;color:#18723a}.status--failed{background:#fde8e8;color:#b4232c}.job-environment{border:1px solid #c9d7e8;border-radius:6px;background:#edf5ff;padding:5px 8px;color:#205eac;font-weight:700}
+  .job-tabs{display:flex;gap:24px;border-bottom:1px solid #d9dfe7;padding-top:18px;overflow-x:auto}.job-tabs button{flex:none;border:0;border-bottom:3px solid transparent;background:none;padding:10px 2px;color:#5f6774;font:inherit;font-size:12px;cursor:pointer}.job-tabs button[aria-selected="true"]{border-color:#087bd3;color:#18212e;font-weight:750}
+  .job-panel{padding-top:22px}.job-panel>h3,.job-detail-head h3{margin:0;font-size:18px}.job-panel-label{display:block;margin-bottom:2px;color:#3376cd;font-size:9px;font-weight:750;letter-spacing:.09em;text-transform:uppercase}.job-detail-head{display:flex;align-items:center;justify-content:space-between;gap:15px}.job-actions,.job-config-actions{display:flex;gap:8px}.primary,.secondary{border-radius:6px;padding:7px 11px;font:inherit;font-weight:700;cursor:pointer}.primary{border:1px solid #087bd3;background:#087bd3;color:#fff}.secondary{border:1px solid #c6d0dc;background:#fff;color:#2f3a49}
+  .job-summary{display:grid;grid-template-columns:minmax(0,1fr) minmax(12rem,.75fr);gap:22px;margin-top:18px;border:1px solid #dbe1e8;border-radius:9px;background:#fff;padding:17px}.job-facts{display:grid;grid-template-columns:minmax(105px,.45fr) minmax(0,1fr);gap:11px 18px;margin:0}.job-facts dt{color:#667182}.job-facts dd{margin:0;font-weight:650;overflow-wrap:anywhere}.job-parameter-preview{display:grid;align-content:center;gap:4px;border-left:1px solid #e2e7ed;padding-left:20px}.job-parameter-preview span{color:#667182;font-size:10px;text-transform:uppercase;letter-spacing:.06em}.job-parameter-preview small{color:#667182}
+  .job-config{margin-top:16px;border:1px solid #bcd1ea;border-radius:9px;background:#f4f8fd;padding:16px}.job-config h4{margin:0 0 12px;font-size:14px}.job-config-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.job-config label{display:grid;gap:4px;color:#596475;font-size:10px;font-weight:700}.job-config input{min-width:0;border:1px solid #bac5d2;border-radius:5px;background:#fff;padding:7px;color:#1b2331;font:inherit}.job-config-actions{justify-content:flex-end;margin-top:13px}.job-config-status{margin:11px 0 0;color:#17653f;font-weight:650}
+  .run-performance{margin-top:24px}.run-performance__heading{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:10px}.run-performance__heading h4{margin:0;font-size:15px}.run-performance__heading>span{color:#667182;font-size:10px}.job-table-wrap{overflow:auto;border:1px solid #dbe1e8;border-radius:9px;background:#fff}.job-runs{width:100%;border-collapse:collapse;min-width:650px}.job-runs th,.job-runs td{border-bottom:1px solid #e4e8ed;padding:10px 12px;text-align:left;white-space:nowrap}.job-runs tr:last-child td{border-bottom:0}.job-runs th{background:#f5f7fa;color:#626d7d;font-size:10px;text-transform:uppercase}.run-error{color:#b4232c;font-weight:650}
+  .job-help{color:#667182}.pipeline-parameters{display:grid;grid-template-columns:minmax(130px,.45fr) minmax(0,1fr);gap:0;margin-top:16px;border:1px solid #dbe1e8;border-radius:9px;background:#fff;overflow:hidden}.pipeline-parameters dt,.pipeline-parameters dd{margin:0;border-bottom:1px solid #e5e9ee;padding:10px 13px;overflow-wrap:anywhere}.pipeline-parameters dt{background:#f5f7fa;color:#667182}.pipeline-parameters dd{font-family:var(--ide-mono);font-size:10px}.job-panel pre{max-height:28rem;margin-top:14px}
+  @media(max-width:760px){.job-workspace{padding:0 14px 28px}.job-breadcrumbs{margin:0 -14px;padding-inline:14px}.job-pipeline-heading,.job-detail-head,.run-performance__heading{align-items:flex-start;flex-direction:column}.job-tabs{gap:16px}.job-summary{grid-template-columns:1fr}.job-parameter-preview{border-top:1px solid #e2e7ed;border-left:0;padding-top:13px;padding-left:0}.job-config-grid{grid-template-columns:1fr}}
+</style>
+
+<script>
+  const setJobSection = (section: string) => {
+    document.querySelectorAll<HTMLButtonElement>('[data-job-section]').forEach((button) => {
+      button.setAttribute('aria-selected', String(button.dataset.jobSection === section));
+    });
+    document.querySelectorAll<HTMLElement>('[data-job-panel]').forEach((panel) => {
+      panel.hidden = panel.dataset.jobPanel !== section;
+    });
+  };
+
+  document.querySelectorAll<HTMLButtonElement>('[data-job-section]').forEach((button) => {
+    button.addEventListener('click', () => setJobSection(button.dataset.jobSection || 'jobs'));
+  });
+
+  const jobConfig = document.querySelector<HTMLFormElement>('[data-job-config]');
+  document.querySelectorAll<HTMLButtonElement>('[data-job-edit]').forEach((button) => {
+    button.addEventListener('click', () => {
+      setJobSection('jobs');
+      if (jobConfig) jobConfig.hidden = false;
+      jobConfig?.querySelector<HTMLInputElement>('input')?.focus();
+    });
+  });
+  document.querySelector<HTMLButtonElement>('[data-job-cancel]')?.addEventListener('click', () => {
+    if (jobConfig) jobConfig.hidden = true;
+  });
+  jobConfig?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const data = new FormData(jobConfig);
+    document.querySelector<HTMLElement>('[data-job-value="concurrency"]')!.textContent = String(data.get('concurrency') || '10');
+    document.querySelector<HTMLElement>('[data-job-value="timeout"]')!.textContent = String(data.get('timeout') || '3');
+    const status = document.querySelector<HTMLElement>('[data-job-config-status]');
+    if (status) status.hidden = false;
+  });
+</script>

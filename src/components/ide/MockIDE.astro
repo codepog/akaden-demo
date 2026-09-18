@@ -202,7 +202,7 @@ import Chat from './Chat.astro';
     cutoffInput?.addEventListener('input', applyCutoff);
 
     const viewFor = (file: string | null, fallback: string) =>
-      !file ? fallback : file === 'pipeline' ? 'pipeline' : file === 'test' ? 'test' : `doc:${file}`;
+      !file ? fallback : file === 'pipeline' ? 'pipeline' : file === 'test' ? 'test' : file === 'job' ? 'job' : `doc:${file}`;
 
     function positionCallout() {
       if (!callout || !calloutTarget || callout.hidden) return;
@@ -273,11 +273,18 @@ import Chat from './Chat.astro';
         b.setAttribute('aria-current', String(b.dataset.file === openFile));
         b.classList.toggle('file-arrived', cur === 1 && b.dataset.file === 'requirement');
       });
+      const visibleTabs = new Set<string>();
+      if (openFile) visibleTabs.add(openFile);
+      if (cur >= 9) {
+        visibleTabs.add('pipeline');
+        visibleTabs.add('test');
+        visibleTabs.add('job');
+      }
       tabBtns.forEach((t) => {
-        t.hidden = t.dataset.tab !== openFile;
+        t.hidden = !visibleTabs.has(t.dataset.tab!);
         t.setAttribute('aria-current', String(t.dataset.tab === openFile));
       });
-      if (tabBar) tabBar.hidden = openFile === null;
+      if (tabBar) tabBar.hidden = visibleTabs.size === 0;
 
       views.forEach((v) => {
         const active = v.dataset.view === viewFor(openFile, s.view);
@@ -324,7 +331,7 @@ import Chat from './Chat.astro';
       if (pendingTurn) pendingTurn.hidden = true;
       if (typing) typing.hidden = true;
       if (deployPanel) deployPanel.hidden = !deployOpen;
-      const monitoring = s.id === 'monitor' && openFile === null;
+      const monitoring = s.id === 'monitor' && (openFile === null || openFile === 'job');
       const filePanel = q<HTMLElement>('[data-file-panel]');
       const monitorSidebar = q<HTMLElement>('[data-monitor-sidebar]');
       if (filePanel) filePanel.hidden = monitoring;
@@ -416,7 +423,7 @@ import Chat from './Chat.astro';
       if (!preserveExplore) exploreMode = false;
       cur = nextStep;
       openFile = step().open;
-      if (openFile && !step().files.includes(openFile)) openFile = null;
+      if (openFile && openFile !== 'job' && !step().files.includes(openFile)) openFile = null;
       render();
     }
     function openDeploy() {
@@ -555,13 +562,8 @@ import Chat from './Chat.astro';
       if (step().id === 'publish' && !published) { publishVersion(); return; }
       if (cur === steps.length) {
         walkthroughComplete = true;
-        if (mobileTour.matches) {
-          exploreMode = false;
-          render();
-          return;
-        }
-        exploreMode = true;
-        openFile = 'pipeline';
+        exploreMode = false;
+        openFile = null;
         render();
         return;
       }
@@ -578,9 +580,8 @@ import Chat from './Chat.astro';
     q('[data-rail-tool="monitor"]')?.addEventListener('click', () => go(10));
     q('[data-rail-tool="files"]')?.addEventListener('click', () => { if (step().files.includes('pipeline')) { openFile = 'pipeline'; render(); } });
     qa<HTMLButtonElement>('[data-view-job]').forEach(button => button.addEventListener('click', () => {
-      go(9);
-      const runId = q<HTMLElement>('[data-run-id]');
-      if (runId) runId.textContent = `#DEMO-00${button.dataset.viewJob}`;
+      openFile = 'job';
+      render();
     }));
     qa<HTMLInputElement>('[data-test-segment],[data-test-filename]').forEach(input => input.addEventListener('change', () => { transition++; busy = false; resetQuickTest(); render(); }));
     send?.addEventListener('click', next);

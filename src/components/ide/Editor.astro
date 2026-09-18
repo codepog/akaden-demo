@@ -44,13 +44,17 @@ const pipelineDetail = (name: string, kind?: string) => {
 };
 ---
 <main class="ed" aria-label="Editor">
-  <div class="tabs" data-tabs hidden>
+  <div class="tabs" data-tabs hidden aria-label="Open workspace tabs">
     {Object.entries(FILES).map(([key, v]) => (
       <button type="button" class="tab" data-tab={key} hidden>
         <span class:list={['ficon', v.kind]} aria-hidden="true">{v.kind === 'pipeline' ? 'S' : v.kind === 'test' ? 'TEST' : 'TXT'}</span>
         {v.name}
       </button>
     ))}
+    <button type="button" class="tab" data-tab="job" hidden>
+      <span class="ficon job" aria-hidden="true">JOB</span>
+      Student Contact Export job
+    </button>
   </div>
 
   <div class="editor-toolbar" data-toolbar aria-label="Editor actions"></div>
@@ -204,7 +208,9 @@ const pipelineDetail = (name: string, kind?: string) => {
     display:flex;align-items:center;gap:7px;padding:8px 14px;border:0;border-right:1px solid var(--ide-border);
     background:var(--ide-panel);color:var(--ide-ink-soft);font:inherit;font-size:12.5px;cursor:pointer;white-space:nowrap;
   }
-  .tab[aria-current="true"]{background:var(--ide-editor);color:var(--ide-ink);}
+  .tab{border-top:3px solid transparent;padding-top:5px;}
+  .tab:hover{background:var(--ide-hover);color:var(--ide-ink);}
+  .tab[aria-current="true"]{border-top-color:var(--ide-accent);background:var(--ide-editor);color:var(--ide-ink);}
   .ficon{font-size:7px;font-weight:700;font-family:var(--ide-mono);border:1px solid currentColor;border-radius:2px;padding:1px 2px;color:#5B8DD6;}
   .ficon.pipeline{color:#C0392B;}
 
